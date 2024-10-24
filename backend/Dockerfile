@@ -12,7 +12,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Use a base image with JDK to run the application
-FROM openjdk:17-jdk-alpine
+FROM build
 
 # Set the working directory inside the container
 WORKDIR /app

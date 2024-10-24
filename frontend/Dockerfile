@@ -5,13 +5,13 @@ FROM node:16 AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json first to leverage Docker cache
-COPY my-app/package.json my-app/package-lock.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the application code
-COPY my-app/ ./
+COPY . .
 
 # Build the app for production
 RUN npm run build
@@ -20,7 +20,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy the build artifacts from the previous stage to Nginx's web root
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # Expose port 80 for the Nginx web server
 EXPOSE 80
