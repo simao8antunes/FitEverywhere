@@ -1,10 +1,10 @@
-package fiteverywhere.project.Service;
+package pt.fe.up.fiteverywhere.backend.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fiteverywhere.project.Entity.User;
-import fiteverywhere.project.Repository.UserRepository;
+import pt.fe.up.fiteverywhere.backend.Entity.User;
+import pt.fe.up.fiteverywhere.backend.Repository.UserRepository;
 
 @Service
 public class UserService {

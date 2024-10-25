@@ -1,9 +1,9 @@
-package fiteverywhere.project.Repository;
+package pt.fe.up.fiteverywhere.backend.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import fiteverywhere.project.Entity.User;
+import pt.fe.up.fiteverywhere.backend.Entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

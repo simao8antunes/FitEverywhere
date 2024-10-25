@@ -1,4 +1,4 @@
-package fiteverywhere.project.Entity;
+package pt.fe.up.fiteverywhere.backend.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

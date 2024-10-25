@@ -1,10 +1,10 @@
-package fiteverywhere.project;
+package pt.fe.up.fiteverywhere.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ProjectApplicationTests {
+class BackendApplicationTests {
 
 	@Test
 	void contextLoads() {

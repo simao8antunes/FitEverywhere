@@ -1,40 +1,35 @@
-version: '3.8'
-
 services:
-  mysql:
+  database:
     image: mysql:8.0
-    container_name: mysql-db
+    container_name: "fit-everywhere-db"
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: your_database_name
-      MYSQL_USER: your_username
-      MYSQL_PASSWORD: your_password
+      MYSQL_ROOT_PASSWORD: f1t3v3rywh3r3r00t
+      MYSQL_DATABASE: fit_everywhere
+      MYSQL_USER: fit_everywhere
+      MYSQL_PASSWORD: f1t3v3rywh3r3
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
-  springboot-app:
-    image: your_springboot_app_image
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: springboot-app
+  fit-everywhere-be:
+    build: ./backend
+    container_name: "fit-everywhere-be"
     depends_on:
-      - mysql
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/your_database_name
-      SPRING_DATASOURCE_USERNAME: your_username
-      SPRING_DATASOURCE_PASSWORD: your_password
+      - database
 
-  react-frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+  fit-everywhere-fe:
+    build: ./frontend
+    container_name: "fit-everywhere-fe"
+    depends_on:
+      - fit-everywhere-be
+
+  proxy:
+    build: ./nginx
+    container_name: "fit-everywhere-proxy"
+    restart: always
     ports:
-      - "3000:80"
+      - "80:80"
 
 volumes:
   mysql_data:
