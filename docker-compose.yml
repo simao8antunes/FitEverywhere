@@ -21,6 +21,8 @@ services:
   fit-everywhere-fe:
     build: ./frontend
     container_name: "fit-everywhere-fe"
+    volumes:
+      - ./frontend:/app  # Bind mount to allow real-time changes
     depends_on:
       - fit-everywhere-be
 
