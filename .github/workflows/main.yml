@@ -1,0 +1,52 @@
+name: CI/CD Pipeline to Azure VM with Docker Compose and GHCR
+
+on:
+  push:
+    branches:
+      - main  # Trigger workflow on pushes to the main branch
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Log in to GitHub Container Registry (GHCR)
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 3: Build and Push Docker Images to GHCR using Docker Compose
+      - name: Build and Push Docker Images to GHCR
+        run: |
+          docker-compose -f docker-compose.yml build
+          docker-compose -f docker-compose.yml push
+          
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: ${{ github.actor }}
+      DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      # Step 4: SSH into Azure VM and Deploy with Docker Compose
+      - name: SSH to Azure VM and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
+          script: |
+            # Authenticate with GHCR on the VM
+            echo $DOCKER_PASSWORD | docker login ghcr.io -u $DOCKER_USERNAME --password-stdin
+
+            # Pull the latest images and start the containers
+            docker-compose pull
+            docker-compose up -d
