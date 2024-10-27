@@ -1,22 +1,7 @@
 services:
-  database:
-    image: mysql:8.0
-    container_name: "fit-everywhere-db"
-    environment:
-      MYSQL_ROOT_PASSWORD: f1t3v3rywh3r3r00t
-      MYSQL_DATABASE: fit_everywhere
-      MYSQL_USER: fit_everywhere
-      MYSQL_PASSWORD: f1t3v3rywh3r3
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-
   fit-everywhere-be:
     build: ./backend
     container_name: "fit-everywhere-be"
-    depends_on:
-      - database
 
   fit-everywhere-fe:
     build: ./frontend
