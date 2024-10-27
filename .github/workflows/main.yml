@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main  # Trigger workflow on pushes to the main branch
-
+env:
+  DOCKER_USERNAME: ${{ github.actor }}
+  DOCKER_PASSWORD: ${{ secrets.GHCR_TOKEN }}
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
@@ -20,8 +22,10 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
+      - uses: hoverkraft-tech/compose-action@v2.0.1
+          
       # Step 3: Build and Push Docker Images to GHCR using Docker Compose
       - name: Build and Push Docker Images to GHCR
         run: |
@@ -31,9 +35,7 @@ jobs:
   deploy:
     needs: build_and_push
     runs-on: ubuntu-latest
-    env:
-      DOCKER_USERNAME: ${{ github.actor }}
-      DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    
     steps:
       # Step 4: SSH into Azure VM and Deploy with Docker Compose
       - name: SSH to Azure VM and Deploy
