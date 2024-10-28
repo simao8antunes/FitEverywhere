@@ -1,0 +1,30 @@
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches:
+      - main  # Or the branch you wish to deploy from
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        
+    - name: Copy files to Azure VM
+      run: |
+        scp -r -o StrictHostKeyChecking=no . fiteverywhereroot@4.210.226.23:~/FitEverywhere-T2E
+
+    - name: SSH into VM and deploy
+      run: |
+        ssh -o StrictHostKeyChecking=no fiteverywhereroot@4.210.226.23 << 'EOF'
+          cd ~/FitEverywhere-T2E
+          docker-compose down      # Stop previous containers if any
+          docker-compose up -d     # Start new containers
+        EOF
