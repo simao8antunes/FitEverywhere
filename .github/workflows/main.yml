@@ -53,5 +53,5 @@ jobs:
             echo $DOCKER_PASSWORD | docker login ghcr.io -u $DOCKER_USERNAME --password-stdin
 
             # Pull the latest images and start the containers
-            docker-compose pull
-            docker-compose up -d
+            docker compose pull
+            docker compose up -d
