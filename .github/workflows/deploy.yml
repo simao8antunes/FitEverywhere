@@ -25,6 +25,6 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no fiteverywhereroot@4.210.226.23 << 'EOF'
           cd ~/FitEverywhere-T2E
-          docker compose down      # Stop previous containers if any
-          docker compose up -d     # Start new containers
+          sudo docker compose down      # Stop previous containers if any
+          sudo docker compose up -d     # Start new containers
         EOF
