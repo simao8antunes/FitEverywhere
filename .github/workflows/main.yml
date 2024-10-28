@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main  # Trigger workflow on pushes to the main branch
-env:
-  DOCKER_USERNAME: ${{ github.actor }}
-  DOCKER_PASSWORD: ${{ secrets.GHCR_TOKEN }}
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
@@ -47,11 +44,10 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          
+        env:
+          DOCKER_USERNAME: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.GHCR_TOKEN }}
           script: |
-            # Authenticate with GHCR on the VM
             echo $DOCKER_PASSWORD | docker login ghcr.io -u $DOCKER_USERNAME --password-stdin
-
-            # Pull the latest images and start the containers
             docker compose pull
             docker compose up -d
