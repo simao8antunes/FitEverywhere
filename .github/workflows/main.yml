@@ -1,0 +1,80 @@
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches:
+      - main, dev
+  pull_request:
+    branches:
+      - main, dev
+    
+jobs:
+  lint_frontend:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [23]
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+      
+      - name: Run linter
+        run: npm run lint
+        working-directory: ./frontend
+      
+      - name: Build the project
+        run: npm run build --if-present
+        working-directory: ./frontend
+  lint_backend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Test with Maven
+      run: mvn test
+      working-directory: ./backend
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+      working-directory: ./backend
+      
+  deploy:
+    runs-on: ubuntu-latest
+    if: success() && github.ref == 'refs/heads/main'
+    needs: [lint_backend, lint_frontend]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        
+    - name: Copy files to Azure VM
+      run: |
+        scp -r -o StrictHostKeyChecking=no * fiteverywhereroot@4.210.226.23:~/FitEverywhere-T2E
+
+    - name: SSH into VM and deploy
+      run: |
+        ssh -o StrictHostKeyChecking=no fiteverywhereroot@4.210.226.23 << 'EOF'
+          cd ~/FitEverywhere-T2E
+          sudo docker compose down      # Stop previous containers if any
+          sudo docker compose up -d     # Start new containers
+        EOF
