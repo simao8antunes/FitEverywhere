@@ -3,10 +3,12 @@ name: Deploy to Azure VM
 on:
   push:
     branches:
-      - main, dev
+      - main
+      - dev
   pull_request:
     branches:
-      - main, dev
+      - main
+      - dev
     
 jobs:
   lint_frontend:
@@ -14,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [23]
+        node-version: [18]
 
     steps:
       - uses: actions/checkout@v4
