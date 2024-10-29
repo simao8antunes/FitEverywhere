@@ -1,9 +1,16 @@
 name: Deploy to Azure VM
 
 on:
+  workflow_run:
+      workflows: [FrontEnd Verification, Java CI with Maven]
+      types:
+        - completed
   push:
     branches:
-      - main  # Or the branch you wish to deploy from
+      - main
+  pull_request:
+    branches:
+      - main  
 jobs:
   deploy:
     runs-on: ubuntu-latest
