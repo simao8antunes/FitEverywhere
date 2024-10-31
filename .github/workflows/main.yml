@@ -63,7 +63,6 @@ jobs:
       
   deploy:
     runs-on: ubuntu-latest
-    if: success() && github.ref == 'refs/heads/main'
     needs: [lint_backend, lint_frontend]
     
     steps:
