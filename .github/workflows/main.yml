@@ -57,7 +57,6 @@ jobs:
       
   deploy:
     runs-on: ubuntu-latest
-    if: success() && github.ref == 'refs/heads/main'
     needs: [lint_backend, lint_frontend]
     
     steps:
@@ -71,12 +70,12 @@ jobs:
         
     - name: Copy files to Azure VM
       run: |
-        scp -r -o StrictHostKeyChecking=no * fiteverywhereroot@4.210.226.23:~/FitEverywhere-T2E
+        scp -r -o StrictHostKeyChecking=no * fiteverywhereroot@4.210.226.23:~/FitEverywhere-T2E-dev
 
     - name: SSH into VM and deploy
       run: |
         ssh -o StrictHostKeyChecking=no fiteverywhereroot@4.210.226.23 << 'EOF'
-          cd ~/FitEverywhere-T2E
+          cd ~/FitEverywhere-T2E-dev
           sudo docker compose down      # Stop previous containers if any
           sudo docker rmi $(docker images -a -q)
           sudo docker compose up -d     # Start new containers
