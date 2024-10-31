@@ -1,22 +1,25 @@
 services:
-  fit-everywhere-be:
+  backend:
     build: ./backend
-    container_name: "fit-everywhere-be"
-
-  fit-everywhere-fe:
+    container_name: "fit-everywhere-be-dev"
+      
+  frontend:
     build: ./frontend
-    container_name: "fit-everywhere-fe"
+    container_name: "fit-everywhere-fe-dev"
     volumes:
       - ./frontend:/app  # Bind mount to allow real-time changes
     depends_on:
-      - fit-everywhere-be
+      - backend
 
   proxy:
     build: ./nginx
-    container_name: "fit-everywhere-proxy"
+    container_name: "fit-everywhere-proxy-dev"
     restart: always
     ports:
-      - "80:80"
+      - "81:81"
+    depends_on:
+      - backend
+      - frontend
 
 volumes:
   mysql_data:
