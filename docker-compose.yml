@@ -1,7 +1,7 @@
 services:
   backend:
     build: ./backend
-    container_name: "fit-everywhere-be-dev"
+    container_name: "fit-everywhere-be"
       
   frontend:
     build: ./frontend
@@ -16,7 +16,7 @@ services:
     container_name: "fit-everywhere-proxy-dev"
     restart: always
     ports:
-      - "81:80"
+      - "80:80"
     depends_on:
       - backend
       - frontend
