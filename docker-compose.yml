@@ -16,7 +16,7 @@ services:
     container_name: "fit-everywhere-proxy-dev"
     restart: always
     ports:
-      - "81:81"
+      - "81:80"
     depends_on:
       - backend
       - frontend
