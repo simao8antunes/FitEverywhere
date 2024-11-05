@@ -28,4 +28,18 @@ public class UserService {
     public boolean isUserExists(String username, String email) {
         return userRepository.findByUsername(username) != null || userRepository.findByEmail(email) != null;
     }
+
+    public User findOrRegisterOAuthUser(String name, String email) {
+        User user = userRepository.findByEmail(email);
+        
+        if (user == null) {
+            user = new User();
+            user.setUsername(name);
+            user.setEmail(email);
+            userRepository.save(user);
+        }
+        
+        return user;
+    }
+    
 }

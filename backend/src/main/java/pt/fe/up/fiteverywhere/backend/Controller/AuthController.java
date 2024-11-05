@@ -19,7 +19,7 @@ import pt.fe.up.fiteverywhere.backend.Entity.User;
 import pt.fe.up.fiteverywhere.backend.Service.UserService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -55,24 +55,31 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/")
+        @GetMapping("/")
         public ResponseEntity<Map<String, String>> root() {
             Map<String, String> response = new HashMap<>();
             response.put("message", "Welcome to the FitEverywhere API");
             return ResponseEntity.ok(response);
         }
 
-        @GetMapping("/auth/login/success")
+        @GetMapping("/login/success")
         public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
             if (principal == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
             }
-
+        
+            String email = principal.getAttribute("email");
+            String name = principal.getAttribute("name");
+            
+            User user = userService.findOrRegisterOAuthUser(name, email);
+            
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Login successful");
-            response.put("user", principal.getAttributes());
+            response.put("user", user); // Return user info
             return ResponseEntity.ok(response);
         }
+        
+        
 
         @GetMapping("/error")
         public ResponseEntity<?> handleError() {

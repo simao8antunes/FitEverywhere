@@ -16,7 +16,7 @@ const App: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setIsAuthenticated(true);
-          setUserName(data.user.name);  // Assuming 'name' is the attribute containing the user’s name
+          setUserName(data.user.username);  // Assuming 'name' is the attribute containing the user’s name
         } else {
           setIsAuthenticated(false);
         }
