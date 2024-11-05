@@ -18,7 +18,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("/auth/login/success", true) // Redirect on success
+                .defaultSuccessUrl("http://localhost:5173", true) // Redirect on success
                 .failureUrl("/error") // Redirect on failure
             );
     
