@@ -11,15 +11,5 @@ services:
     depends_on:
       - backend
 
-  proxy:
-    build: ./nginx
-    container_name: "fit-everywhere-proxy"
-    restart: always
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-      - frontend
-
 volumes:
   mysql_data:
