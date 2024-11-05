@@ -1,16 +1,19 @@
 import React from 'react';
-import Sidebar from './components/Sidebar/Sidebar';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 import './App.css';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
     <div className="app-container">
-      <Sidebar
-        userName="Salif Faustino"
-      />
-      <div className="main-content">
-        <h1>Welcome to FitEverywhere</h1>
-      </div>
+
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/login" element={<Login />} />
+            </Routes>
+        </BrowserRouter>
     </div>
   );
 };
