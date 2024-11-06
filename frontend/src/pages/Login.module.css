@@ -1,3 +1,7 @@
+body {
+    background-color: #292D36;
+}
+
 .sideInfo {
     flex: 0 0 60%;
     display: flex;
@@ -5,7 +9,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-color: #292D36;
+    /*background-color: #292D36;*/
 }
 
 .sideInfo h1 {
@@ -30,12 +34,12 @@
 }
 
 .loginbox {
-    flex: 0 0 40%;
+    flex: 0 0 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #292D36;
+    /*background-color: #292D36;*/
 }
 
 .loginbox h1 {
