@@ -1,0 +1,5 @@
+/nginx
+/.github
+docker-compose.yml
+/backend/*
+/frontend/*
