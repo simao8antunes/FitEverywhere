@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import Sidebar from './components/Sidebar/Sidebar';
+//import React from 'react';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import './App.css';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,6 +40,13 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
+      <BrowserRouter>
+          <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/login" element={<Login />} />
+          </Routes>
+      </BrowserRouter>
+
       <Sidebar userName={userName || "Guest"} />
       <div className="main-content">
         <h1>Welcome to FitEverywhere</h1>
