@@ -79,6 +79,7 @@ jobs:
     - name: SSH into VM and deploy
       run: |
         ssh -o StrictHostKeyChecking=no fiteverywheredevuser@20.56.8.144 << 'EOF'
+
           cd ~/FitEverywhere-T2E
           sudo docker compose down      # Stop previous containers if any
           sudo docker rmi $(sudo docker images -a -q)
