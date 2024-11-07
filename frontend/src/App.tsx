@@ -1,6 +1,3 @@
-
-import './App.css';
-//import Sidebar from './components/Sidebar/Sidebar';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
@@ -12,12 +9,10 @@ const App: React.FC = () => {
     <div className="app-container">
       <BrowserRouter>
           <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
       </BrowserRouter>
-
-    
     </div>
   );
 };
