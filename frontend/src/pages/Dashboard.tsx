@@ -4,7 +4,10 @@ import Sidebar from '../components/Sidebar/Sidebar';
 
 const Dashboard: React.FC = () => {
     const location = useLocation();
-    const { userName } = location.state || { userName: 'Guest' };
+    const userNameFromState = location.state?.userName;
+    const userName = userNameFromState || sessionStorage.getItem('userName') || 'Guest';  // Fallback to sessionStorage
+
+    console.log("Received userName in Dashboard:", userName);
 
     return (
         <div className="app-container">
@@ -15,5 +18,6 @@ const Dashboard: React.FC = () => {
         </div>
     );
 };
+
 
 export default Dashboard;

@@ -70,7 +70,8 @@ public class AuthController {
         
             String email = principal.getAttribute("email");
             String name = principal.getAttribute("name");
-            
+            System.out.println("Authenticated user: " + name);  // Add debug log to check the value
+
             User user = userService.findOrRegisterOAuthUser(name, email);
             
             Map<String, Object> response = new HashMap<>();

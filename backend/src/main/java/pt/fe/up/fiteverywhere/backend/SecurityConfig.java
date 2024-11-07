@@ -24,8 +24,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("http://localhost:5173", true) // Redirect on success
-                .failureUrl("/error") // Redirect on failure
+            .defaultSuccessUrl("http://localhost/dashboard", true)
+            .failureUrl("/error") // Redirect on failure
             );
 
         return http.build();
@@ -37,7 +37,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Allow your frontend origin
+        config.setAllowedOrigins(Arrays.asList("http://localhost"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         source.registerCorsConfiguration("/**", config);

@@ -5,23 +5,23 @@ import logo from "../assets/logo.jpg";
 import styles from "./Login.module.css";
 
 const Login: React.FC = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userName, setUserName] = useState<string | null>(null);
+    const [_isAuthenticated, setIsAuthenticated] = useState(false);
+    const [_userName, setUserName] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/auth/login/success', {
-                    credentials: 'include',
-                });
+                const response = await fetch('/api/auth/login/success', { credentials: 'include' });
                 if (response.ok) {
                     const data = await response.json();
+                    console.log("Fetched user data:", data); // Log response data
                     setIsAuthenticated(true);
                     setUserName(data.user.username);
-                    // Redirect to dashboard with userName
+                    sessionStorage.setItem('userName', data.user.username);  // Store username in sessionStorage
                     navigate('/dashboard', { state: { userName: data.user.username } });
                 } else {
+                    console.log("Failed to authenticate");
                     setIsAuthenticated(false);
                 }
             } catch (error) {
@@ -29,12 +29,13 @@ const Login: React.FC = () => {
                 setIsAuthenticated(false);
             }
         };
+        
 
         fetchUserData();
     }, [navigate]);
 
     const handleLogin = () => {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        window.location.href = '/api/oauth2/authorization/google';
     };
 
     return (
