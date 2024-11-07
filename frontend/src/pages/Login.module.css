@@ -1,5 +1,7 @@
 body {
     background-color: #292D36;
+    display: flex;
+    justify-content: center;
 }
 
 .sideInfo {
