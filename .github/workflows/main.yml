@@ -78,8 +78,8 @@ jobs:
         
     - name: Clean and Copy files to Azure VM
       run: |
-        ssh -o StrictHostKeyChecking=no fiteverywheredevuser@20.56.8.144 "rm -rf ~/FitEverywhere-T2E/*"
-        scp -r -o StrictHostKeyChecking=no * fiteverywheredevuser@20.56.8.144:~/FitEverywhere-T2E
+        ssh -o StrictHostKeyChecking=no fiteverywhereroot@4.210.226.23 "rm -rf ~/FitEverywhere-T2E/*"
+        scp -r -o StrictHostKeyChecking=no * fiteverywhereroot@4.210.226.23:~/FitEverywhere-T2E
 
     - name: SSH into VM and deploy
       run: |
