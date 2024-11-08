@@ -5,7 +5,7 @@ import Sidebar from '../components/Sidebar/Sidebar';
 const Dashboard: React.FC = () => {
     const location = useLocation();
     const userNameFromState = location.state?.userName;
-    const userName = userNameFromState || sessionStorage.getItem('userName') || 'Guest';  // Fallback to sessionStorage
+    const userName = userNameFromState || sessionStorage.getItem('user') || 'Guest';  // Fallback to sessionStorage
 
     console.log("Received userName in Dashboard:", userName);
 

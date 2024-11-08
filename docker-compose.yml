@@ -1,31 +1,29 @@
 services:
-  backend:
+  fit-everywhere-be:
     build: ./backend
     container_name: "fit-everywhere-be"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://fiteverywhere-db.mysql.database.azure.com:3306/fiteverywhere_db?serverTimezone=UTC&useSSL=true&requireSSL=false
       - SPRING_DATASOURCE_USERNAME=user_fiteverywhere
       - SPRING_DATASOURCE_PASSWORD=F1t3v3rywh3r3.
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_REDIRECT_URI=http://localhost/api/login/oauth2/code/google
-    expose:
-      - "8080"
+      - SERVER_NAME=http://dev.fiteverywhere.me
+      - GOOGLE_CLIENT_ID=593868525882-24fp6hrgoipq7eq3o45uhbahvqnvaokq.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=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
 
-  frontend:
+  fit-everywhere-fe:
     build: ./frontend
     container_name: "fit-everywhere-fe"
     volumes:
       - ./frontend:/app  # Bind mount for development
-    expose:
-      - "3000"
     depends_on:
-      - backend
+      - fit-everywhere-be
 
-  proxy:
+  fit-everywhere-proxy:
     build: ./nginx
     container_name: "fit-everywhere-proxy"
     restart: always
     ports:
       - "80:80"
     depends_on:
-      - backend
-      - frontend
+      - fit-everywhere-be
+      - fit-everywhere-fe

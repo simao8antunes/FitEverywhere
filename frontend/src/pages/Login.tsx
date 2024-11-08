@@ -18,7 +18,7 @@ const Login: React.FC = () => {
                     console.log("Fetched user data:", data); // Log response data
                     setIsAuthenticated(true);
                     setUserName(data.user.username);
-                    sessionStorage.setItem('userName', data.user.username);  // Store username in sessionStorage
+                    sessionStorage.setItem('user', data.user);  // Store username in sessionStorage
                     navigate('/dashboard', { state: { userName: data.user.username } });
                 } else {
                     console.log("Failed to authenticate");
@@ -44,13 +44,16 @@ const Login: React.FC = () => {
                 <div className={styles.headerDiv}>
                     <h1>FitEverywhere</h1>
                     <div className="logoContainer">
-                        <img src={logo} alt="Logo" className={styles.logo} />
+                        <img src={logo} alt="Logo" className={styles.logo}/>
                     </div>
                 </div>
-                <p className={styles.infoText}>With FitEverywhere, maintaining a fitness routine becomes a rewarding part of the travel experience, making it easy to stay active and healthy—anytime, anywhere.</p>
+                <p className={styles.infoText}>With FitEverywhere, maintaining a fitness routine becomes a rewarding
+                    part of the travel experience, making it easy to stay active and healthy—anytime, anywhere.</p>
+                <p>{_isAuthenticated ? "Autenticado" : "Nao Autenticado"}</p>
+                <p>{_userName}</p>
             </div>
             <div className={styles.loginbox}>
-                <h1>Login</h1>
+            <h1>Login</h1>
                 <button onClick={handleLogin} className={styles.buttonContainer}>
                     Login with Google
                     <img src={google_icon} alt="google" className={styles.googleIcon} />
