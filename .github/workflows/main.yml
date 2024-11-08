@@ -3,10 +3,10 @@ name: CI/CD
 on:
   push:
     branches:
-      - dev
+      - main
   pull_request:
     branches:
-      - dev
+      - main
     
 jobs:
   lint_frontend:
@@ -74,7 +74,7 @@ jobs:
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_DEV }}
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
         
     - name: Clean and Copy files to Azure VM
       run: |
@@ -83,7 +83,7 @@ jobs:
 
     - name: SSH into VM and deploy
       run: |
-        ssh -o StrictHostKeyChecking=no fiteverywheredevuser@20.56.8.144 << 'EOF'
+        ssh -o StrictHostKeyChecking=no fiteverywhereroot@4.210.226.23 << 'EOF'
 
           cd ~/FitEverywhere-T2E
           sudo docker compose down      # Stop previous containers if any
