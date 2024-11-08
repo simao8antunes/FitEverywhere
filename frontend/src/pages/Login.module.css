@@ -1,0 +1,67 @@
+body {
+    background-color: #292D36;
+    display: flex;
+}
+
+.sideInfo {
+    flex: 0 0 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /*background-color: #292D36;*/
+}
+
+.sideInfo h1 {
+    color: white;
+}
+
+.headerDiv {
+    display: flex;
+}
+
+.logo {
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.infoText {
+    margin-top: 20px;
+    max-width: 45%;
+    color: white;
+}
+
+.loginbox {
+    flex: 0 0 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /*background-color: #292D36;*/
+}
+
+.loginbox h1 {
+    color:white
+}
+
+button {
+    margin-top: 20px; 
+    padding: 10px 20px;
+    font-size: 16px; 
+    cursor: pointer;
+    background-color: #C8F4AF;
+    color: #6E6E6E
+}
+
+.googleIcon {
+    width: 30px;
+    padding-left: 5px;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: row;
+}
