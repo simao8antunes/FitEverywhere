@@ -119,7 +119,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.6.0</version> <!-- Use the latest version here -->
                 <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
+                    <configLocation>./checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
