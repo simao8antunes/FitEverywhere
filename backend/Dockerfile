@@ -2,6 +2,7 @@ FROM maven:3.8-openjdk-18 AS build
 WORKDIR /app
 COPY src ./src
 COPY pom.xml .
+COPY checkstyle.xml .
 RUN mvn clean package -DskipTests
 
 FROM build
