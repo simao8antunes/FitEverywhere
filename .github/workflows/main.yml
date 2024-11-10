@@ -62,12 +62,20 @@ jobs:
         run: mvn clean compile
         working-directory: ./backend
 
-      - name: Validate and Check Code Style
+      - name: Check Code Style and Validity
         run: mvn validate
         working-directory: ./backend
 
       - name: Run Backend Tests with Coverage
         run: mvn test jacoco:report
+        working-directory: ./backend
+
+      - name: Package the application
+        run: mvn package
+        working-directory: ./backend
+
+      - name: Verify application quality criteria
+        run: mvn verify
         working-directory: ./backend
 
   deploy:

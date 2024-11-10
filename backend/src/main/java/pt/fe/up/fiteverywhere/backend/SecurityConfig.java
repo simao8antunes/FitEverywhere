@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl(environment.getProperty("SERVER_NAME"), true)
+                        .defaultSuccessUrl("/", true)
                         .failureUrl("/error") // Redirect on failure
                 );
 
