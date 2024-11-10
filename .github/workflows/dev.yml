@@ -52,15 +52,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
           cache: maven
 
       - name: Clean and Compile with Maven
         run: mvn clean compile
+        working-directory: ./backend
+
+      - name: Check Code Style and Validity
+        run: mvn validate
         working-directory: ./backend
 
       - name: Run Backend Tests with Coverage
