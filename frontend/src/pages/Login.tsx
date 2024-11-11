@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import google_icon from "../assets/google_icon.png";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.svg";
 import styles from "./Login.module.css";
 
 const Login: React.FC = () => {

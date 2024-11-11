@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/logo.jpg";
+import logo from "../../assets/logo.svg";
 import styles from "./Sidebar.module.css";
 
 interface SidebarProps {
