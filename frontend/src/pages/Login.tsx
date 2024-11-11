@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../../public/logo.svg";
 import google_icon from "../assets/google_icon.png";
-import logo from "../assets/logo.jpg";
 import styles from "./Login.module.css";
 
 const Login: React.FC = () => {
@@ -20,8 +20,12 @@ const Login: React.FC = () => {
           console.log("Fetched user data:", data); // Log response data
           setIsAuthenticated(true);
           setUserName(data.user.username);
-          sessionStorage.setItem("user", data.user); // Store username in sessionStorage
-          navigate("/dashboard", { state: { userName: data.user.username } });
+          sessionStorage.setItem("user", JSON.stringify(data.user)); // Store user info in sessionStorage
+          if (!data.user.role) {
+            navigate("/select-role");
+          } else {
+            navigate("/dashboard", { state: { userName: data.user.username } });
+          }
         } else {
           console.log("Failed to authenticate");
           setIsAuthenticated(false);

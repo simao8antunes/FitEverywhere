@@ -1,0 +1,68 @@
+/* Add these styles to your CSS */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.main-content {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.events-container {
+  width: 80%;
+  max-width: 900px;
+  margin: 20px 0;
+}
+
+.events-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.event-item {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.event-title {
+  font-size: 1.5em;
+  color: #333;
+}
+
+.event-time {
+  font-size: 1em;
+  color: #555;
+}
+
+.event-details {
+  text-align: center;
+}
+
+.event-link {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.event-link:hover {
+  text-decoration: underline;
+}
+
+.event-item:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
