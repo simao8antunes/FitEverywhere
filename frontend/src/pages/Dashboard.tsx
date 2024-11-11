@@ -2,11 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar/Sidebar";
 
+interface Event {
+  id: string;
+  summary: string;
+  start: { dateTime: string };
+  end: { dateTime: string };
+}
+
 const Dashboard: React.FC = () => {
   const location = useLocation();
   const userNameFromState = location.state?.userName;
   const userName = userNameFromState || "Guest";
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -20,8 +27,7 @@ const Dashboard: React.FC = () => {
           console.log(data);
 
           // Filter upcoming events
-          const upcomingEvents = data.items.filter((event: any) => {
-            // Check if both start and end have dateTime
+          const upcomingEvents = data.items.filter((event: Event) => {
             const eventStartDate = event.start?.dateTime
               ? new Date(event.start.dateTime)
               : null;

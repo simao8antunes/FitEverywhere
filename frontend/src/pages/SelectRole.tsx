@@ -32,7 +32,7 @@ const SelectRole: React.FC = () => {
         const errorData = await response.json();
         console.error(
           "Failed to update role:",
-          errorData.message || response.statusText
+          errorData.message || response.statusText,
         );
       }
     } catch (error) {
