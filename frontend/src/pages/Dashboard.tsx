@@ -22,12 +22,18 @@ const Dashboard: React.FC = () => {
           // Filter upcoming events
           const upcomingEvents = data.items.filter((event: any) => {
             // Check if both start and end have dateTime
-            const eventStartDate = event.start?.dateTime ? new Date(event.start.dateTime) : null;
-            const eventEndDate = event.end?.dateTime ? new Date(event.end.dateTime) : null;
+            const eventStartDate = event.start?.dateTime
+              ? new Date(event.start.dateTime)
+              : null;
+            const eventEndDate = event.end?.dateTime
+              ? new Date(event.end.dateTime)
+              : null;
             const currentDate = new Date();
 
             // Only include events with valid start and end times, and those that are in the future
-            return eventStartDate && eventEndDate && eventStartDate > currentDate;
+            return (
+              eventStartDate && eventEndDate && eventStartDate > currentDate
+            );
           });
 
           setEvents(upcomingEvents);

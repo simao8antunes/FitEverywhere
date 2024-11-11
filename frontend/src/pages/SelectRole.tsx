@@ -30,7 +30,10 @@ const SelectRole: React.FC = () => {
         navigate("/dashboard", { state: { userName: _userName, role } });
       } else {
         const errorData = await response.json();
-        console.error("Failed to update role:", errorData.message || response.statusText);
+        console.error(
+          "Failed to update role:",
+          errorData.message || response.statusText
+        );
       }
     } catch (error) {
       console.error("Error updating role:", error);
