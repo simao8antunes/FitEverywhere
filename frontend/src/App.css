@@ -52,7 +52,6 @@
 
 /* Container for App */
 .app-container {
-  display: flex;
   height: 100vh; /* Full height to match the viewport */
 }
 
