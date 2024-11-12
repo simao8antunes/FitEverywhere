@@ -3,7 +3,7 @@ services:
     build: ./backend
     container_name: "fit-everywhere-be"
     environment:
-      - SERVER_NAME=http://localhost
+      - SERVER_NAME=http://fiteverywhere.me
 
   fit-everywhere-fe:
     build: ./frontend
@@ -14,7 +14,9 @@ services:
       - fit-everywhere-be
 
   fit-everywhere-proxy:
-    build: ./nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.prod
     container_name: "fit-everywhere-proxy"
     restart: always
     ports:
