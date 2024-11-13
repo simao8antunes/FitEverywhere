@@ -6,7 +6,6 @@ Welcome to FitEverywhere! FitEverywhere is a fitness management platform designe
 - [Deployed Servers](#deployed-servers)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
-- [Local Development Setup](#local-development-setup)
 
 ---
 
@@ -60,15 +59,7 @@ To start the app in a development environment, follow these steps:
    git clone https://github.com/MESW-LES-2425/FitEverywhere-T2E.git
    cd FitEverywhere-T2E
    ```
-2. **Environment Variables**:
-   - Change the environment variables in the docker-compose.yml file.
-     ```bash
-     SERVER_NAME=http://localhost
-     ```
-   - Remove the server_name from the nginx/nginx.conf file.
-
-     ~~server_name <server_name>~~;
-3. **Start the Application**:
+2. **Start the Application**:
    ```bash
    docker compose up --build
    ```
