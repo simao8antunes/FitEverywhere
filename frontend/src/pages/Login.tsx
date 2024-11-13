@@ -1,43 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import logo from "../../public/logo.svg";
 import { SiGoogle } from "react-icons/si";
 
 const Login: React.FC = () => {
-  const [_isAuthenticated, setIsAuthenticated] = useState(false);
-  const [_userName, setUserName] = useState<string | null>(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("/api/auth/login/success", {
-          credentials: "include",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Fetched user data:", data); // Log response data
-          setIsAuthenticated(true);
-          setUserName(data.user.username);
-          sessionStorage.setItem("user", JSON.stringify(data.user)); // Store user info in sessionStorage
-          if (!data.user.role) {
-            navigate("/select-role");
-          } else {
-            navigate("/dashboard", { state: { userName: data.user.username } });
-          }
-        } else {
-          console.log("Failed to authenticate");
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setIsAuthenticated(false);
-      }
-    };
-
-    fetchUserData();
-  }, [navigate]);
-
   const handleLogin = () => {
     window.location.href = "/api/oauth2/authorization/google";
   };
@@ -51,7 +16,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl font-semibold mb-4">FitEverywhere</h1>
+        <h1 className="text-2xl font-semibold mb-4">FitEverywhereA</h1>
 
         {/* Description */}
         <p className="text-gray-400 mb-8 px-4 leading-relaxed">

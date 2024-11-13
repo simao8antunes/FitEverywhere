@@ -25,7 +25,9 @@ const SelectRole: React.FC = () => {
         <div
           onClick={() => setRole("gym")}
           className={`cursor-pointer bg-white shadow-lg rounded-lg p-8 w-48 text-center transition-transform transform hover:scale-105 ${
-            role === "gym" ? "border-2 border-primary" : "border border-gray-300"
+            role === "gym"
+              ? "border-2 border-primary"
+              : "border border-gray-300"
           }`}
         >
           <FaDumbbell
@@ -48,7 +50,9 @@ const SelectRole: React.FC = () => {
         <div
           onClick={() => setRole("client")}
           className={`cursor-pointer bg-white shadow-lg rounded-lg p-8 w-48 text-center transition-transform transform hover:scale-105 ${
-            role === "client" ? "border-2 border-primary" : "border border-gray-300"
+            role === "client"
+              ? "border-2 border-primary"
+              : "border border-gray-300"
           }`}
         >
           <FaUser
