@@ -161,4 +161,26 @@ public class AuthController {
         }
     }
 
+
+    @GetMapping("/gyms/nearby")
+    public ResponseEntity<?> getNearbyGyms(@RequestParam double latitude, @RequestParam double longitude, @RequestParam int radius) {
+        // Construct the URL for Google Places API - Nearby Search
+        String url = String.format(
+            "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=10000&type=gym&key=AIzaSyAjEzYhZoH1GHZ_LrBXo7tjKTYzHOB7Cqs",
+            latitude, longitude
+        );
+
+        RestTemplate restTemplate = new RestTemplate();
+        
+        try {
+            // Make the API call
+            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
+            
+            // Return the response data (results are the nearby gyms)
+            return ResponseEntity.ok(response.getBody());
+        } catch (Exception e) {
+            // Handle any errors gracefully
+            return ResponseEntity.status(500).body(Map.of("error", "Failed to fetch nearby gyms", "message", e.getMessage()));
+        }
+    }
 }
