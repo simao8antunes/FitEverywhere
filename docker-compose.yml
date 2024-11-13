@@ -6,12 +6,19 @@ services:
       - SERVER_NAME=http://localhost
 
   fit-everywhere-fe:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     container_name: "fit-everywhere-fe"
     volumes:
       - ./frontend:/app  # Bind mount for development
+      - /app/node_modules  # Bind mount for development
+    ports:
+      - "3000:3000"
     depends_on:
       - fit-everywhere-be
+    environment:
+      - NODE_ENV=development
 
   fit-everywhere-proxy:
     build: ./nginx
