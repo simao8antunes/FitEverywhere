@@ -16,7 +16,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl font-semibold mb-4">FitEverywhereA</h1>
+        <h1 className="text-2xl font-semibold mb-4">FitEverywhere</h1>
 
         {/* Description */}
         <p className="text-gray-400 mb-8 px-4 leading-relaxed">

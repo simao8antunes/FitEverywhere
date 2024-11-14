@@ -1,75 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import Sidebar from "../components/Sidebar/Sidebar";
-
-interface Event {
-  id: string;
-  summary: string;
-  start: { dateTime: string };
-  end: { dateTime: string };
-}
+import React from "react";
+import Sidebar from "../components/Sidebar";
+import { useFetchEvents } from "../hooks/useFetchEvents.ts";
+import { useAuth } from "../hooks/useAuth.ts";
 
 const Dashboard: React.FC = () => {
-  const location = useLocation();
-  const userNameFromState = location.state?.userName;
-  const userName = userNameFromState || "Guest";
-  const [events, setEvents] = useState<Event[]>([]);
+  const auth = useAuth();
+  const { events, loading, error } = useFetchEvents();
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch("/api/auth/calendar/events", {
-          method: "GET",
-          credentials: "include",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
+  if (!auth) return <div>Not authorized</div>;
 
-          // Filter upcoming events
-          const upcomingEvents = data.items.filter((event: Event) => {
-            const eventStartDate = event.start?.dateTime
-              ? new Date(event.start.dateTime)
-              : null;
-            const eventEndDate = event.end?.dateTime
-              ? new Date(event.end.dateTime)
-              : null;
-            const currentDate = new Date();
+  // Conditional rendering based on loading/error states
+  if (loading) {
+    return <div>Loading events...</div>;
+  }
 
-            // Only include events with valid start and end times, and those that are in the future
-            return (
-              eventStartDate && eventEndDate && eventStartDate > currentDate
-            );
-          });
-
-          setEvents(upcomingEvents);
-        }
-      } catch (error) {
-        console.error("Error fetching calendar events:", error);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
-  console.log("Received userName in Dashboard:", userName);
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="app-container">
-      <Sidebar userName={userName} />
+      <Sidebar userName={auth.user!.username} />
       <div className="events-container">
         <h2>Upcoming Events</h2>
-        <div className="events-list">
-          {events.map((event) => (
-            <div key={event.id} className="event-item">
-              <h3 className="event-title">{event.summary}</h3>
-              <p className="event-time">
-                {new Date(event.start.dateTime).toLocaleString()} -{" "}
-                {new Date(event.end.dateTime).toLocaleString()}
-              </p>
-            </div>
-          ))}
-        </div>
+        {events.length === 0 ? (
+          <p>No upcoming events.</p>
+        ) : (
+          <div className="events-list">
+            {events.map(({ id, summary, start, end }) => (
+              <div key={id} className="event-item">
+                <h3 className="event-title">{summary}</h3>
+                <p className="event-time">
+                  {new Date(start.dateTime).toLocaleString()} -{" "}
+                  {new Date(end.dateTime).toLocaleString()}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
