@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Map from "../components/Map";
+import GoogleMap from "../components/GoogleMap.tsx";
 import { useFetchEvents } from "../hooks/useFetchEvents.ts";
-import { useAuth } from "../hooks/useAuth.ts";
-import { useLocation } from "react-router-dom";
 
 interface Gym {
   name: string;
-  location: string;
-  latitude: number;
-  longitude: number;
+  vicinity: string;
+  location: {
+    lng: number;
+    lat: number;
+  };
 }
-    
+
+interface GymResponse {
+  name: string;
+  vicinity: string;
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+}
+
 const Dashboard: React.FC = () => {
-  const location = useLocation();
-  const auth = useAuth();
   const { events, loading, error } = useFetchEvents();
   const [nearbyGyms, setNearbyGyms] = useState<Gym[]>([]);
 
@@ -23,32 +31,34 @@ const Dashboard: React.FC = () => {
     try {
       // Step 1: Convert location (address) to latitude and longitude using Google Geocoding API
       const geocodingResponse = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyAjEzYhZoH1GHZ_LrBXo7tjKTYzHOB7Cqs`
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyAjEzYhZoH1GHZ_LrBXo7tjKTYzHOB7Cqs`,
       );
       const geocodingData = await geocodingResponse.json();
-  
+
       console.log("Geocoding response:", geocodingData); // Log geocoding data
-  
+
       if (geocodingData.status === "OK") {
         const latitude = geocodingData.results[0].geometry.location.lat;
         const longitude = geocodingData.results[0].geometry.location.lng;
-  
+
         console.log("Geocoding successful, coordinates:", latitude, longitude); // Log coordinates
-  
+
         // Step 2: Use latitude and longitude to fetch nearby gyms
         const gymsResponse = await fetch(
-          `/api/auth/gyms/nearby?latitude=${latitude}&longitude=${longitude}&radius=5000`
+          `/api/auth/gyms/nearby?latitude=${latitude}&longitude=${longitude}&radius=5000`,
         );
         if (gymsResponse.ok) {
           const gymsData = await gymsResponse.json();
           console.log("Nearby gyms data:", gymsData); // Log gyms data
           setNearbyGyms(
-            gymsData.results?.map((gym: any) => ({
+            gymsData.results?.map((gym: GymResponse) => ({
               name: gym.name,
-              location: gym.vicinity,
-              latitude: gym.geometry.location.lat,
-              longitude: gym.geometry.location.lng,
-            })) || []
+              vicinity: gym.vicinity,
+              location: {
+                lat: gym.geometry.location.lat,
+                lng: gym.geometry.location.lng,
+              },
+            })) || [],
           ); // Transform gyms data
         } else {
           console.error("Failed to fetch nearby gyms");
@@ -66,8 +76,6 @@ const Dashboard: React.FC = () => {
       fetchNearbyGyms(events[0].location);
     }
   }, [events]);
-  
-  if (!auth) return <div>Not authorized</div>;
 
   // Conditional rendering based on loading/error states
   if (loading) {
@@ -80,7 +88,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="app-container">
-      <Sidebar userName={auth.user!.username} />
       <div className="events-container">
         <h2>Upcoming Events</h2>
         {events.length === 0 ? (
@@ -104,7 +111,7 @@ const Dashboard: React.FC = () => {
         <h3>Nearby Gyms</h3>
         <div className="gyms-list">
           {nearbyGyms.length > 0 ? (
-            <Map gyms={nearbyGyms} />
+            <GoogleMap gyms={nearbyGyms} />
           ) : (
             <p>No nearby gyms found.</p>
           )}

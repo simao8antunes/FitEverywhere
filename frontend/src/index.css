@@ -38,6 +38,10 @@
   --border-radius-circle: 100%;
 }
 
+#root {
+  display: flex;
+}
+
 /* Custom Reset */
 *,
 *::before,
