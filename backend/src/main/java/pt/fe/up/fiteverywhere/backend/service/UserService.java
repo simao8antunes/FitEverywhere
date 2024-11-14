@@ -1,12 +1,11 @@
 package pt.fe.up.fiteverywhere.backend.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.repository.UserRepository;
+
+import java.util.Optional;
 
 
 @Service
@@ -53,7 +52,7 @@ public class UserService {
         newUser.setEmail(email);
         return userRepository.save(newUser);
     }
-    
+
     public void updateUserRole(User user, String role) {
         user.setRole(role);
         userRepository.save(user);

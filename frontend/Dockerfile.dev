@@ -1,0 +1,21 @@
+# Use a base image with Node.js for development
+FROM node:alpine
+
+WORKDIR /app
+
+# Set PATH to include node_modules/.bin to allow local commands
+ENV PATH /app/node_modules/.bin:$PATH
+
+# Install dependencies
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
+RUN npm ci
+
+# Copy the source code
+COPY . /app
+
+# Expose the port that Vite runs on
+EXPOSE 3000
+
+# Default command to run Vite in development mode
+CMD ["npm", "run", "dev"]
