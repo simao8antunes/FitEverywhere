@@ -18,7 +18,8 @@ const Sidebar: React.FC<SidebarProps> = ({ userName }) => {
   const { logout } = useAuth();
 
   const navItemStyles: SidebarStyles = {
-    container: "w-64 flex flex-col h-[100vh] bg-background text-text p-base",
+    container:
+      "w-64 flex flex-col h-[100vh] bg-background text-text p-base fixed",
     logoContainer: "flex justify-center mb-base",
     navItem:
       "flex items-center gap-base decoration-0 text-text py-s transition-all hover:bg-[#34495E] hover:pl-s active:bg-primary active:text-text",

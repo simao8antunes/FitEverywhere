@@ -34,6 +34,7 @@ export function useFetchUser(): UseFetchUserResult {
         setIsAuthenticated(false);
         setUser(null);
         setError("Failed to authenticate");
+        navigate("/");
         throw new Error(`Error fetching user data: ${err}`);
       });
   }, [navigate]);

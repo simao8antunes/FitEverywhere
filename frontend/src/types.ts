@@ -24,4 +24,37 @@ interface UseFetchEventsResult {
   error: string | null;
 }
 
-export type { User, UseFetchUserResult, Event, UseFetchEventsResult };
+interface Gym {
+  name: string;
+  vicinity: string;
+  location: {
+    lng: number;
+    lat: number;
+  };
+}
+
+interface GymResponse {
+  name: string;
+  vicinity: string;
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+}
+interface NearbyGymsProps {
+  gyms: Gym[];
+  loading: boolean;
+  error: string | null;
+}
+
+export type {
+  User,
+  UseFetchUserResult,
+  Event,
+  UseFetchEventsResult,
+  Gym,
+  GymResponse,
+  NearbyGymsProps,
+};
