@@ -8,7 +8,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 w-[100vw]">
       <div className="bg-gray-800 text-white rounded-lg shadow-lg p-8 max-w-sm w-full mx-4 text-center">
         {/* Logo */}
         <div className="flex justify-center mb-6">
@@ -16,7 +16,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl font-semibold mb-4">FitEverywhereA</h1>
+        <h1 className="text-2xl font-semibold mb-4">FitEverywhere</h1>
 
         {/* Description */}
         <p className="text-gray-400 mb-8 px-4 leading-relaxed">
