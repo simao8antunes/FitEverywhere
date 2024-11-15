@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
         console.log("Fetched nearby gyms");
       });
     }
-  }, [events, fetchNearbyGyms]);
+  }, [events]);
 
   return (
     <div className="container mx-auto px-4 py-6">
