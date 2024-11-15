@@ -1,6 +1,6 @@
 import React from "react";
-import GoogleMap from "../components/GoogleMap"; // Ensure this path is correct
-import type { NearbyGymsProps } from "../types.ts";
+import GoogleMap from "../components/GoogleMap";
+import type { NearbyGymsProps } from "../types";
 
 const NearbyGyms: React.FC<NearbyGymsProps> = ({ gyms, loading, error }) => {
   // Render loading state
@@ -20,8 +20,13 @@ const NearbyGyms: React.FC<NearbyGymsProps> = ({ gyms, loading, error }) => {
 
   // Render the list of gyms and the Google Map
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 flex gap-base">
-      <ul className="space-y-4 mb-6">
+    <div className="bg-white shadow-md rounded-lg p-6 flex flex-col">
+      {/* Render GoogleMap component to display the gyms on a map */}
+      <div className="h-64 w-full mb-6">
+        <GoogleMap gyms={gyms} />
+      </div>
+      {/* Render list of gyms */}
+      <ul className="space-y-4">
         {gyms.map((gym, index) => (
           <li
             key={index}
@@ -32,11 +37,6 @@ const NearbyGyms: React.FC<NearbyGymsProps> = ({ gyms, loading, error }) => {
           </li>
         ))}
       </ul>
-
-      {/* Render GoogleMap component to display the gyms on a map */}
-      <div className="h-64">
-        <GoogleMap gyms={gyms} />
-      </div>
     </div>
   );
 };

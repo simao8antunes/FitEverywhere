@@ -1,22 +1,33 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.service.UserService;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -141,18 +152,23 @@ public class AuthController {
     }
 
 
+    private static final String OVERPASS_API_URL = "http://overpass-api.de/api/interpreter";
+
     @GetMapping("/gyms/nearby")
     public ResponseEntity<?> getNearbyGyms(@RequestParam double latitude, @RequestParam double longitude, @RequestParam int radius) {
-        // Construct the URL for Google Places API - Nearby Search
-        String url = String.format(
-            "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=10000&type=gym&key=AIzaSyAjEzYhZoH1GHZ_LrBXo7tjKTYzHOB7Cqs",
-            latitude, longitude
+        // Construct Overpass query for nearby gyms
+        String query = String.format(
+            "[out:json];node[\"amenity\"=\"gym\"](around:%d,%f,%f);out;",
+            radius, latitude, longitude
         );
+
+        // URL for Overpass API
+        String url = OVERPASS_API_URL + "?data=" + query;
 
         RestTemplate restTemplate = new RestTemplate();
         
         try {
-            // Make the API call
+            // Make the API call to Overpass
             ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
             
             // Return the response data (results are the nearby gyms)

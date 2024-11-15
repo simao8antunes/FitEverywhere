@@ -1,7 +1,8 @@
 import { useState } from "react";
-import type { Gym, GymResponse } from "../types";
+import type { Gym } from "../types";
 
-const API_KEY = "AIzaSyAjEzYhZoH1GHZ_LrBXo7tjKTYzHOB7Cqs"; // Consider keeping sensitive keys in .env file
+// OpenStreetMap-related URLs
+const OVERPASS_API_URL = "http://overpass-api.de/api/interpreter";
 
 export const useFetchGyms = () => {
   const [gyms, setGyms] = useState<Gym[]>([]);
@@ -11,45 +12,59 @@ export const useFetchGyms = () => {
   const fetchNearbyGyms = async (location: string) => {
     setLoading(true);
     setError(null);
+  
     try {
-      // Geocoding API request
+      // Geocoding request to Nominatim API
+      const encodedLocation = encodeURIComponent(location);
       const geocodingResponse = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${API_KEY}`,
+        `https://nominatim.openstreetmap.org/search?q=${encodedLocation}&format=json`
       );
+  
+      if (!geocodingResponse.ok) {
+        throw new Error("Failed to fetch geocoding data");
+      }
+  
       const geocodingData = await geocodingResponse.json();
-
-      if (geocodingData.status === "OK") {
-        const { lat, lng } = geocodingData.results[0].geometry.location;
-
-        // Fetch gyms based on latitude and longitude
+  
+      if (geocodingData.length > 0) {
+        const { lat, lon } = geocodingData[0];
+  
+        // Fetch gyms using Overpass API
         const gymsResponse = await fetch(
-          `/api/auth/gyms/nearby?latitude=${lat}&longitude=${lng}&radius=5000`,
+          `${OVERPASS_API_URL}?data=[out:json];node["leisure"="fitness_centre"](around:2000,${lat},${lon});out;`
         );
-
-        if (gymsResponse.ok) {
-          const gymsData = await gymsResponse.json();
+  
+        if (!gymsResponse.ok) {
+          throw new Error("Failed to fetch nearby gyms");
+        }
+  
+        const gymsData = await gymsResponse.json();
+  
+        if (gymsData.elements && gymsData.elements.length > 0) {
           setGyms(
-            gymsData.results?.map((gym: GymResponse) => ({
-              name: gym.name,
-              vicinity: gym.vicinity,
+            gymsData.elements.map((gym: any) => ({
+              name: gym.tags?.name || "Unnamed Gym",
+              vicinity: gym.tags?.address || "Unknown address",
               location: {
-                lat: gym.geometry.location.lat,
-                lng: gym.geometry.location.lng,
+                lat: gym.lat,
+                lng: gym.lon,
               },
-            })) || [],
+            }))
           );
         } else {
-          setError("Failed to fetch nearby gyms");
+          setGyms([]); // Clear gyms if none found
+          setError("No nearby gyms found. Try a different location or increase the search radius.");
         }
       } else {
-        setError("Geocoding failed");
+        setError("Geocoding failed: No results found for the location.");
       }
-    } catch (error) {
-      setError("Error fetching nearby gyms: " + error);
+    } catch (err: any) {
+      setError("Error: " + err.message);
     } finally {
       setLoading(false);
     }
   };
+  
 
   return { gyms, fetchNearbyGyms, loading, error };
 };
