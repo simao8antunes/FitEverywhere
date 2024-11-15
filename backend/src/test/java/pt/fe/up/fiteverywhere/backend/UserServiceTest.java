@@ -136,4 +136,55 @@ class UserServiceTest {
         assertFalse(userService.isUserExists(fakeUser, fakeEmail));
 
     }
+
+    @Test
+    public void testSaveUser() {
+        User user = new User("John Doe", "johndoe@example.com", "mockPassword");
+
+        userService.save(user);
+
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    public void testfindOrRegisterUser() {
+
+        // User exists
+
+        String username = "John Doe";
+        String email = "johndoe@gmail.com";
+        String password = "mockPassword";
+        String wrongEmail = "wrongemail@gmail.com";
+
+        User user = new User(username, email, password);
+        User newUser = new User("Jane Doe", wrongEmail, "otherPassword");
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        assertEquals(userService.findOrRegisterOAuthUser(username, email), user);
+
+        // User doesn't exist
+
+        when(userRepository.findByEmail(wrongEmail)).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.findOrRegisterOAuthUser(username, wrongEmail);
+        
+        assertEquals(newUser, result);
+        verify(userRepository).save(any(User.class));
+
+    }
+
+    @Test
+    void testUpdateUserRole() {
+        // Roles: gym, client
+
+        User user = new User("John Doe", "johndoe@gmail.com", "mockPassword");
+        String role = "client";
+
+        userService.updateUserRole(user, role);
+
+        assertEquals(user.getRole(), role);
+        verify(userRepository).save(user);
+    }
 }
