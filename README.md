@@ -14,12 +14,12 @@ Welcome to FitEverywhere! FitEverywhere is a fitness management platform designe
 FitEverywhere has two fully dockerized environments:
 
 1. **Production Environment**
-    - **URL**: [http://fiteverywhere.me](https://fiteverywhere.me)
+    - **URL**: [http://fiteverywhere.me](http://fiteverywhere.me)
     - **Port**: 80 (reverse-proxied via Nginx)
     - **Description**: The main production environment where stable and thoroughly tested features are available for end-users.
 
 2. **Development Environment**
-    - **URL**: [http://dev.fiteverywhere.me](https://dev.fiteverywhere.me)
+    - **URL**: [http://dev.fiteverywhere.me](http://dev.fiteverywhere.me)
     - **Port**: 80 (reverse-proxied via Nginx)
     - **Description**: A development environment for testing new features and ongoing development updates before they are released to production.
 
