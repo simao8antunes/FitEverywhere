@@ -40,6 +40,7 @@ const EventList: React.FC<EventListProps> = ({
             <p className="text-sm text-gray-600">
               {new Date(event.start.dateTime).toLocaleString()} -{" "}
               {new Date(event.end.dateTime).toLocaleString()}
+              <p>{event.location}</p>
             </p>
           </div>
         ))}

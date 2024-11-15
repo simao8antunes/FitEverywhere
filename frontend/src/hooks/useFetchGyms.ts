@@ -44,7 +44,6 @@ export const useFetchGyms = () => {
           setGyms(
             gymsData.elements.map((gym: any) => ({
               name: gym.tags?.name || "Unnamed Gym",
-              vicinity: gym.tags?.address || "Unknown address",
               location: {
                 lat: gym.lat,
                 lng: gym.lon,

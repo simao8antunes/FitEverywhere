@@ -152,30 +152,34 @@ public class AuthController {
     }
 
 
-    private static final String OVERPASS_API_URL = "http://overpass-api.de/api/interpreter";
 
     @GetMapping("/gyms/nearby")
-    public ResponseEntity<?> getNearbyGyms(@RequestParam double latitude, @RequestParam double longitude, @RequestParam int radius) {
-        // Construct Overpass query for nearby gyms
-        String query = String.format(
-            "[out:json];node[\"amenity\"=\"gym\"](around:%d,%f,%f);out;",
-            radius, latitude, longitude
+    public ResponseEntity<?> getNearbyGyms(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam int radius) {
+    
+        // Construct the Overpass API query URL
+        String overpassApiUrl = String.format(
+                "http://overpass-api.de/api/interpreter?data=[out:json];node[\"leisure\"=\"fitness_centre\"](around:%d,%f,%f);out;",
+                radius, latitude, longitude
         );
-
-        // URL for Overpass API
-        String url = OVERPASS_API_URL + "?data=" + query;
-
+    
         RestTemplate restTemplate = new RestTemplate();
-        
+    
         try {
             // Make the API call to Overpass
-            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
-            
+            ResponseEntity<Map> response = restTemplate.exchange(overpassApiUrl, HttpMethod.GET, null, Map.class);
+    
             // Return the response data (results are the nearby gyms)
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
             // Handle any errors gracefully
-            return ResponseEntity.status(500).body(Map.of("error", "Failed to fetch nearby gyms", "message", e.getMessage()));
+            return ResponseEntity.status(500).body(Map.of(
+                    "error", "Failed to fetch nearby gyms",
+                    "message", e.getMessage()
+            ));
         }
     }
+    
 }
