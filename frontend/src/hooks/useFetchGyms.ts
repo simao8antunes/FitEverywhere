@@ -45,7 +45,7 @@ export const useFetchGyms = () => {
         setError("Geocoding failed");
       }
     } catch (error) {
-      setError("Error fetching nearby gyms");
+      setError("Error fetching nearby gyms: " + error);
     } finally {
       setLoading(false);
     }

@@ -19,9 +19,11 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (events.length > 0 && events[0].location) {
-      fetchNearbyGyms(events[0].location);
+      fetchNearbyGyms(events[0].location).then(() => {
+        console.log("Fetched nearby gyms");
+      });
     }
-  }, [events]);
+  }, [events, fetchNearbyGyms]);
 
   return (
     <div className="container mx-auto px-4 py-6">
