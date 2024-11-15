@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userName }) => {
         <img src={logo} alt="Logo" className="p-base" />
       </div>
       <div className="flex flex-col my-xxl">
-        <a href="#home" className={navItemStyles.navItem}>
+        <a href="" className={navItemStyles.navItem}>
           🏠 Home
         </a>
         <a href="#gyms" className={navItemStyles.navItem}>
@@ -54,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userName }) => {
 
       {/* User Information */}
       <div className={navItemStyles.userInfo}>
-        <p>{userName}</p>
+      <a href="/profile" className={navItemStyles.navItem}>{userName}</a>
         <button onClick={logout} className={navItemStyles.logout}>
           Log Out
         </button>

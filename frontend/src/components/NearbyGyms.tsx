@@ -20,13 +20,13 @@ const NearbyGyms: React.FC<NearbyGymsProps> = ({ gyms, loading, error }) => {
 
   // Render the list of gyms and the Google Map
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 flex flex-col">
+    <div className="bg-white shadow-md rounded-lg p-6">
       {/* Render GoogleMap component to display the gyms on a map */}
-      <div className="h-64 w-full mb-6">
+      <div className="h-64 w-full mb-20">
         <GoogleMap gyms={gyms} />
       </div>
       {/* Render list of gyms */}
-      <ul className="space-y-4">
+      <ul className="gyms-list space-y-4">
         {gyms.map((gym, index) => (
           <li
             key={index}

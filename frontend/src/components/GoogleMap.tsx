@@ -2,9 +2,9 @@ import React from "react";
 
 // Assuming you're using a library like Google Maps or Leaflet for the map
 import {
+  AdvancedMarker,
   APIProvider,
   Map,
-  AdvancedMarker,
   Pin,
 } from "@vis.gl/react-google-maps";
 
@@ -50,7 +50,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ gyms }) => {
       onLoad={() => console.log("Maps API has loaded.")}
     >
       <Map
-        style={{ width: "400px", height: "400px" }}
+        style={{ width: "400px", height: "320px" }}
         defaultCenter={mapCenter}
         mapId="NearbyGymsMap"
         defaultZoom={12}
