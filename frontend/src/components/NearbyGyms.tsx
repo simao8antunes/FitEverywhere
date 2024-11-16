@@ -1,6 +1,6 @@
 import React from "react";
-import GoogleMap from "../components/GoogleMap"; // Ensure this path is correct
-import type { NearbyGymsProps } from "../types.ts";
+import GoogleMap from "../components/GoogleMap";
+import type { NearbyGymsProps } from "../types";
 
 const NearbyGyms: React.FC<NearbyGymsProps> = ({ gyms, loading, error }) => {
   // Render loading state
@@ -20,23 +20,23 @@ const NearbyGyms: React.FC<NearbyGymsProps> = ({ gyms, loading, error }) => {
 
   // Render the list of gyms and the Google Map
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 flex gap-base">
-      <ul className="space-y-4 mb-6">
+    <div className="bg-intense shadow-md rounded-lg p-6 ">
+      {/* Render GoogleMap component to display the gyms on a map */}
+      <div className="mb-10">
+        <GoogleMap gyms={gyms} />
+      </div>
+      {/* Render list of gyms */}
+      <ul className="gyms-list space-y-4">
         {gyms.map((gym, index) => (
           <li
             key={index}
-            className="bg-gray-100 rounded-lg p-4 border border-gray-200 hover:bg-gray-200 transition-colors"
+            className="bg-background rounded-lg p-4 border border-secbackground hover:bg-secbackground transition-colors"
           >
             <h4 className="text-lg font-semibold">{gym.name}</h4>
-            <p className="text-sm text-gray-600">{gym.vicinity}</p>
+            <p className="text-sm">{gym.vicinity}</p>
           </li>
         ))}
       </ul>
-
-      {/* Render GoogleMap component to display the gyms on a map */}
-      <div className="h-64">
-        <GoogleMap gyms={gyms} />
-      </div>
     </div>
   );
 };

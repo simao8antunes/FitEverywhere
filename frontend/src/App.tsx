@@ -6,16 +6,18 @@ import Login from "./pages/Login";
 import Layout from "./components/Layout";
 import SelectRole from "./pages/SelectRole";
 import AuthProvider from "./providers/AuthProvider";
+import Profile from "./pages/Profile.tsx";
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="login" element={<Login />} />
           <Route path="select-role" element={<SelectRole />} />
-          <Route path="/dashboard" element={<Layout />}>
+          <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
         </Routes>
       </AuthProvider>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import type { User, UseFetchUserResult } from "../types";
 
 export function useFetchUser(): UseFetchUserResult {
@@ -7,6 +7,9 @@ export function useFetchUser(): UseFetchUserResult {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  if (location.pathname === "/login" && user) navigate("/");
 
   const fetchUsers = async () => {
     return await fetch("/api/auth/login/success", {
@@ -26,15 +29,13 @@ export function useFetchUser(): UseFetchUserResult {
         sessionStorage.setItem("user", JSON.stringify(data.user));
         if (!data.user.role) {
           navigate("/select-role");
-        } else {
-          navigate("/dashboard", { state: { userName: data.user.username } });
         }
       })
       .catch((err) => {
         setIsAuthenticated(false);
         setUser(null);
         setError("Failed to authenticate");
-        navigate("/");
+        navigate("/login");
         throw new Error(`Error fetching user data: ${err}`);
       });
   }, [navigate]);
@@ -49,7 +50,7 @@ export function useFetchUser(): UseFetchUserResult {
           setIsAuthenticated(false);
           setUser(null);
           sessionStorage.removeItem("user");
-          navigate("/");
+          navigate("/login");
         } else {
           console.error("Failed to logout");
         }

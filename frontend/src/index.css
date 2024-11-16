@@ -2,40 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 :root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
   /*---COLORS---*/
-  --background-color: #282c35;
-  --color-text: #ECF0F1;
-  --color-primary: #C8F4AF;
+  --background-color: #fbf7f2;
+  --secondary-background-color: #f9fafb;
+  --color-text: #242424;
+  --color-primary: #80411b;
   --color-secondary: #6E6E6E;
+  --color-intense: white;
 
-  /*! Typography - Size */
-  --font-size-h1: 32px;
-  --font-size-h2: 28px;
-  --font-size-h3: 26px;
-  --font-size-h4: 22px;
-  --font-size-h5: 20px;
-  --font-size-h6: 18px;
-  --font-size-display: 36px;
-  --font-size-base: 16px;
-  --font-size-s: 14px;
-  --font-size-xs: 12px;
-  --font-size-label: 11px;
+  /* Font Size Variables */
+  --font-size-h1: 2.25rem;
+  --font-size-h2: 1.875rem;
+  --font-size-h3: 1.5rem;
+  --font-size-h4: 1.25rem;
+  --font-size-h5: 1rem;
+  --font-size-h6: 0.875rem;
+  --font-size-display: 4rem;
+  --font-size-base: 1rem;
+  --font-size-s: 0.875rem;
+  --font-size-xs: 0.75rem;
+  --font-size-label: 0.875rem;
 
-  /*! Space - Sizes */
-  --space-none: 0;
-  --space-xs: 4px;
-  --space-s: 8px;
-  --space-base: 16px;
-  --space-m: 24px;
-  --space-l: 32px;
-  --space-xl: 40px;
-  --space-xxl: 48px;
+  /* Spacing Variables */
+  --space-xs: 0.25rem;
+  --space-s: 0.5rem;
+  --space-base: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2rem;
+  --space-xl: 3rem;
+  --space-xxl: 4rem;
 
-  /*! Border Radius */
+  /* Border Radius Variables */
   --border-radius-none: 0;
-  --border-radius-soft: 4px;
-  --border-radius-rounded: 100px;
-  --border-radius-circle: 100%;
+  --border-radius-soft: 0.25rem;
+  --border-radius-rounded: 0.5rem;
+  --border-radius-circle: 50%;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-color: var(--secondary-background-color);
+  color: var(--color-text);
+
 }
 
 #root {
@@ -49,6 +64,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+#logo {
+  filter: invert(1);
 }
 
 .google-login-button {
@@ -81,4 +100,20 @@
 
 .main-content h1 {
   color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #2e2e2e;
+    --secondary-background-color: #3d3d3d;
+    --color-text: rgba(255, 255, 255, 0.87);
+    --color-primary: #6366f1; /* Dark mode primary color */
+    --color-secondary: #374151; /* Dark mode secondary color (for hover) */
+    --color-intense: #272727;
+  }
+
+  #logo {
+    filter: invert(0) !important;
+  }
+
 }
