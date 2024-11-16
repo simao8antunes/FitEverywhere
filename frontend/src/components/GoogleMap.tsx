@@ -50,7 +50,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ gyms }) => {
       onLoad={() => console.log("Maps API has loaded.")}
     >
       <Map
-        style={{ width: "400px", height: "320px" }}
+        className="w-full aspect-video"
         defaultCenter={mapCenter}
         mapId="NearbyGymsMap"
         defaultZoom={12}

@@ -32,7 +32,7 @@ const Dashboard: React.FC = () => {
     <div className="container mx-auto px-4 py-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Events Section */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-intense rounded-lg shadow-lg p-6">
           <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
           <EventList
             events={events}
@@ -43,7 +43,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Nearby Gyms Section */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-intense rounded-lg shadow-lg p-6">
           {selectedEvent ? (
             <>
               <div className="flex justify-between items-center mb-4">
@@ -57,11 +57,7 @@ const Dashboard: React.FC = () => {
                   Close
                 </button>
               </div>
-              <NearbyGyms
-                gyms={gyms}
-                loading={gymsLoading}
-                error={gymsError}
-              />
+              <NearbyGyms gyms={gyms} loading={gymsLoading} error={gymsError} />
             </>
           ) : (
             <p>Select an event to view nearby gyms.</p>

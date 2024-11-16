@@ -10,7 +10,7 @@ const SelectRole: React.FC = () => {
 
   const handleRoleSelection = async () => {
     if (role) {
-      navigate("/dashboard", { state: { userName: userNameFromState, role } });
+      navigate("/", { state: { userName: userNameFromState, role } });
     }
   };
 

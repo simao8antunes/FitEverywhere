@@ -9,7 +9,7 @@ const Layout = () => {
   return (
     <>
       <Sidebar userName={auth.user!.username} />
-      <main className="p-base ml-64">
+      <main className="p-base ml-64 bg-secbackground">
         <Outlet />
       </main>
     </>
