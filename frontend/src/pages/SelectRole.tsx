@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { FaDumbbell, FaUser } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SelectRole: React.FC = () => {
   const [role, setRole] = useState<string>("");
@@ -9,8 +9,22 @@ const SelectRole: React.FC = () => {
   const userNameFromState = location.state?.userName || "Guest";
 
   const handleRoleSelection = async () => {
-    if (role) {
-      navigate("/", { state: { userName: userNameFromState, role } });
+    try {
+      const response = await fetch(`/api/auth/role?role=${role}`, {
+        method: "PUT",
+        credentials: "include",
+      });
+      if (response.ok) {
+        navigate("/", { state: { userName: userNameFromState, role } });
+      } else {
+        const errorData = await response.json();
+        console.error(
+          "Failed to update role:",
+          errorData.message || response.statusText,
+        );
+      }
+    } catch (error) {
+      console.error("Error updating role:", error);
     }
   };
 
