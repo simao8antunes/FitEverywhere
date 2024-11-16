@@ -6,7 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.repository.UserRepository;
 import pt.fe.up.fiteverywhere.backend.service.UserService;
@@ -25,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceTests {
 
     @Mock
     private UserRepository userRepository;
@@ -100,7 +99,7 @@ class UserServiceTest {
 
         when(userRepository.findByUsername(username)).thenReturn(mockUser);
 
-        assertEquals(userService.loginUser(username, "wrongpassword"), null);
+        assertNull(userService.loginUser(username, "wrongpassword"));
     }
 
     @Test
