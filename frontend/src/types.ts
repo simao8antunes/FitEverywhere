@@ -1,6 +1,8 @@
 interface User {
   username: string;
   role: string;
+  email: string;
+  id: string;
 }
 
 interface UseFetchUserResult {
@@ -35,13 +37,11 @@ interface Gym {
 
 interface GymResponse {
   name: string;
-  vicinity: string;
-  geometry: {
-    location: {
-      lat: number;
-      lng: number;
-    };
+  tags: {
+    name: string;
   };
+  lat: number;
+  lon: number;
 }
 interface NearbyGymsProps {
   gyms: Gym[];
