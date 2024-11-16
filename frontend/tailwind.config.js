@@ -1,16 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  darkMode: 'class',
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       colors: {
         background: 'var(--background-color)',
+        secbackground: 'var(--secondary-background-color)',
         text: 'var(--color-text)',
         primary: 'var(--color-primary)',
         secondary: 'var(--color-secondary)',
+        intense: 'var(--color-intense)',
       },
       fontSize: {
         h1: 'var(--font-size-h1)',

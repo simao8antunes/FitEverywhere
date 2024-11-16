@@ -8,16 +8,12 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-gray-800 text-white rounded-lg shadow-lg p-8 max-w-sm w-full mx-4 text-center">
+    <div className="flex items-center justify-center min-h-screen w-[100vw]">
+      <div className="bg-background  rounded-lg shadow-lg p-8 max-w-md w-full mx-4 text-center">
         {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <img src={logo} alt="FitEverywhere Logo" className="w-20 h-20" />
+        <div className="flex justify-center my-6">
+          <img src={logo} alt="FitEverywhere Logo" id="logo" className="h-52" />
         </div>
-
-        {/* Title */}
-        <h1 className="text-2xl font-semibold mb-4">FitEverywhereA</h1>
-
         {/* Description */}
         <p className="text-gray-400 mb-8 px-4 leading-relaxed">
           With FitEverywhere, maintaining a fitness routine becomes a rewarding
