@@ -22,4 +22,10 @@ class BackendApplicationTests {
         // Verifies that the userService bean is loaded correctly
         assertThat(userService).isNotNull();
     }
+
+    @Test
+    void mainMethodTest() {
+        // This will cover the main method of BackendApplication
+        BackendApplication.main(new String[] {});
+    }
 }

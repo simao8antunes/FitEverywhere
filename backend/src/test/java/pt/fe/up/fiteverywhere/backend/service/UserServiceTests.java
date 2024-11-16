@@ -1,4 +1,4 @@
-package pt.fe.up.fiteverywhere.backend;
+package pt.fe.up.fiteverywhere.backend.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.repository.UserRepository;
-import pt.fe.up.fiteverywhere.backend.service.UserService;
 
 import java.util.Optional;
 
