@@ -97,6 +97,8 @@ jobs:
           scp -r -o StrictHostKeyChecking=no * fiteverywhereroot@4.210.226.23:~/FitEverywhere-T2E
 
       - name: SSH into VM and deploy
+        env:
+          SERVER_NAME: http://fiteverywhere.me
         run: |
           ssh -o StrictHostKeyChecking=no fiteverywhereroot@4.210.226.23 << 'EOF'
           

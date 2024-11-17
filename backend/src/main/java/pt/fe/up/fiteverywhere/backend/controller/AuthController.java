@@ -49,7 +49,6 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Role updated successfully"));
     }
 
-
     @GetMapping("/error")
     public ResponseEntity<?> handleError() {
         Map<String, String> response = new HashMap<>();
@@ -57,6 +56,23 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
+    @GetMapping("/login/success")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        String email = principal.getAttribute("email");
+        String name = principal.getAttribute("name");
+        System.out.println("Authenticated user: " + name);  // Add debug log to check the value
+
+        User user = userService.findOrRegisterOAuthUser(name, email);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Login successful");
+        response.put("user", user); // Return user info
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/calendar/events")
     public ResponseEntity<?> getCalendarEvents(@RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient) {
