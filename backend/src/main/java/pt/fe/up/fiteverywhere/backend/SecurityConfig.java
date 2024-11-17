@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login/success", "/auth/role", "/auth/calendar/events").permitAll()
+                        .requestMatchers("/auth/login/success", "/auth/role", "/auth/calendar/events", "/auth/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

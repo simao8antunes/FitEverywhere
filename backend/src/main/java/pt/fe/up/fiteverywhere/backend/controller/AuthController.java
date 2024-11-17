@@ -1,28 +1,19 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.service.UserService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -105,28 +96,22 @@ public class AuthController {
             @RequestParam double latitude,
             @RequestParam double longitude,
             @RequestParam int radius) {
-    
+
         // Construct the Overpass API query URL
         String overpassApiUrl = String.format(
                 "http://overpass-api.de/api/interpreter?data=[out:json];node[\"leisure\"=\"fitness_centre\"](around:%d,%f,%f);out;",
                 radius, latitude, longitude
         );
-    
+
         RestTemplate restTemplate = new RestTemplate();
-    
-        try {
-            // Make the API call to Overpass
-            ResponseEntity<Map> response = restTemplate.exchange(overpassApiUrl, HttpMethod.GET, null, Map.class);
-    
-            // Return the response data (results are the nearby gyms)
-            return ResponseEntity.ok(response.getBody());
-        } catch (Exception e) {
-            // Handle any errors gracefully
-            return ResponseEntity.status(500).body(Map.of(
-                    "error", "Failed to fetch nearby gyms",
-                    "message", e.getMessage()
-            ));
-        }
+
+
+        // Make the API call to Overpass
+        ResponseEntity<Map> response = restTemplate.exchange(overpassApiUrl, HttpMethod.GET, null, Map.class);
+
+        // Return the response data (results are the nearby gyms)
+        return ResponseEntity.ok(response.getBody());
+
     }
-    
+
 }
