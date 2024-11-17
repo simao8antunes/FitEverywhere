@@ -98,12 +98,11 @@ jobs:
           scp -r -o StrictHostKeyChecking=no * fiteverywheredevuser@20.56.8.144:~/FitEverywhere-T2E
 
       - name: SSH into VM and deploy
-        env:
-          SERVER_NAME: http://dev.fiteverywhere.me
         run: |
           ssh -o StrictHostKeyChecking=no fiteverywheredevuser@20.56.8.144 << 'EOF'
           
             cd ~/FitEverywhere-T2E
+            echo "SERVER_NAME=http://dev.fiteverywhere.me" > .env
             sudo docker stop $(docker ps -a -q)      # Stop previous containers if any
             sudo docker rm $(docker ps -a -q)        # Remove previous containers if any
             sudo docker rmi $(sudo docker images -a -q)

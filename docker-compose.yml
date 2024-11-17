@@ -3,7 +3,7 @@ services:
     build: ./backend
     container_name: "fit-everywhere-be"
     environment:
-        - SERVER_NAME=${SERVER_NAME}
+      - SERVER_NAME=${SERVER_NAME}
 
   fit-everywhere-fe:
     build: ./frontend
