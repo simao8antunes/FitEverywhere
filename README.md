@@ -1,8 +1,6 @@
 [![CI/CD for production](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/main.yml) [![CI/CD for development](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/dev.yml/badge.svg?branch=dev)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/dev.yml)
 
-<div style="text-align: center; margin-top: 20px">
-    <img src="frontend/public/logo.svg" alt="logo" style="max-width: 300px;">
-</div>
+<p align="center"><a href="http://fiteverywhere.me" target="_blank"><img src="frontend/public/logo.svg" width="300" alt="Laravel Logo"></a></p>
 
 # Welcome to FitEverywhere!
 **FitEverywhere** is a fitness management platform designed to connect customers, personal trainers, and gym managers through a seamless digital experience. This README provides an overview of the deployed environments, steps to start the application, and a summary of the tech stack used. All project documentation, planning, and progress are available on our [Wiki Page](https://github.com/MESW-LES-2425/FitEverywhere-T2E/wiki).
