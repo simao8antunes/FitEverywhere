@@ -1,17 +1,34 @@
-# FitEverywhere
+[![CI/CD for production](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/main.yml) [![CI/CD for development](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/dev.yml/badge.svg?branch=dev)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/dev.yml)
 
-Welcome to FitEverywhere! FitEverywhere is a fitness management platform designed to connect customers, personal trainers, and gym managers through a seamless digital experience. This README provides an overview of the deployed environments, steps to start the application, and a summary of the tech stack used.
+<div style="text-align: center; margin-top: 20px">
+    <img src="frontend/public/logo.svg" alt="logo" style="max-width: 300px;">
+</div>
+
+# Welcome to FitEverywhere!
+**FitEverywhere** is a fitness management platform designed to connect customers, personal trainers, and gym managers through a seamless digital experience. This README provides an overview of the deployed environments, steps to start the application, and a summary of the tech stack used. All project documentation, planning, and progress are available on our [Wiki Page](https://github.com/MESW-LES-2425/FitEverywhere-T2E/wiki).
+
 
 ## Table of Contents
 - [Deployed Servers](#deployed-servers)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Project Setup](#local-development-setup)
+- [Continuous Integration & Deployment](#continuous-integration--deployment)
+- [Support and Feedback](#support-and-feedback)
+- [License](#license)
 
 ---
 
+## Overview
+
+**FitEverywhere** aims to revolutionize the fitness industry by offering a digital platform that simplifies the interaction between key stakeholders: customers, trainers, and gym managers. The platform includes features such as user authentication, gym management, trainer scheduling, and customer engagement tools, all within a user-friendly interface.
+
+The project leverages modern web development practices, advanced DevOps methodologies, and a scalable architecture to ensure both performance and maintainability. For detailed project planning, architectural diagrams, and progress tracking, please refer to the [Wiki Page](https://github.com/MESW-LES-2425/FitEverywhere-T2E/wiki).
+
 ## Deployed Servers
 
-FitEverywhere has two fully dockerized environments:
+**FitEverywhere** has two fully dockerized environments:
 
 1. **Production Environment**
     - **URL**: [http://fiteverywhere.me](http://fiteverywhere.me)
@@ -63,5 +80,19 @@ To start the app in a development environment, follow these steps:
    ```bash
    docker compose up --build
    ```
+
+## Continuous Integration & Deployment
+
+FitEverywhere utilizes a CI/CD pipeline to ensure high code quality and smooth deployments. Key features include:
+- **Automated Testing**: Unit tests, integration tests, and end-to-end tests are run on every pull request.
+- **Static Analysis**: Linting and code formatting checks are enforced to maintain a consistent code style.
+- **Automated Deployments**: Merged changes trigger automated builds and deployments to both the development and production environments.
+
+## Support and Feedback
+
+Thank you for using FitEverywhere! We value feedback and encourage you to report any issues or request new features through our GitHub Issues page. For any inquiries, feel free to reach out to the project maintainers.
+
 ---
-Thank you for using FitEverywhere! For questions, bug reports, or feature requests, please reach out via our GitHub issues page.
+## License
+
+This project is licensed under the MIT License, ensuring it remains open-source and accessible for modification and distribution.
