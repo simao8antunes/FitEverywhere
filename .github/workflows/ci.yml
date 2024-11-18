@@ -62,7 +62,7 @@ jobs:
         working-directory: ./backend
 
       - name: Run Backend Tests with Coverage
-        run: mvn test jacoco:report
+        run: mvn test
         working-directory: ./backend
 
       - name: Package the application
