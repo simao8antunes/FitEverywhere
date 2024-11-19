@@ -1,6 +1,6 @@
 **Main**:
-[![CD Production](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml/badge.svg?branch=main)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml)
 [![CI Production](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/ci.yml)
+[![CD Production](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml/badge.svg?branch=main)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml)
 **Dev**:
 [![CD Development](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml/badge.svg?branch=dev)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml)
 
