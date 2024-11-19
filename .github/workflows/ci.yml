@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI ${{ github.ref_name == 'dev' && 'Production' || 'Development' }}
 
 on:
   pull_request:
