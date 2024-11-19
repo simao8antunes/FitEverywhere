@@ -32,6 +32,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
           
+            export SERVER_NAME=$SERVER_NAME
             cd ~/FitEverywhere-T2E
             echo "SERVER_NAME=$SERVER_NAME" > .env
             sudo docker stop $(sudo docker ps -a -q)      # Stop previous containers if any
