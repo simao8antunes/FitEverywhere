@@ -1,4 +1,4 @@
-[![CI/CD for production](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/main.yml) [![CI/CD for development](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/dev.yml/badge.svg?branch=dev)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/dev.yml)
+[![CD Production](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml/badge.svg)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml) [![CD Development](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml/badge.svg?branch=dev)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml) [![CI Production](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/ci.yml)
 
 <p align="center"><a href="http://fiteverywhere.me" target="_blank"><img src="frontend/public/logo.svg" width="300" alt="Laravel Logo"></a></p>
 
