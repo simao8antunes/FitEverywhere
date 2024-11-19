@@ -3,13 +3,11 @@ services:
     build: ./backend
     container_name: "fit-everywhere-be"
     environment:
-      - SERVER_NAME=http://localhost
+      - SERVER_NAME=${SERVER_NAME}
 
   fit-everywhere-fe:
     build: ./frontend
     container_name: "fit-everywhere-fe"
-    volumes:
-      - ./frontend:/app  # Bind mount for development
     depends_on:
       - fit-everywhere-be
 
