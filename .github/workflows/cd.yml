@@ -1,4 +1,4 @@
-name: CD ${{ github.ref_name == 'main' && 'Production' || 'Development' }}
+name: CD
 
 on:
   push:
