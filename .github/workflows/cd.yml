@@ -32,10 +32,11 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
           
+            export SERVER_NAME=$SERVER_NAME
             cd ~/FitEverywhere-T2E
             echo "SERVER_NAME=$SERVER_NAME" > .env
-            sudo docker stop $(docker ps -a -q)      # Stop previous containers if any
-            sudo docker rm $(docker ps -a -q)        # Remove previous containers if any
+            sudo docker stop $(sudo docker ps -a -q)      # Stop previous containers if any
+            sudo docker rm $(sudo docker ps -a -q)        # Remove previous containers if any
             sudo docker rmi $(sudo docker images -a -q)
             docker compose -f docker-compose.yml up -d     # Start new containers
           EOF
