@@ -1,9 +1,5 @@
 name: CD
 
-concurrency:
-  group: ${{ github.ref_name == 'refs/heads/main' && 'production' || 'staging' }}
-  cancel-in-progress: true
-
 on:
   push:
     branches:
@@ -13,7 +9,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name == 'refs/heads/main' && 'production' || 'staging' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
