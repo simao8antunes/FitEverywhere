@@ -1,6 +1,10 @@
 package pt.fe.up.fiteverywhere.backend.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +13,6 @@ import lombok.Setter;
 @Entity
 public class User {
 
-    // Getters and Setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Automatically generate IDs
     private Long id;
@@ -25,7 +28,13 @@ public class User {
 
     @Column(nullable = true)  // Role can be null initially
     private String role;
-
+    
+    @Column(nullable = true)
+    private Integer workoutsPerWeek;
+    
+    @Column(nullable = true)
+    private String preferredTime; // morning, afternoon, evening
+    
 
     public User() {
     }
@@ -35,6 +44,4 @@ public class User {
         this.email = email;
         this.password = password;
     }
-
-
 }
