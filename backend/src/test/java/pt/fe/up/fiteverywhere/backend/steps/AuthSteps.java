@@ -4,6 +4,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,9 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 public class AuthSteps {
 
+    WebDriver driver = new ChromeDriver();
+
     @Given("the user navigates to the login page")
     public void userNavigatesToLoginPage() {
-        // code to navigate to the login page
+        driver.get("/api/auth/login");
     }
 
     @When("the user submits valid credentials")
