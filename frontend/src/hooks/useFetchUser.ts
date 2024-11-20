@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import type { User, UseFetchUserResult } from "../types";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import type { UseFetchUserResult, User } from "../types";
 
 export function useFetchUser(): UseFetchUserResult {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -27,8 +27,15 @@ export function useFetchUser(): UseFetchUserResult {
         setUser(data.user);
 
         sessionStorage.setItem("user", JSON.stringify(data.user));
+        console.log(user);
         if (!data.user.role) {
           navigate("/select-role");
+        }
+        if (data.user.role == "client"){
+          navigate("/profile")
+        }
+        if (data.user.role == "gym"){
+          navigate("/gym-profile")
         }
       })
       .catch((err) => {
