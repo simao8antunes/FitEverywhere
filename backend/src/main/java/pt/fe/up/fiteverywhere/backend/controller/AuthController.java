@@ -1,7 +1,10 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -22,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.User;
+import pt.fe.up.fiteverywhere.backend.service.GymService;
 import pt.fe.up.fiteverywhere.backend.service.UserService;
 
 @RestController
@@ -31,6 +36,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GymService gymService;
 
     @GetMapping("/error")
     public ResponseEntity<?> handleError() {
@@ -89,20 +97,50 @@ public class AuthController {
             @RequestParam double longitude,
             @RequestParam int radius) {
 
-        // Construct the Overpass API query URL
+        // Construct Overpass API query
         String overpassApiUrl = String.format(
                 "http://overpass-api.de/api/interpreter?data=[out:json];node[\"leisure\"=\"fitness_centre\"](around:%d,%f,%f);out;",
                 radius, latitude, longitude
         );
 
         RestTemplate restTemplate = new RestTemplate();
-
-
-        // Make the API call to Overpass
         ResponseEntity<Map> response = restTemplate.exchange(overpassApiUrl, HttpMethod.GET, null, Map.class);
 
-        // Return the response data (results are the nearby gyms)
-        return ResponseEntity.ok(response.getBody());
+        if (response.getBody() == null || !response.getBody().containsKey("elements")) {
+            return ResponseEntity.ok(List.of()); // Return empty list if no gyms found
+        }
+
+        List<Map<String, Object>> gymsFromAPI = (List<Map<String, Object>>) response.getBody().get("elements");
+
+        // Process results
+        List<Map<String, Object>> matchedGyms = new ArrayList<>();
+        for (Map<String, Object> gymData : gymsFromAPI) {
+            Map<String, Object> tags = (Map<String, Object>) gymData.get("tags");
+            if (tags != null) { // Ensure tags are not null to avoid NullPointerException
+                String gymName = (String) tags.get("name");
+                Double gymLat = (Double) gymData.get("lat");
+                Double gymLon = (Double) gymData.get("lon");
+
+                // Match with database
+                Optional<Gym> gymInDB = gymService.findGymByNameAndLocation(gymName, gymLat, gymLon);
+                if (gymInDB.isPresent()) {
+                    matchedGyms.add(Map.of(
+                        "name", gymName,
+                        "latitude", gymLat,
+                        "longitude", gymLon,
+                        "dbDetails", gymInDB.get() // Include database details if matched
+                    ));
+                } else {
+                    matchedGyms.add(Map.of(
+                        "name", gymName,
+                        "latitude", gymLat,
+                        "longitude", gymLon,
+                        "dbDetails", "Not in database" // Mark as not found
+                    ));
+                }
+            }
+        }
+        return ResponseEntity.ok(matchedGyms);
     }
 
 
