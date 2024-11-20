@@ -33,6 +33,7 @@ interface Gym {
     lng: number;
     lat: number;
   };
+  distance?: string;
 }
 
 interface GymResponse {
@@ -50,11 +51,8 @@ interface NearbyGymsProps {
 }
 
 export type {
-  User,
-  UseFetchUserResult,
-  Event,
-  UseFetchEventsResult,
-  Gym,
+  Event, Gym,
   GymResponse,
-  NearbyGymsProps,
+  NearbyGymsProps, UseFetchEventsResult, UseFetchUserResult, User
 };
+
