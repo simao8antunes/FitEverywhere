@@ -1,6 +1,6 @@
 interface User {
   username: string;
-  role: string;
+  role: "gym" | "client" | "pt";
   email: string;
   id: string;
 }
@@ -51,8 +51,11 @@ interface NearbyGymsProps {
 }
 
 export type {
-  Event, Gym,
+  Event,
+  Gym,
   GymResponse,
-  NearbyGymsProps, UseFetchEventsResult, UseFetchUserResult, User
+  NearbyGymsProps,
+  UseFetchEventsResult,
+  UseFetchUserResult,
+  User,
 };
-
