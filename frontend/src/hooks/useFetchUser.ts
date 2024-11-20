@@ -31,12 +31,6 @@ export function useFetchUser(): UseFetchUserResult {
         if (!data.user.role) {
           navigate("/select-role");
         }
-        if (data.user.role == "client"){
-          navigate("/profile")
-        }
-        if (data.user.role == "gym"){
-          navigate("/gym-profile")
-        }
       })
       .catch((err) => {
         setIsAuthenticated(false);
