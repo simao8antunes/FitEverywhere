@@ -1,37 +1,20 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.service.GymService;
 import pt.fe.up.fiteverywhere.backend.service.UserService;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -128,17 +111,17 @@ public class AuthController {
                 Optional<Gym> gymInDB = gymService.findGymByNameAndLocation(gymName, gymLat, gymLon);
                 if (gymInDB.isPresent()) {
                     matchedGyms.add(Map.of(
-                        "name", gymName,
-                        "latitude", gymLat,
-                        "longitude", gymLon,
-                        "dbDetails", gymInDB.get() // Include database details if matched
+                            "name", gymName,
+                            "latitude", gymLat,
+                            "longitude", gymLon,
+                            "dbDetails", gymInDB.get() // Include database details if matched
                     ));
                 } else {
                     matchedGyms.add(Map.of(
-                        "name", gymName,
-                        "latitude", gymLat,
-                        "longitude", gymLon,
-                        "dbDetails", "Not in database" // Mark as not found
+                            "name", gymName,
+                            "latitude", gymLat,
+                            "longitude", gymLon,
+                            "dbDetails", "Not in database" // Mark as not found
                     ));
                 }
             }
@@ -182,10 +165,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
-        Integer workoutsPerWeek = (Integer) number;
-        String preferredTime = (String) time;
-
-        userService.updatePreferences(user, workoutsPerWeek, preferredTime);
+        userService.updatePreferences(user, number, time);
 
         return ResponseEntity.ok(Map.of("message", "Preferences saved successfully"));
     }
@@ -207,14 +187,6 @@ public class AuthController {
                 "preferredTime", user.getPreferredTime()
         );
         return ResponseEntity.ok(preferences);
-    }
-
-    @GetMapping("/logout")
-    public ResponseEntity<Map<String, String>> logoutUser(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request, response, null);
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("message", "Logout successful");
-        return ResponseEntity.ok(responseBody);
     }
 
 }
