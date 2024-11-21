@@ -18,36 +18,36 @@ export function useFetchUser(): UseFetchUserResult {
   };
 
   useEffect(() => {
-    fetchUsers()
-      .then((response) => response.json())
-      .then((data: { user: User }) => {
-        console.log("Fetched user data:", data);
+    if (location.pathname !== "/login")
+      fetchUsers()
+        .then((response) => response.json())
+        .then((data: { user: User }) => {
+          console.log("Fetched user data:", data);
+          setIsAuthenticated(true);
+          setUser(data.user);
 
-        setIsAuthenticated(true);
-        setUser(data.user);
-
-        sessionStorage.setItem("user", JSON.stringify(data.user));
-        console.log(user);
-        if (!data.user.role) {
-          navigate("/select-role");
-        }
-      })
-      .catch((err) => {
-        setIsAuthenticated(false);
-        setUser(null);
-        setError("Failed to authenticate");
-        navigate("/login");
-        throw new Error(`Error fetching user data: ${err}`);
-      });
-  }, [navigate]);
+          sessionStorage.setItem("user", JSON.stringify(data.user));
+          if (!data.user.role) {
+            navigate("/select-role");
+          }
+        })
+        .catch((err) => {
+          setIsAuthenticated(false);
+          setUser(null);
+          setError("Failed to authenticate");
+          navigate("/login");
+          throw new Error(`Error fetching user data: ${err}`);
+        });
+  }, [location.pathname, navigate]);
 
   const logout = async () => {
-    return await fetch("/api/auth/logout", {
+    return await fetch("/api/logout", {
       method: "GET",
       credentials: "include",
     })
       .then((response) => {
         if (response.status === 200) {
+          console.log("Logged out successfully");
           setIsAuthenticated(false);
           setUser(null);
           sessionStorage.removeItem("user");

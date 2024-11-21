@@ -20,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Automatically generate IDs
     private Long id;
 
-    @Column(nullable = false, unique = false)  // Ensure username is unique and not null
+    @Column(nullable = false)  // En§sure username is unique and not null
     private String username;
 
     @Column(nullable = false, unique = true)  // Ensure email is unique and not null
@@ -29,7 +29,7 @@ public class User {
     @Column(nullable = false)  // Password should not be null
     private String password;
 
-    @Column(nullable = true)  // Role can be null initially
+    @Column()  // Role can be null initially
     private String role;
     
     @Column(nullable = true)
