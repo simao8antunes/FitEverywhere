@@ -13,7 +13,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+    environment:
+      name: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+      url: ${{ vars.SERVER_NAME }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
