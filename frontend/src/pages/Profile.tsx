@@ -38,12 +38,15 @@ const Profile: React.FC = () => {
         {
           method: "POST",
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Failed to save preferences:", errorData.message || response.statusText);
+        console.error(
+          "Failed to save preferences:",
+          errorData.message || response.statusText,
+        );
         alert("Failed to save preferences");
         return;
       }

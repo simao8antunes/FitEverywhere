@@ -5,8 +5,6 @@ import { useAuth } from "../hooks/useAuth.ts";
 const GymProfile: React.FC = () => {
   const { user } = useAuth();
   const { username, email, role } = user || {};
-
-  const [_gymDetails, setGymDetails] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [gymName, setGymName] = useState<string>("");
   const [location, setLocation] = useState<string>("");
@@ -26,7 +24,6 @@ const GymProfile: React.FC = () => {
           throw new Error("Failed to fetch gym details");
         }
         const data = await response.json();
-        setGymDetails(data);
         setGymName(data.gymName);
         setLocation(data.location);
         setFacilities(data.facilities);
@@ -61,7 +58,10 @@ const GymProfile: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Failed to save gym details:", errorData.message || response.statusText);
+        console.error(
+          "Failed to save gym details:",
+          errorData.message || response.statusText,
+        );
         alert("Failed to save gym details");
         return;
       }
@@ -99,22 +99,28 @@ const GymProfile: React.FC = () => {
         {!isEditing ? (
           <div>
             <div>
-              <span className="font-bold">Gym Name:</span> {gymName || "Not set"}
+              <span className="font-bold">Gym Name:</span>{" "}
+              {gymName || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Location:</span> {location || "Not set"}
+              <span className="font-bold">Location:</span>{" "}
+              {location || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Facilities:</span> {facilities || "Not set"}
+              <span className="font-bold">Facilities:</span>{" "}
+              {facilities || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Daily Fee:</span> {dailyFee || "Not set"}
+              <span className="font-bold">Daily Fee:</span>{" "}
+              {dailyFee || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Latitude:</span> {latitude || "Not set"}
+              <span className="font-bold">Latitude:</span>{" "}
+              {latitude || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Longitude:</span> {longitude || "Not set"}
+              <span className="font-bold">Longitude:</span>{" "}
+              {longitude || "Not set"}
             </div>
             <button
               className="bg-primary text-white py-2 px-4 rounded mt-4"
