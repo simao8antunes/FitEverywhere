@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../public/logo.svg";
+import logo from "/logo.svg";
 import { SiGoogle } from "react-icons/si";
 
 const Login: React.FC = () => {
