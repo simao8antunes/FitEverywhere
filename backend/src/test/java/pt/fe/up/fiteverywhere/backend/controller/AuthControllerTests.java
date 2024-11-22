@@ -1,16 +1,14 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -100,32 +98,59 @@ public class AuthControllerTests {
                 .andExpect(status().isUnauthorized());*/
     }
 
-    // Test for /auth/gyms/nearby - valid input
     @Test
-    public void testGetNearbyGyms_ValidInput_ShouldReturnGyms() throws Exception {
-        mockMvc.perform(get("/auth/gyms/nearby")
-                        .param("latitude", "41.1579")
-                        .param("longitude", "-8.6291")
-                        .param("radius", "1000")
+    public void testSaveWorkoutPreferences_AuthenticatedUser_ShouldSavePreferences() throws Exception {
+        // Assume the user with email "testuser@gmail.com" exists in the database
+        // and has "workoutsPerWeek" and "preferredTime" set.
+
+        mockMvc.perform(post("/auth/workout-preferences")
+                        .param("number", "3")
+                        .param("time", "Morning")
                         .with(oauth2Login().attributes(attrs -> {
                             attrs.put("email", "testuser@gmail.com");
                             attrs.put("name", "Test User");
                         })))
-                .andExpect(status().isOk());
-        // Additional assertions can be added based on expected gym data structure
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Preferences saved successfully"));
     }
 
-    // Test for /auth/gyms/nearby - invalid latitude/longitude
+    // Test for /workout-preferences - user not found in database
     @Test
-    public void testGetNearbyGyms_InvalidInput_ShouldReturnError() throws Exception {
-        mockMvc.perform(get("/auth/gyms/nearby")
-                        .param("latitude", "invalid")
-                        .param("longitude", "-8.6291")
-                        .param("radius", "0")
+    public void testSaveWorkoutPreferences_UserNotFound_ShouldReturn404() throws Exception {
+        mockMvc.perform(post("/auth/workout-preferences")
+                        .param("number", "3")
+                        .param("time", "Morning")
+                        .with(oauth2Login().attributes(attrs -> {
+                            attrs.put("email", "nonexistentuser@example.com");
+                            attrs.put("name", "Nonexistent User");
+                        })))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("User not found"));
+    }
+
+    // Test for /workout-preferences - authenticated user with valid data
+    @Test
+    public void testGetWorkoutPreferences_AuthenticatedUser_ShouldReturnPreferences() throws Exception {
+        mockMvc.perform(get("/auth/workout-preferences")
                         .with(oauth2Login().attributes(attrs -> {
                             attrs.put("email", "testuser@gmail.com");
                             attrs.put("name", "Test User");
                         })))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workoutsPerWeek").exists())
+                .andExpect(jsonPath("$.preferredTime").exists());
     }
+
+    // Test for /workout-preferences - authenticated user not found in database
+    @Test
+    public void testGetWorkoutPreferences_UserNotFound_ShouldReturn404() throws Exception {
+        mockMvc.perform(get("/auth/workout-preferences")
+                        .with(oauth2Login().attributes(attrs -> {
+                            attrs.put("email", "nonexistentuser@example.com");
+                            attrs.put("name", "Nonexistent User");
+                        })))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").value("User not found"));
+    }
+
 }
