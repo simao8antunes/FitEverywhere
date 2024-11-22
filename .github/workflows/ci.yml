@@ -53,22 +53,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Clean and Compile with Maven
-        run: mvn clean compile
+      - name: Clean with Maven
+        run: mvn clean
         working-directory: ./backend
 
-      - name: Check Code Style and Validity
-        run: mvn validate
-        working-directory: ./backend
-
-      - name: Run Backend Tests with Coverage
-        run: mvn test
+      - name: Check Code Style / Unit and Integration Tests
+        run: mvn verify
         working-directory: ./backend
 
       - name: Package the application
-        run: mvn package
-        working-directory: ./backend
-
-      - name: Verify application quality criteria
-        run: mvn verify
+        run: mvn package -DskipTests
         working-directory: ./backend
