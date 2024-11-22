@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../public/logo.svg";
+import logo from "/logo.svg";
 import { useAuth } from "../hooks/useAuth.ts";
 import { FiHome, FiGrid, FiUser } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
