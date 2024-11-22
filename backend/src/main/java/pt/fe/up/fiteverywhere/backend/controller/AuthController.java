@@ -22,24 +22,6 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @PutMapping("/role")
-    public ResponseEntity<Map<String, String>> updateUserRole(
-            @RequestParam String role,
-            @AuthenticationPrincipal OAuth2User principal) {
-        if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authenticated"));
-        }
-
-        String email = principal.getAttribute("email");
-        System.out.println("Updating role for user: " + email); // Debug log
-        User user = userService.findUserByEmail(email);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
-        }
-        userService.updateUserRole(user, role);
-        return ResponseEntity.ok(Map.of("message", "Role updated successfully"));
-    }
-
     @GetMapping("/error")
     public ResponseEntity<?> handleError() {
         Map<String, String> response = new HashMap<>();
@@ -91,27 +73,57 @@ public class AuthController {
     }
 
 
-    @GetMapping("/gyms/nearby")
-    public ResponseEntity<?> getNearbyGyms(
-            @RequestParam double latitude,
-            @RequestParam double longitude,
-            @RequestParam int radius) {
+    @PutMapping("/role")
+    public ResponseEntity<Map<String, String>> updateUserRole(
+            @RequestParam String role,
+            @AuthenticationPrincipal OAuth2User principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authenticated"));
+        }
 
-        // Construct the Overpass API query URL
-        String overpassApiUrl = String.format(
-                "http://overpass-api.de/api/interpreter?data=[out:json];node[\"leisure\"=\"fitness_centre\"](around:%d,%f,%f);out;",
-                radius, latitude, longitude
+        String email = principal.getAttribute("email");
+        System.out.println("Updating role for user: " + email); // Debug log
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+        userService.updateUserRole(user, role);
+        return ResponseEntity.ok(Map.of("message", "Role updated successfully"));
+    }
+
+
+    @PostMapping("/workout-preferences")
+    public ResponseEntity<?> saveWorkoutPreferences(
+            @RequestParam int number,
+            @RequestParam String time,
+            @AuthenticationPrincipal OAuth2User principal) {
+
+        String email = principal.getAttribute("email");
+        System.out.println("Updating preferences for user: " + email); // Debug log
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        userService.updatePreferences(user, number, time);
+
+        return ResponseEntity.ok(Map.of("message", "Preferences saved successfully"));
+    }
+
+    @GetMapping("/workout-preferences")
+    public ResponseEntity<?> getWorkoutPreferences(@AuthenticationPrincipal OAuth2User principal) {
+
+        String email = principal.getAttribute("email");
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        Map<String, Object> preferences = Map.of(
+                "workoutsPerWeek", user.getWorkoutsPerWeek(),
+                "preferredTime", user.getPreferredTime()
         );
-
-        RestTemplate restTemplate = new RestTemplate();
-
-
-        // Make the API call to Overpass
-        ResponseEntity<Map> response = restTemplate.exchange(overpassApiUrl, HttpMethod.GET, null, Map.class);
-
-        // Return the response data (results are the nearby gyms)
-        return ResponseEntity.ok(response.getBody());
-
+        return ResponseEntity.ok(preferences);
     }
 
 }

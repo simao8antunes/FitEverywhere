@@ -34,6 +34,7 @@ const NearbyGyms: React.FC<NearbyGymsProps> = ({ gyms, loading, error }) => {
           >
             <h4 className="text-lg font-semibold">{gym.name}</h4>
             <p className="text-sm">{gym.vicinity}</p>
+            <p className="text-sm text-gray-500">Distance: {gym.distance} km</p>
           </li>
         ))}
       </ul>

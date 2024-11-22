@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.repository.UserRepository;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -57,4 +59,33 @@ public class UserService {
         user.setRole(role);
         userRepository.save(user);
     }
+
+    public void updatePreferences(User user, int number, String time) {
+        user.setPreferredTime(time);
+        user.setWorkoutsPerWeek(number);
+        userRepository.save(user);
+    }
+
+    public List<String> generateWorkoutSchedule(User user, List<Map<String, Object>> calendarEvents) {
+//        int workoutsPerWeek = user.getWorkoutsPerWeek();
+//        String preferredTime = user.getPreferredTime();
+//        List<String> schedule = new ArrayList<>();
+//
+//        // Example: Distribute workouts while avoiding calendar events
+//        for (int i = 0; i < 7; i++) {
+//            if (schedule.size() >= workoutsPerWeek) break;
+//
+//            String day = LocalDate.now().plusDays(i).getDayOfWeek().name();
+//            boolean hasConflict = calendarEvents.stream()
+//                    .anyMatch(event -> event.get("day").equals(day) && event.get("time").equals(preferredTime));
+//
+//            if (!hasConflict) {
+//                schedule.add(day + " " + preferredTime);
+//            }
+//        }
+//
+//        return schedule;
+        return List.of();
+    }
+
 }
