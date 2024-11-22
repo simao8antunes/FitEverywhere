@@ -59,7 +59,7 @@ export const useFetchGyms = () => {
           }
           return await response.json().then((gymsData) => {
             if (gymsData.elements && gymsData.elements.length > 0) {
-              console.log(gymsData);
+              console.log(gymsData.elements);
               // Sort gyms by distance to the event location
               const sortedGyms = gymsData.elements
                 .map((gym: GymResponse) => {
@@ -69,6 +69,8 @@ export const useFetchGyms = () => {
                     gym.lat,
                     gym.lon,
                   );
+
+                  
                   return {
                     name: gym.tags?.name || "Unnamed Gym",
                     location: {

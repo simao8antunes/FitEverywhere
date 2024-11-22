@@ -26,9 +26,6 @@ public class User {
     @Column(nullable = false, unique = true)  // Ensure email is unique and not null
     private String email;
 
-    @Column(nullable = false)  // Password should not be null
-    private String password;
-
     @Column()  // Role can be null initially
     private String role;
     
@@ -42,9 +39,8 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password) {
+    public User(String username, String email) {
         this.username = username;
         this.email = email;
-        this.password = password;
     }
 }

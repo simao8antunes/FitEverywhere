@@ -1,13 +1,14 @@
 package pt.fe.up.fiteverywhere.backend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import pt.fe.up.fiteverywhere.backend.entity.User;
-import pt.fe.up.fiteverywhere.backend.repository.UserRepository;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import pt.fe.up.fiteverywhere.backend.entity.User;
+import pt.fe.up.fiteverywhere.backend.repository.UserRepository;
 
 
 @Service
@@ -21,14 +22,14 @@ public class UserService {
         return user.orElse(null);  // Return user if found, otherwise null
     }
 
-    public void registerUser(String username, String email, String password) {
-        User user = new User(username, email, password);
+    public void registerUser(String username, String email) {
+        User user = new User(username, email);
         userRepository.save(user);
     }
 
-    public User loginUser(String username, String password) {
+    public User loginUser(String username) {
         User user = userRepository.findByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null) {
             return user;
         }
         return null;
@@ -64,6 +65,10 @@ public class UserService {
         user.setPreferredTime(time);
         user.setWorkoutsPerWeek(number);
         userRepository.save(user);
+    }
+    
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     public List<String> generateWorkoutSchedule(User user, List<Map<String, Object>> calendarEvents) {
