@@ -22,10 +22,10 @@ public class Gym extends User {
     @Column(nullable = false)
     private Double dailyFee;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Double latitude; // Latitude of the gym
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Double longitude; // Longitude of the gym
 
     public Gym() {
@@ -33,8 +33,8 @@ public class Gym extends User {
         this.setRole("gym"); // Default role for a Gym user
     }
 
-    public Gym(String username, String email, String password, String gymName, String location, Double latitude, Double longitude) {
-        super(username, email, password);
+    public Gym(String username, String email, String gymName, String location, Double latitude, Double longitude) {
+        super(username, email);
         this.gymName = gymName;
         this.location = location;
         this.latitude = latitude;

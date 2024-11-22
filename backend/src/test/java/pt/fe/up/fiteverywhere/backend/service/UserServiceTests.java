@@ -1,25 +1,20 @@
 package pt.fe.up.fiteverywhere.backend.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.repository.UserRepository;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.when;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.ArgumentMatchers.any;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +28,7 @@ class UserServiceTests {
 
     @Test
     void testFindUserByEmail() {
-        User mockUser = new User("John Doe", "johndoe@gmail.com", "mockPassword");
+        User mockUser = new User("John Doe", "johndoe@gmail.com");
         when(userRepository.findByEmail("johndoe@gmail.com")).thenReturn(Optional.of(mockUser));
 
         User result = userService.findUserByEmail("johndoe@gmail.com");
@@ -50,9 +45,8 @@ class UserServiceTests {
 
         String username = "testName";
         String email = "johndoe@gmail.com";
-        String password = "mockPassword";
 
-        userService.registerUser(username, email, password);
+        userService.registerUser(username, email);
 
         verify(userRepository).save(any(User.class));
     }
@@ -62,9 +56,8 @@ class UserServiceTests {
 
         String username = "testName";
         String email = "johndoe@gmail.com";
-        String password = "mockPassword";
 
-        userService.registerUser(username, email, password);
+        userService.registerUser(username, email);
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(userCaptor.capture());
@@ -72,55 +65,38 @@ class UserServiceTests {
         User savedUser = userCaptor.getValue();
         assertEquals(username, savedUser.getUsername());
         assertEquals(email, savedUser.getEmail());
-        assertEquals(password, savedUser.getPassword());
     }
 
     @Test
     void testLoginUserCorrectCreds() {
         String username = "testname";
         String email = "johndoe@gmail.com";
-        String password = "mockPassword";
 
-        User mockUser = new User(username, email, password);
-
-        when(userRepository.findByUsername(username)).thenReturn(mockUser);
-
-        assertEquals(userService.loginUser(username, password), mockUser);
-    }
-
-    @Test
-    void testLoginUserIncorrectPassword() {
-        String username = "testname";
-        String email = "johndoe@gmail.com";
-        String password = "mockPassword";
-
-        User mockUser = new User(username, email, password);
+        User mockUser = new User(username, email);
 
         when(userRepository.findByUsername(username)).thenReturn(mockUser);
 
-        assertNull(userService.loginUser(username, "wrongpassword"));
+        assertEquals(userService.loginUser(username), mockUser);
     }
 
     @Test
     void testLoginUserIncorrectUsername() {
         String wrongUser = "wrongUsername";
-        String password = "mockPassword";
 
         when(userRepository.findByUsername(wrongUser)).thenReturn(null);
 
-        assertNull(userService.loginUser(wrongUser, password));
+        assertNull(userService.loginUser(wrongUser));
     }
 
     @Test
     void testUserExists() {
         String username = "John Doe";
         String email = "johndoe@gmail.com";
-        String password = "johndoePassword";
 
         String fakeUser = "Test";
         String fakeEmail = "testemail@gmail.com";
 
-        User correctUser = new User(username, email, password);
+        User correctUser = new User(username, email);
 
         when(userRepository.findByUsername(username)).thenReturn(correctUser);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(correctUser));
@@ -137,7 +113,7 @@ class UserServiceTests {
 
     @Test
     public void testSaveUser() {
-        User user = new User("John Doe", "johndoe@example.com", "mockPassword");
+        User user = new User("John Doe", "johndoe@example.com");
 
         userService.save(user);
 
@@ -151,11 +127,10 @@ class UserServiceTests {
 
         String username = "John Doe";
         String email = "johndoe@gmail.com";
-        String password = "mockPassword";
         String wrongEmail = "wrongemail@gmail.com";
 
-        User user = new User(username, email, password);
-        User newUser = new User("Jane Doe", wrongEmail, "otherPassword");
+        User user = new User(username, email);
+        User newUser = new User("Jane Doe", wrongEmail);
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
@@ -177,7 +152,7 @@ class UserServiceTests {
     void testUpdateUserRole() {
         // Roles: gym, client
 
-        User user = new User("John Doe", "johndoe@gmail.com", "mockPassword");
+        User user = new User("John Doe", "johndoe@gmail.com");
         String role = "client";
 
         userService.updateUserRole(user, role);

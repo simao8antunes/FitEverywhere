@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiUser } from "react-icons/fi";
-import { useAuth } from "../hooks/useAuth.ts";
+import { useAuth } from "../hooks/useAuth";
+import { useFetchGyms } from "../hooks/useFetchGyms"; // Assuming this hook fetches nearby gyms
 
 const GymProfile: React.FC = () => {
   const { user } = useAuth();
@@ -13,56 +14,75 @@ const GymProfile: React.FC = () => {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
 
+  const { gyms, fetchNearbyGyms } = useFetchGyms(); // Call the hook at the top level
+
   useEffect(() => {
-    const fetchGymDetails = async () => {
+    const fetchPreferences = async () => {
       try {
         const response = await fetch(`/api/gym/details`, {
           method: "GET",
           credentials: "include",
         });
         if (!response.ok) {
-          throw new Error("Failed to fetch gym details");
+          throw new Error("Failed to fetch preferences");
         }
-        const data = await response.json();
-        setGymName(data.gymName);
-        setLocation(data.location);
-        setFacilities(data.facilities);
-        setDailyFee(data.dailyFee);
-        setLatitude(data.latitude);
-        setLongitude(data.longitude);
+        const gymDetails = await response.json();
+        setGymName(gymDetails.gymName);
+        setLocation(gymDetails.location);
+        setFacilities(gymDetails.facilities);
+        setDailyFee(gymDetails.dailyFee);
+        setLatitude(gymDetails.latitude);
+        setLongitude(gymDetails.longitude);
       } catch (error) {
-        console.error("Error fetching gym details:", error);
+        console.error("Error fetching preferences:", error);
       }
     };
 
-    fetchGymDetails();
+    fetchPreferences();
   }, []);
 
   const handleSaveGymDetails = async () => {
+    if (!gymName || !location) {
+      alert("Please provide a gym name and location.");
+      return;
+    }
     try {
+      // Fetch gyms near the provided location
+      await fetchNearbyGyms(location);
+
+      if (gyms.length === 0) {
+        alert("No gyms found near the provided location.");
+        return;
+      }
+
+      // Get the closest gym (assuming sorted gyms)
+      const closestGym = gyms[0];
+      setGymName(closestGym.name);
+      setLatitude(closestGym.location.lat);
+      setLongitude(closestGym.location.lng);
+
+      // Send updated gym details to the backend
       const response = await fetch("/api/gym/details", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          gymName,
+          gymName: closestGym.name,
           location,
           facilities,
           dailyFee,
-          latitude,
-          longitude,
+          latitude: closestGym.location.lat,
+          longitude: closestGym.location.lng,
+          email,
+          username,
         }),
         credentials: "include",
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error(
-          "Failed to save gym details:",
-          errorData.message || response.statusText,
-        );
-        alert("Failed to save gym details");
+        alert(errorData.message || "Failed to save gym details");
         return;
       }
 
@@ -99,28 +119,23 @@ const GymProfile: React.FC = () => {
         {!isEditing ? (
           <div>
             <div>
-              <span className="font-bold">Gym Name:</span>{" "}
-              {gymName || "Not set"}
+              <span className="font-bold">Gym Name:</span> {gymName || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Location:</span>{" "}
-              {location || "Not set"}
+              <span className="font-bold">Location:</span> {location || "Not set"}
             </div>
             <div>
               <span className="font-bold">Facilities:</span>{" "}
               {facilities || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Daily Fee:</span>{" "}
-              {dailyFee || "Not set"}
+              <span className="font-bold">Daily Fee:</span> {dailyFee || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Latitude:</span>{" "}
-              {latitude || "Not set"}
+              <span className="font-bold">Latitude:</span> {latitude || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Longitude:</span>{" "}
-              {longitude || "Not set"}
+              <span className="font-bold">Longitude:</span> {longitude || "Not set"}
             </div>
             <button
               className="bg-primary text-white py-2 px-4 rounded mt-4"
