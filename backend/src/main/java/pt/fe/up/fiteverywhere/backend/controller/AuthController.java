@@ -9,12 +9,11 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.User;
-import pt.fe.up.fiteverywhere.backend.service.GymService;
 import pt.fe.up.fiteverywhere.backend.service.UserService;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,9 +21,6 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private GymService gymService;
 
     @GetMapping("/error")
     public ResponseEntity<?> handleError() {
@@ -77,59 +73,6 @@ public class AuthController {
     }
 
 
-    @GetMapping("/gyms/nearby")
-    public ResponseEntity<?> getNearbyGyms(
-            @RequestParam double latitude,
-            @RequestParam double longitude,
-            @RequestParam int radius) {
-
-        // Construct Overpass API query
-        String overpassApiUrl = String.format(
-                "http://overpass-api.de/api/interpreter?data=[out:json];node[\"leisure\"=\"fitness_centre\"](around:%d,%f,%f);out;",
-                radius, latitude, longitude
-        );
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Map> response = restTemplate.exchange(overpassApiUrl, HttpMethod.GET, null, Map.class);
-
-        if (response.getBody() == null || !response.getBody().containsKey("elements")) {
-            return ResponseEntity.ok(List.of()); // Return empty list if no gyms found
-        }
-
-        List<Map<String, Object>> gymsFromAPI = (List<Map<String, Object>>) response.getBody().get("elements");
-
-        // Process results
-        List<Map<String, Object>> matchedGyms = new ArrayList<>();
-        for (Map<String, Object> gymData : gymsFromAPI) {
-            Map<String, Object> tags = (Map<String, Object>) gymData.get("tags");
-            if (tags != null) { // Ensure tags are not null to avoid NullPointerException
-                String gymName = (String) tags.get("name");
-                Double gymLat = (Double) gymData.get("lat");
-                Double gymLon = (Double) gymData.get("lon");
-
-                // Match with database
-                Optional<Gym> gymInDB = gymService.findGymByNameAndLocation(gymName, gymLat, gymLon);
-                if (gymInDB.isPresent()) {
-                    matchedGyms.add(Map.of(
-                            "name", gymName,
-                            "latitude", gymLat,
-                            "longitude", gymLon,
-                            "dbDetails", gymInDB.get() // Include database details if matched
-                    ));
-                } else {
-                    matchedGyms.add(Map.of(
-                            "name", gymName,
-                            "latitude", gymLat,
-                            "longitude", gymLon,
-                            "dbDetails", "Not in database" // Mark as not found
-                    ));
-                }
-            }
-        }
-        return ResponseEntity.ok(matchedGyms);
-    }
-
-
     @PutMapping("/role")
     public ResponseEntity<Map<String, String>> updateUserRole(
             @RequestParam String role,
@@ -154,9 +97,6 @@ public class AuthController {
             @RequestParam int number,
             @RequestParam String time,
             @AuthenticationPrincipal OAuth2User principal) {
-        if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
-        }
 
         String email = principal.getAttribute("email");
         System.out.println("Updating preferences for user: " + email); // Debug log
@@ -172,9 +112,6 @@ public class AuthController {
 
     @GetMapping("/workout-preferences")
     public ResponseEntity<?> getWorkoutPreferences(@AuthenticationPrincipal OAuth2User principal) {
-        if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
-        }
 
         String email = principal.getAttribute("email");
         User user = userService.findUserByEmail(email);
