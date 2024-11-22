@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public boolean isUserExists(String username, String email) {
-        return userRepository.findByUsername(username) != null || userRepository.findByEmail(email).isPresent();
+        return userRepository.findByUsername(username) != null || userRepository.findByEmail(email) == null;
     }
 
 
