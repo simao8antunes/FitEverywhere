@@ -119,23 +119,28 @@ const GymProfile: React.FC = () => {
         {!isEditing ? (
           <div>
             <div>
-              <span className="font-bold">Gym Name:</span> {gymName || "Not set"}
+              <span className="font-bold">Gym Name:</span>{" "}
+              {gymName || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Location:</span> {location || "Not set"}
+              <span className="font-bold">Location:</span>{" "}
+              {location || "Not set"}
             </div>
             <div>
               <span className="font-bold">Facilities:</span>{" "}
               {facilities || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Daily Fee:</span> {dailyFee || "Not set"}
+              <span className="font-bold">Daily Fee:</span>{" "}
+              {dailyFee || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Latitude:</span> {latitude || "Not set"}
+              <span className="font-bold">Latitude:</span>{" "}
+              {latitude || "Not set"}
             </div>
             <div>
-              <span className="font-bold">Longitude:</span> {longitude || "Not set"}
+              <span className="font-bold">Longitude:</span>{" "}
+              {longitude || "Not set"}
             </div>
             <button
               className="bg-primary text-white py-2 px-4 rounded mt-4"
