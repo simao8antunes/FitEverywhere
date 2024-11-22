@@ -1,5 +1,6 @@
 package pt.fe.up.fiteverywhere.backend.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,21 @@ public class GymService {
         return gymRepository.findById(id);
     }
 
+    public Gym findGymByEmail(String email) {
+        Optional<Gym> gym = gymRepository.findGymByEmail(email);
+        return gym.orElse(null);  // Return user if found, otherwise null
+    }
+
     public Gym saveOrUpdateGym(Gym gym) {
         return gymRepository.save(gym);
     }
 
     public Optional<Gym> findGymByNameAndLocation(String name, double latitude, double longitude) {
         return gymRepository.findGymByNameAndLocation(name, latitude, longitude);
+    }
+    
+    public List<Gym> getAllGyms() {
+        return gymRepository.findAll();
     }
     
 }
