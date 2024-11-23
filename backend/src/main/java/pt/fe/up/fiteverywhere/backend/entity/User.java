@@ -25,6 +25,9 @@ public abstract class User {
     @Column(nullable = false)  // En§sure username is unique and not null
     private String username;
 
+    @Column
+    private String role;
+
     public User() {
     }
 

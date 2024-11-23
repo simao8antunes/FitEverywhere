@@ -19,7 +19,7 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
-    @PostMapping("/workout-preferences")
+    @PutMapping("/workout-preferences")
     public ResponseEntity<?> saveWorkoutPreferences(
             @RequestParam int number,
             @RequestParam String time,
@@ -36,20 +36,4 @@ public class ClientController {
         return ResponseEntity.ok(Map.of("message", "Preferences saved successfully"));
     }
 
-    @GetMapping("/workout-preferences")
-    public ResponseEntity<?> getWorkoutPreferences(@AuthenticationPrincipal OAuth2User principal) {
-
-        String email = principal.getAttribute("email");
-        Optional<Client> clientOptional = clientService.findClientByEmail(email);
-        if (clientOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
-        Client client = clientOptional.get();
-        Map<String, Object> preferences = Map.of(
-                "workoutsPerWeek", client.getWorkoutsPerWeek(),
-                "preferredTime", client.getPreferredTime()
-        );
-        return ResponseEntity.ok(preferences);
-    }
 }

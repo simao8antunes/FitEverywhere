@@ -1,13 +1,29 @@
 interface User {
   username: string;
-  role: "gym" | "client" | "pt";
+  role: "gym_manager" | "client" | "personal_trainer";
   email: string;
-  id: string;
 }
+
+interface Client extends User {
+  workoutsPerWeek: number;
+  preferredTime: string;
+  role: "client";
+}
+
+interface GymManager extends User {
+  role: "gym_manager";
+}
+
+interface PersonalTrainer extends User {
+  linkedGym: string;
+  role: "personal_trainer";
+}
+
+type UserOptions = Client | GymManager | PersonalTrainer;
 
 interface UseFetchUserResult {
   isAuthenticated: boolean;
-  user: User | null;
+  user: UserOptions | null;
   error: string | null;
   logout: () => void;
 }
@@ -58,4 +74,8 @@ export type {
   UseFetchEventsResult,
   UseFetchUserResult,
   User,
+  UserOptions,
+  Client,
+  GymManager,
+  PersonalTrainer,
 };

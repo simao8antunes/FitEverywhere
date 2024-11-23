@@ -19,9 +19,11 @@ public class PersonalTrainer extends User {
 
     public PersonalTrainer(String username, String email) {
         super(username, email);
+        setRole("personal_trainer");
     }
 
     public PersonalTrainer() {
         super();
+        setRole("personal_trainer");
     }
 }

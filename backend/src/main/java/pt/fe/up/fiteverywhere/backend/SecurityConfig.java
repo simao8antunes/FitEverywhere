@@ -35,14 +35,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login/success", "/auth/role", "/auth/calendar/events", "/auth/error").permitAll()
+                        .requestMatchers("/auth/login/success", "/auth/signup", "/auth/calendar/events", "/auth/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/", true)
+                        .defaultSuccessUrl("/select-role", true)
                         .failureUrl("/error") // Redirect on failure
                 );
 

@@ -19,9 +19,11 @@ public class Client extends User {
 
     public Client(String username, String email) {
         super(username, email);
+        setRole("client");
     }
 
     public Client() {
         super();
+        setRole("client");
     }
 }

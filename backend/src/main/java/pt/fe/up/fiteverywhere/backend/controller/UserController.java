@@ -62,7 +62,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/signup")
+    @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> updateUserRole(
             @RequestParam String role,
             @AuthenticationPrincipal OAuth2User principal) {
