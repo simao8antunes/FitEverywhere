@@ -9,32 +9,21 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Setter
 @Getter
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) // Define inheritance strategy
-public class User {
+@EntityScan("pt.fe.up.fiteverywhere.backend.entity")
+// Define inheritance strategy
+public abstract class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Automatically generate IDs
-    private Long id;
-
-    @Column(nullable = false)  // En§sure username is unique and not null
-    private String username;
-
     @Column(nullable = false, unique = true)  // Ensure email is unique and not null
     private String email;
 
-    @Column()  // Role can be null initially
-    private String role;
-    
-    @Column(nullable = true)
-    private Integer workoutsPerWeek;
-    
-    @Column(nullable = true)
-    private String preferredTime; // morning, afternoon, evening
-    
+    @Column(nullable = false)  // En§sure username is unique and not null
+    private String username;
 
     public User() {
     }

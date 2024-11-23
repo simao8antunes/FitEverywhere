@@ -1,14 +1,22 @@
 package pt.fe.up.fiteverywhere.backend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
 @Entity
-public class Gym extends User {
+public class Gym {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     private String gymName;
@@ -16,29 +24,31 @@ public class Gym extends User {
     @Column(nullable = false)
     private String location;
 
-    @Column(nullable = true)
+    @Column()
     private String facilities; // e.g., "Pool, Sauna, Gym Equipment"
 
     @Column(nullable = false)
     private Double dailyFee;
 
-    @Column(nullable = true)
+    @Column()
     private Double latitude; // Latitude of the gym
 
-    @Column(nullable = true)
+    @Column()
     private Double longitude; // Longitude of the gym
 
+    @ManyToMany
+    private Set<GymManager> linkedGymManagers= new HashSet<>();
+
+    @OneToMany(mappedBy = "linkedGym", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonalTrainer> linkedPersonalTrainers = new HashSet<>();
+
     public Gym() {
-        super();
-        this.setRole("gym"); // Default role for a Gym user
     }
 
-    public Gym(String username, String email, String gymName, String location, Double latitude, Double longitude) {
-        super(username, email);
+    public Gym(String gymName, String location, Double latitude, Double longitude) {
         this.gymName = gymName;
         this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.setRole("gym"); // Assign role as "gym"
     }
 }

@@ -19,11 +19,6 @@ public class GymService {
         return gymRepository.findById(id);
     }
 
-    public Gym findGymByEmail(String email) {
-        Optional<Gym> gym = gymRepository.findGymByEmail(email);
-        return gym.orElse(null);  // Return user if found, otherwise null
-    }
-
     public Gym saveOrUpdateGym(Gym gym) {
         return gymRepository.save(gym);
     }

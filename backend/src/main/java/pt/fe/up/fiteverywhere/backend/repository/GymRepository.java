@@ -17,6 +17,5 @@ public interface GymRepository extends JpaRepository<Gym, Long> {
                                            @Param("latitude") double latitude,
                                            @Param("longitude") double longitude);
 
-       Optional<Gym> findGymByEmail(String email);
 
 }
