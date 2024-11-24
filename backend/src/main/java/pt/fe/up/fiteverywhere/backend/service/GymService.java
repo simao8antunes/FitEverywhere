@@ -1,16 +1,14 @@
 package pt.fe.up.fiteverywhere.backend.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
 import pt.fe.up.fiteverywhere.backend.repository.GymRepository;
 import pt.fe.up.fiteverywhere.backend.repository.user.children.GymManagerRepository;
+
+import java.util.Optional;
 
 @Service
 public class GymService {
@@ -25,12 +23,8 @@ public class GymService {
         return gymRepository.findById(id);
     }
 
-    public Gym saveOrUpdateGym(Gym gym) {
-        return gymRepository.save(gym);
-    }
-    
-    public List<Gym> getAllGyms() {
-        return gymRepository.findAll();
+    public void saveOrUpdateGym(Gym gym) {
+        gymRepository.save(gym);
     }
 
     @Transactional

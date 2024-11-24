@@ -24,10 +24,10 @@ public class Gym {
     private Double dailyFee;
 
     @Column
-    private Integer latitude;
+    private Double latitude;
 
     @Column
-    private Integer longitude;
+    private Double longitude;
 
     @ManyToMany
     private Set<GymManager> linkedGymManagers= new HashSet<>();

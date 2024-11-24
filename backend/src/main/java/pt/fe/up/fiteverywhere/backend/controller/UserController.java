@@ -45,12 +45,12 @@ public class UserController {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
-
-        String email = principal.getAttribute("email");
-        String name = principal.getAttribute("name");
-        System.out.println("Authenticated user: " + name);  // Add debug log to check the value
-
         try {
+            String email = principal.getAttribute("email");
+            String name = principal.getAttribute("name");
+            System.out.println("Authenticated user: " + name);  // Add debug log to check the value
+
+
             Optional<User> user = userService.findUserByEmail(email);
             System.out.println("Authenticated user: " + user);
             if (user.isEmpty()) {
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> updateUserRole(
+    public ResponseEntity<Map<String, String>> createNewUser(
             @RequestParam String role,
             @AuthenticationPrincipal OAuth2User principal) {
         if (principal == null) {

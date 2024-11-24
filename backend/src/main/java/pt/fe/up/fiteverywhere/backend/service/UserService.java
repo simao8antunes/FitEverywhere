@@ -18,16 +18,4 @@ public class UserService {
         return userRepository.findById(email);
     }
 
-    public User loginUser(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
-            return user;
-        }
-        return null;
-    }
-
-    public void deleteUser(String email) {
-        userRepository.deleteById(email);
-    }
-
 }
