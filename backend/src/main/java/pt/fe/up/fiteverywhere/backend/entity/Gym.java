@@ -15,26 +15,19 @@ import java.util.Set;
 public class Gym {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String gymName;
+    private String name;
 
-    @Column(nullable = false)
-    private String location;
-
-    @Column()
-    private String facilities; // e.g., "Pool, Sauna, Gym Equipment"
-
-    @Column(nullable = false)
+    @Column
     private Double dailyFee;
 
-    @Column()
-    private Double latitude; // Latitude of the gym
+    @Column
+    private Integer latitude;
 
-    @Column()
-    private Double longitude; // Longitude of the gym
+    @Column
+    private Integer longitude;
 
     @ManyToMany
     private Set<GymManager> linkedGymManagers= new HashSet<>();
@@ -45,10 +38,8 @@ public class Gym {
     public Gym() {
     }
 
-    public Gym(String gymName, String location, Double latitude, Double longitude) {
-        this.gymName = gymName;
-        this.location = location;
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public Gym(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 }

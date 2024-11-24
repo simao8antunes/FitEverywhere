@@ -62,9 +62,7 @@ public class GymController {
 
         // Update gym details
         Gym existingGym = gymOpt.get();
-        existingGym.setGymName(gym.getGymName());
-        existingGym.setLocation(gym.getLocation());
-        existingGym.setFacilities(gym.getFacilities());
+        existingGym.setName(gym.getName());
         existingGym.setDailyFee(gym.getDailyFee());
         existingGym.setLatitude(gym.getLatitude());
         existingGym.setLongitude(gym.getLongitude());
@@ -93,9 +91,7 @@ public class GymController {
 
         Gym gym = gymOpt.get();
         Map<String, Object> gymInfo = Map.of(
-                "gymName", gym.getGymName(),
-                "location", gym.getLocation(),
-                "facilities", gym.getFacilities(),
+                "name", gym.getName(),
                 "dailyFee", gym.getDailyFee(),
                 "latitude", gym.getLatitude(),
                 "longitude", gym.getLongitude()

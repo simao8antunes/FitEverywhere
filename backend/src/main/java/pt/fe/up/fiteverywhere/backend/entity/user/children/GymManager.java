@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 public class GymManager extends User {
 
-    @ManyToMany(mappedBy = "linkedGymManagers", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "linkedGymManagers", fetch = FetchType.EAGER)
     private Set<Gym> linkedGyms = new HashSet<>();
 
     public GymManager(String username, String email) {

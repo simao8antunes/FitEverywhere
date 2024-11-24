@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 interface User {
   username: string;
   role: "gym_manager" | "client" | "personal_trainer";
@@ -12,6 +14,7 @@ interface Client extends User {
 
 interface GymManager extends User {
   role: "gym_manager";
+  linkedGyms: Gym[];
 }
 
 interface PersonalTrainer extends User {
@@ -43,13 +46,23 @@ interface UseFetchEventsResult {
 }
 
 interface Gym {
+  id: number;
   name: string;
-  vicinity: string;
-  location: {
-    lng: number;
-    lat: number;
-  };
-  distance?: string;
+  dailyFee: number;
+  latitude: number;
+  longitude: number;
+  distance?: number;
+  tags?: GymSpec;
+}
+
+interface GymSpec {
+  addrCity?: string;
+  addrHouseNumber?: string;
+  addrPostcode?: string;
+  addrStreet?: string;
+  phone?: string;
+  website?: string;
+  openingHours?: string;
 }
 
 interface GymResponse {
@@ -60,17 +73,18 @@ interface GymResponse {
   lat: number;
   lon: number;
 }
-interface NearbyGymsProps {
+interface GymsProps {
+  error: string | null;
   gyms: Gym[];
   loading: boolean;
-  error: string | null;
+  onSelectGym?: Dispatch<SetStateAction<Gym | undefined>>;
 }
 
 export type {
   Event,
   Gym,
   GymResponse,
-  NearbyGymsProps,
+  GymsProps,
   UseFetchEventsResult,
   UseFetchUserResult,
   User,

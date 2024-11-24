@@ -63,7 +63,7 @@ const SelectRole: React.FC = () => {
       <div className="flex space-x-6 mb-12">
         {/* Gym Card */}
         <div
-          onClick={() => setRole("gym_manager")}
+          onClick={() => setRole("gym")}
           className={`cursor-pointer bg-white shadow-lg rounded-lg p-8 w-48 text-center transition-transform transform hover:scale-105 ${
             role === "gym"
               ? "border-2 border-primary"
