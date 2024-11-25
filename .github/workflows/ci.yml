@@ -67,7 +67,7 @@ jobs:
         working-directory: ./backend
 
       - name: Unit and Integration Tests
-        run: mvn test jacoco:report
+        run: mvn verify jacoco:report
         working-directory: ./backend
 
       - name: JaCoCo Code Coverage Report
