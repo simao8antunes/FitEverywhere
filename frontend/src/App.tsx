@@ -11,48 +11,47 @@ import { useAuth } from "./hooks/useAuth.ts";
 
 const App: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
-  const hasRole = Boolean(user?.role);
   return (
     <Routes>
       {/* Public Routes */}
       <Route path="login" element={<Login />} />
       <Route
         path="select-role"
-        element={hasRole ? <Navigate to="/" replace /> : <SelectRole />}
+        element={user ? <Navigate to="/" replace /> : <SelectRole />}
       />
 
       {/* Protected Routes */}
       {isAuthenticated && (
         <>
-          {/* Gym Manager Routes */}
-          {user?.role === "gym_manager" && (
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="profile" element={<GymProfile />} />
-            </Route>
-          )}
+          {/* Check if user exists */}
+          {user ? (
+            <>
+              {/* Gym Manager Routes */}
+              {user.role === "gym_manager" && (
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="profile" element={<GymProfile />} />
+                </Route>
+              )}
 
-          {/* Client Routes */}
-          {user?.role === "client" && (
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="profile" element={<Profile />} />
-            </Route>
-          )}
+              {/* Client Routes */}
+              {user.role === "client" && (
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="profile" element={<Profile />} />
+                </Route>
+              )}
 
-          {/* Personal Trainer Routes */}
-          {user?.role === "personal_trainer" && (
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="profile" element={<Profile />} />
-            </Route>
-          )}
-
-          {/* Fallback to Select Role if the role is undefined */}
-          {!user?.role ? (
-            <Route path="*" element={<Navigate to="/select-role" replace />} />
+              {/* Personal Trainer Routes */}
+              {user.role === "personal_trainer" && (
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="profile" element={<Profile />} />
+                </Route>
+              )}
+            </>
           ) : (
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/select-role" replace />} />
           )}
         </>
       )}

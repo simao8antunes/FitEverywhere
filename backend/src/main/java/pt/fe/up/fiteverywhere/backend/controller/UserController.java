@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
@@ -62,6 +63,7 @@ public class UserController {
         }
     }
 
+    @Transactional
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> createNewUser(
             @RequestParam String role,

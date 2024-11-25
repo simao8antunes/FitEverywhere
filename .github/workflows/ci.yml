@@ -53,13 +53,35 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Clean with Maven
-        run: mvn clean
+      - name: Clean and Compile with Maven
+        run: mvn clean compile
         working-directory: ./backend
 
-      - name: Check Code Style / Unit and Integration Tests
-        run: mvn verify
+      - name: Code Style Check
+        run: mvn checkstyle:check
         working-directory: ./backend
+
+      - name: Unit and Integration Tests
+        run: mvn verify jacoco:report
+        working-directory: ./backend
+
+      - name: Add coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.1
+        with:
+          paths: ${{ github.workspace }}/**/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 80
+          min-coverage-changed-files: 60
+          title: Code Coverage
+          update-comment: true
+
+      - name: Fail PR if overall coverage is less than 80%
+        if: ${{ steps.jacoco.outputs.coverage-overall < 80.0 }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('Overall coverage is less than 80%!')
 
       - name: Package the application
         run: mvn package -DskipTests
