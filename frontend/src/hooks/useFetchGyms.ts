@@ -4,10 +4,58 @@ import { Gym, GymResponse } from "../types";
 // OpenStreetMap-related URLs
 const OVERPASS_API_URL = "http://overpass-api.de/api/interpreter";
 
+// Function to calculate the distance between two coordinates (lat1, lon1) and (lat2, lon2)
+const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+) => {
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  // Distance in kilometers
+  return R * c;
+};
+
 export const useFetchGyms = () => {
   const [gyms, setGyms] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const fetchOwnGyms = async () => {
+    setLoading(true);
+    setError(null);
+    const response = await fetch("/api/gym-manager/list-gyms", {
+      credentials: "include",
+    });
+    if (!response.ok) {
+      setError("Failed to fetch gyms");
+      setLoading(false);
+      return;
+    }
+    if (response.status === 204) {
+      setGyms([]);
+      setLoading(false);
+      return;
+    }
+    const data = await response.json();
+    if (data.gyms && data.gyms.length > 0) {
+      setGyms(data.gyms);
+    } else {
+      setGyms([]);
+      setError("No gyms found. Try adding a new gym.");
+    }
+    setLoading(false);
+  };
 
   const fetchNearbyGyms = async (location: string) => {
     setLoading(true);
@@ -36,15 +84,30 @@ export const useFetchGyms = () => {
           }
           return await response.json().then((gymsData) => {
             if (gymsData.elements && gymsData.elements.length > 0) {
-              setGyms(
-                gymsData.elements.map((gym: GymResponse) => ({
-                  name: gym.tags?.name || "Unnamed Gym",
-                  location: {
-                    lat: gym.lat,
-                    lng: gym.lon,
-                  },
-                })),
-              );
+              console.log(gymsData.elements);
+              // Sort gyms by distance to the event location
+              const sortedGyms = gymsData.elements
+                .map((gym: GymResponse) => {
+                  const distance = calculateDistance(
+                    lat,
+                    lon,
+                    gym.lat,
+                    gym.lon,
+                  );
+
+                  return {
+                    name: gym.tags?.name || "Unnamed Gym",
+                    latitude: gym.lat,
+                    longitude: gym.lon,
+                    distance: distance.toFixed(2),
+                  };
+                })
+                .sort(
+                  (a: { distance: number }, b: { distance: number }) =>
+                    a.distance - b.distance,
+                ); // Sort by distance
+
+              setGyms(sortedGyms);
             } else {
               setGyms([]); // Clear gyms if none found
               setError(
@@ -63,5 +126,5 @@ export const useFetchGyms = () => {
         setLoading(false);
       });
   };
-  return { gyms, fetchNearbyGyms, loading, error };
+  return { gyms, fetchNearbyGyms, loading, error, fetchOwnGyms };
 };
