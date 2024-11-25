@@ -6,6 +6,11 @@ on:
       - main
       - dev
 
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
 jobs:
   frontend:
     runs-on: ubuntu-latest
@@ -53,13 +58,40 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Clean with Maven
-        run: mvn clean
+      - name: Clean and Compile with Maven
+        run: mvn clean compile
         working-directory: ./backend
 
-      - name: Check Code Style / Unit and Integration Tests
-        run: mvn verify
+      - name: Code Style Check
+        run: mvn checkstyle:check
         working-directory: ./backend
+
+      - name: Unit and Integration Tests
+        run: mvn verify jacoco:report
+        working-directory: ./backend
+
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v5.0
+        with:
+          coverage_results_path: backend/target/site/jacoco/jacoco.xml
+          coverage_report_name: Coverage
+          coverage_report_title: JaCoCo
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
+          minimum_coverage: 70
+          fail_below_threshold: true
+          publish_only_summary: true
+
+      # Publish Coverage Job Summary  # Optional
+      - name: Add Jacocoo report to workflow run summary
+        run: |
+          echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :heavy_check_mark: Number of Lines Covered | ${{ steps.jacoco_reporter.outputs.covered_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :x: Number of Lines Missed | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Number of Lines | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
 
       - name: Package the application
         run: mvn package -DskipTests

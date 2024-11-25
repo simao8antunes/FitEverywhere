@@ -22,15 +22,40 @@ const calculateDistance = (
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c; // Distance in kilometers
-
-  return distance;
+  // Distance in kilometers
+  return R * c;
 };
 
 export const useFetchGyms = () => {
   const [gyms, setGyms] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const fetchOwnGyms = async () => {
+    setLoading(true);
+    setError(null);
+    const response = await fetch("/api/gym-manager/list-gyms", {
+      credentials: "include",
+    });
+    if (!response.ok) {
+      setError("Failed to fetch gyms");
+      setLoading(false);
+      return;
+    }
+    if (response.status === 204) {
+      setGyms([]);
+      setLoading(false);
+      return;
+    }
+    const data = await response.json();
+    if (data.gyms && data.gyms.length > 0) {
+      setGyms(data.gyms);
+    } else {
+      setGyms([]);
+      setError("No gyms found. Try adding a new gym.");
+    }
+    setLoading(false);
+  };
 
   const fetchNearbyGyms = async (location: string) => {
     setLoading(true);
@@ -72,10 +97,8 @@ export const useFetchGyms = () => {
 
                   return {
                     name: gym.tags?.name || "Unnamed Gym",
-                    location: {
-                      lat: gym.lat,
-                      lng: gym.lon,
-                    },
+                    latitude: gym.lat,
+                    longitude: gym.lon,
                     distance: distance.toFixed(2),
                   };
                 })
@@ -103,5 +126,5 @@ export const useFetchGyms = () => {
         setLoading(false);
       });
   };
-  return { gyms, fetchNearbyGyms, loading, error };
+  return { gyms, fetchNearbyGyms, loading, error, fetchOwnGyms };
 };
