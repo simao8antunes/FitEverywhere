@@ -67,11 +67,12 @@ jobs:
         working-directory: ./backend
 
       - name: Unit and Integration Tests
-        run: mvn verify jacoco:report
+        run: mvn verify
         working-directory: ./backend
 
-      - name: Check if JaCoCo report exists
-        run: ls -R
+      - name: Generate Jacoco Report
+        run: mvn jacoco:report
+        working-directory: ./backend
 
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
