@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
 import pt.fe.up.fiteverywhere.backend.repository.user.children.PersonalTrainerRepository;
-import pt.fe.up.fiteverywhere.backend.service.UserService;
 
 import java.util.Optional;
 

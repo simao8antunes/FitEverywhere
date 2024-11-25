@@ -30,7 +30,7 @@ public class Gym {
     private Double longitude;
 
     @ManyToMany
-    private Set<GymManager> linkedGymManagers= new HashSet<>();
+    private Set<GymManager> linkedGymManagers = new HashSet<>();
 
     @OneToMany(mappedBy = "linkedGym", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PersonalTrainer> linkedPersonalTrainers = new HashSet<>();

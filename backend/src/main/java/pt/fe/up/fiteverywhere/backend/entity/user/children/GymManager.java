@@ -1,6 +1,8 @@
 package pt.fe.up.fiteverywhere.backend.entity.user.children;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
 import pt.fe.up.fiteverywhere.backend.entity.Gym;
