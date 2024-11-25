@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import GoogleMap from "../components/GoogleMap";
-import type { NearbyGymsProps } from "../types";
+import type { Gym, GymsProps } from "../types";
+import GymList from "./GymList.tsx";
+import ShowGym from "./ShowGym.tsx";
 
-const NearbyGyms: React.FC<NearbyGymsProps> = ({ gyms, loading, error }) => {
+const NearbyGyms: React.FC<GymsProps> = ({
+  gyms,
+  loading,
+  error,
+  onSelectGym,
+}) => {
   // Render loading state
+  const [selectedGym] = useState<Gym | undefined>(undefined);
   if (loading) {
     return <div>Loading nearby gyms...</div>;
   }
@@ -26,18 +34,13 @@ const NearbyGyms: React.FC<NearbyGymsProps> = ({ gyms, loading, error }) => {
         <GoogleMap gyms={gyms} />
       </div>
       {/* Render list of gyms */}
-      <ul className="gyms-list space-y-4">
-        {gyms.map((gym, index) => (
-          <li
-            key={index}
-            className="bg-background rounded-lg p-4 border border-secbackground hover:bg-secbackground transition-colors"
-          >
-            <h4 className="text-lg font-semibold">{gym.name}</h4>
-            <p className="text-sm">{gym.vicinity}</p>
-            <p className="text-sm text-gray-500">Distance: {gym.distance} km</p>
-          </li>
-        ))}
-      </ul>
+      <GymList
+        gyms={gyms}
+        loading={loading}
+        error={error}
+        onSelectGym={onSelectGym}
+      />
+      <ShowGym gym={selectedGym} />
     </div>
   );
 };

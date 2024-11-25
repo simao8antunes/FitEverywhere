@@ -1,13 +1,14 @@
 package pt.fe.up.fiteverywhere.backend.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import pt.fe.up.fiteverywhere.backend.entity.Gym;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
 import pt.fe.up.fiteverywhere.backend.repository.GymRepository;
+import pt.fe.up.fiteverywhere.backend.repository.user.children.GymManagerRepository;
+
+import java.util.Optional;
 
 @Service
 public class GymService {
@@ -15,25 +16,28 @@ public class GymService {
     @Autowired
     private GymRepository gymRepository;
 
+    @Autowired
+    private GymManagerRepository gymManagerRepository;
+
     public Optional<Gym> getGymById(Long id) {
         return gymRepository.findById(id);
     }
 
-    public Gym findGymByEmail(String email) {
-        Optional<Gym> gym = gymRepository.findGymByEmail(email);
-        return gym.orElse(null);  // Return user if found, otherwise null
+    public void saveOrUpdateGym(Gym gym) {
+        gymRepository.save(gym);
     }
 
-    public Gym saveOrUpdateGym(Gym gym) {
-        return gymRepository.save(gym);
+    @Transactional
+    public Gym createGymAndLinkToManager(GymManager gymManager, Gym gym) {
+
+        Gym savedGym = gymRepository.save(gym);
+
+        gymManager.getLinkedGyms().add(savedGym);
+        savedGym.getLinkedGymManagers().add(gymManager);
+
+        gymManagerRepository.save(gymManager);
+
+        return savedGym;
     }
 
-    public Optional<Gym> findGymByNameAndLocation(String name, double latitude, double longitude) {
-        return gymRepository.findGymByNameAndLocation(name, latitude, longitude);
-    }
-    
-    public List<Gym> getAllGyms() {
-        return gymRepository.findAll();
-    }
-    
 }

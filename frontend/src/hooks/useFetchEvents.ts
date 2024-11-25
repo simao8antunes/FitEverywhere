@@ -7,7 +7,7 @@ export function useFetchEvents(): UseFetchEventsResult {
   const [error, setError] = useState<string | null>(null);
 
   const fetchEvents = async () => {
-    return await fetch("/api/auth/calendar/events", {
+    return await fetch("/api/calendar/events", {
       method: "GET",
       credentials: "include",
     });

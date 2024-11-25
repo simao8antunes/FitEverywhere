@@ -10,21 +10,47 @@ const SelectRole: React.FC = () => {
 
   const handleRoleSelection = async () => {
     try {
-      const response = await fetch(`/api/auth/role?role=${role}`, {
-        method: "PUT",
+      const response = await fetch(`/api/auth/signup?role=${role}`, {
+        method: "POST",
         credentials: "include",
       });
+
       if (response.ok) {
+        const data = await response.json();
+        console.log("User created successfully:", data.message);
         navigate("/", { state: { userName: userNameFromState, role } });
       } else {
         const errorData = await response.json();
-        console.error(
-          "Failed to update role:",
-          errorData.message || response.statusText,
-        );
+
+        if (response.status === 400) {
+          // Bad request, likely an invalid role
+          console.error(
+            "Invalid role:",
+            errorData.error || "Invalid role provided.",
+          );
+          alert("Please select a valid role.");
+        } else if (response.status === 401) {
+          // Unauthorized, user not authenticated
+          console.error(
+            "User not authenticated:",
+            errorData.error || "Authentication required.",
+          );
+          alert("You need to be logged in to select a role.");
+          navigate("/login");
+        } else {
+          // Other unexpected errors
+          console.error(
+            "Failed to update role:",
+            errorData.error || response.statusText,
+          );
+          alert("An error occurred while updating the role. Please try again.");
+        }
       }
     } catch (error) {
       console.error("Error updating role:", error);
+      alert(
+        "An unexpected error occurred. Please check your connection and try again.",
+      );
     }
   };
 

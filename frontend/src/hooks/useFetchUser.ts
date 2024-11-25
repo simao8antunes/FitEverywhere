@@ -1,44 +1,56 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { UseFetchUserResult, User } from "../types";
+import type { UseFetchUserResult, UserOptions } from "../types";
 
 export function useFetchUser(): UseFetchUserResult {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserOptions | null>(null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (location.pathname === "/login" && user) navigate("/");
-
   const fetchUsers = async () => {
-    return await fetch("/api/auth/login/success", {
-      credentials: "include",
-    });
+    try {
+      const response = await fetch("/api/auth/login/success", {
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          // User not found, redirect to role selection
+          setError("User not found. Please ensure your account is registered.");
+          setIsAuthenticated(true);
+          return navigate("/select-role");
+        } else if (response.status === 401) {
+          // User not authenticated, redirect to login
+          setError("User not authenticated. Please log in.");
+        } else {
+          setError("An unexpected error occurred.");
+        }
+        setIsAuthenticated(false);
+        setUser(null);
+        return navigate("/login");
+      }
+
+      const data = await response.json();
+      console.log("Fetched user data:", data, location.pathname);
+      setIsAuthenticated(true);
+      setUser(data.user);
+      sessionStorage.setItem("user", JSON.stringify(data.user));
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setIsAuthenticated(false);
+      setUser(null);
+      setError("Failed to authenticate");
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
-    if (location.pathname !== "/login")
-      fetchUsers()
-        .then((response) => response.json())
-        .then((data: { user: User }) => {
-          console.log("Fetched user data:", data);
-          setIsAuthenticated(true);
-          setUser(data.user);
-
-          sessionStorage.setItem("user", JSON.stringify(data.user));
-          if (!data.user.role) {
-            navigate("/select-role");
-          }
-        })
-        .catch((err) => {
-          setIsAuthenticated(false);
-          setUser(null);
-          setError("Failed to authenticate");
-          navigate("/login");
-          throw new Error(`Error fetching user data: ${err}`);
-        });
-  }, [location.pathname, navigate]);
+    if (location.pathname !== "/login") {
+      fetchUsers();
+    }
+  }, [location.pathname]);
 
   const logout = async () => {
     return await fetch("/api/logout", {
