@@ -70,11 +70,14 @@ jobs:
         run: mvn verify jacoco:report
         working-directory: ./backend
 
+      - name: Check if JaCoCo report exists
+        run: ls -R
+
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
-          coverage_results_path: backend/target/site/jacoco/jacoco.xml
+          coverage_results_path: ./backend/target/site/jacoco/jacoco.xml
           coverage_report_name: Coverage
           coverage_report_title: JaCoCo
           github_token: ${{ secrets.GITHUB_TOKEN }}
