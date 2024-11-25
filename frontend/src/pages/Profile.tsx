@@ -1,42 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { FiUser } from "react-icons/fi";
 import { useAuth } from "../hooks/useAuth.ts";
+import type { Client, UserOptions } from "../types.ts";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
-  const { username, email, role } = user || {};
 
+  const isClient = (user: UserOptions | null): user is Client => {
+    return user?.role === "client";
+  };
+
+  const { username, email, role } = user || {};
   const [workoutsPerWeek, setWorkoutsPerWeek] = useState<number | null>(null);
   const [preferredTime, setPreferredTime] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
+  // If the user is a client, set initial state values
   useEffect(() => {
-    const fetchPreferences = async () => {
-      try {
-        const response = await fetch(`/api/auth/workout-preferences`, {
-          method: "GET",
-          credentials: "include",
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch preferences");
-        }
-        const data = await response.json();
-        setWorkoutsPerWeek(data.workoutsPerWeek);
-        setPreferredTime(data.preferredTime);
-      } catch (error) {
-        console.error("Error fetching preferences:", error);
-      }
-    };
-
-    fetchPreferences();
-  }, []);
+    if (isClient(user) && workoutsPerWeek === null && preferredTime === null) {
+      setWorkoutsPerWeek(user.workoutsPerWeek);
+      setPreferredTime(user.preferredTime);
+    }
+  }, [user, workoutsPerWeek, preferredTime]);
 
   const handleSavePreferences = async () => {
     try {
       const response = await fetch(
-        `/api/auth/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
+        `/api/client/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
         {
-          method: "POST",
+          method: "PUT",
           credentials: "include",
         },
       );
@@ -59,6 +51,10 @@ const Profile: React.FC = () => {
       alert("Error saving preferences");
     }
   };
+
+  if (!isClient(user)) {
+    return <div>User is not a client.</div>;
+  }
 
   return (
     <div className="flex justify-center items-center w-max">

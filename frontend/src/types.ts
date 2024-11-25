@@ -1,13 +1,32 @@
+import { Dispatch, SetStateAction } from "react";
+
 interface User {
   username: string;
-  role: "gym" | "client" | "pt";
+  role: "gym_manager" | "client" | "personal_trainer";
   email: string;
-  id: string;
 }
+
+interface Client extends User {
+  workoutsPerWeek: number;
+  preferredTime: string;
+  role: "client";
+}
+
+interface GymManager extends User {
+  role: "gym_manager";
+  linkedGyms: Gym[];
+}
+
+interface PersonalTrainer extends User {
+  linkedGym: string;
+  role: "personal_trainer";
+}
+
+type UserOptions = Client | GymManager | PersonalTrainer;
 
 interface UseFetchUserResult {
   isAuthenticated: boolean;
-  user: User | null;
+  user: UserOptions | null;
   error: string | null;
   logout: () => void;
 }
@@ -27,13 +46,23 @@ interface UseFetchEventsResult {
 }
 
 interface Gym {
+  id: number;
   name: string;
-  vicinity: string;
-  location: {
-    lng: number;
-    lat: number;
-  };
-  distance?: string;
+  dailyFee: number;
+  latitude: number;
+  longitude: number;
+  distance?: number;
+  tags?: GymSpec;
+}
+
+interface GymSpec {
+  addrCity?: string;
+  addrHouseNumber?: string;
+  addrPostcode?: string;
+  addrStreet?: string;
+  phone?: string;
+  website?: string;
+  openingHours?: string;
 }
 
 interface GymResponse {
@@ -44,18 +73,23 @@ interface GymResponse {
   lat: number;
   lon: number;
 }
-interface NearbyGymsProps {
+interface GymsProps {
+  error: string | null;
   gyms: Gym[];
   loading: boolean;
-  error: string | null;
+  onSelectGym?: Dispatch<SetStateAction<Gym | undefined>>;
 }
 
 export type {
   Event,
   Gym,
   GymResponse,
-  NearbyGymsProps,
+  GymsProps,
   UseFetchEventsResult,
   UseFetchUserResult,
   User,
+  UserOptions,
+  Client,
+  GymManager,
+  PersonalTrainer,
 };

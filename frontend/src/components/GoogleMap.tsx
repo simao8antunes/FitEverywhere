@@ -7,15 +7,7 @@ import {
   Map,
   Pin,
 } from "@vis.gl/react-google-maps";
-
-interface Gym {
-  name: string;
-  vicinity: string;
-  location: {
-    lng: number;
-    lat: number;
-  };
-}
+import { Gym } from "../types.ts";
 
 interface GoogleMapProps {
   gyms: Gym[];
@@ -25,7 +17,10 @@ const PoiMarkers = (props: { pois: Gym[] }) => {
   return (
     <>
       {props.pois.map((poi: Gym) => (
-        <AdvancedMarker key={poi.name} position={poi.location}>
+        <AdvancedMarker
+          key={poi.name}
+          position={{ lat: poi.latitude, lng: poi.longitude }}
+        >
           <Pin
             background={"#FBBC04"}
             glyphColor={"#000"}
@@ -40,7 +35,7 @@ const PoiMarkers = (props: { pois: Gym[] }) => {
 const GoogleMap: React.FC<GoogleMapProps> = ({ gyms }) => {
   const mapCenter =
     gyms.length > 0
-      ? { lat: gyms[0].location.lat, lng: gyms[0].location.lng }
+      ? { lat: gyms[0].latitude, lng: gyms[0].longitude }
       : { lat: 0, lng: 0 };
 
   console.log("Gyms:", gyms);
