@@ -1,11 +1,12 @@
 package pt.fe.up.fiteverywhere.backend.entity;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Setter
 @Getter
@@ -20,6 +21,9 @@ public abstract class User {
 
     @Column(nullable = false)  // En§sure username is unique and not null
     private String username;
+    
+    @Column(nullable = true)
+    private String password;
 
     @Column
     private String role;
