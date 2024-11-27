@@ -2,8 +2,6 @@ package pt.fe.up.fiteverywhere.backend.steps;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import io.cucumber.java.en.Given;
@@ -15,9 +13,6 @@ import io.cucumber.spring.CucumberContextConfiguration;
 @CucumberContextConfiguration
 @SpringBootTest
 public class AuthSteps {
-
-    WebDriver driver = new ChromeDriver();
-
     @Given("the user navigates to the login page")
     public void userNavigatesToLoginPage() {
         assertTrue(true);
