@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Event, UseFetchEventsResult } from "../types";
 
 export function useFetchEvents(): UseFetchEventsResult {
@@ -8,6 +8,7 @@ export function useFetchEvents(): UseFetchEventsResult {
 
   const fetchEvents = async () => {
     return await fetch("/api/calendar/events", {
+      mode: "no-cors",
       method: "GET",
       credentials: "include",
     });
