@@ -1,5 +1,7 @@
 package pt.fe.up.fiteverywhere.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +31,12 @@ public class Gym {
     @Column
     private Double longitude;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Set<GymManager> linkedGymManagers = new HashSet<>();
 
     @OneToMany(mappedBy = "linkedGym", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<PersonalTrainer> linkedPersonalTrainers = new HashSet<>();
 
     public Gym() {
