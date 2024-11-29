@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SERVER_NAME: http://localhost
-      SPRING_DATASOURCE_URL: jdbc:mysql://fiteverywhere-db.mysql.database.azure.com:3306/actions-fiteverywhere_db?serverTimezone=UTC&useSSL=true&requireSSL=false" >> .env
+      SPRING_DATASOURCE_URL: jdbc:mysql://fiteverywhere-db.mysql.database.azure.com:3306/actions-fiteverywhere_db?serverTimezone=UTC&useSSL=true&requireSSL=false
       SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
       SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
