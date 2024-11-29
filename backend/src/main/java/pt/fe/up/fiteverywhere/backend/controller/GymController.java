@@ -102,5 +102,14 @@ public class GymController {
         return ResponseEntity.ok(gymInfo);
     }
 
+    @PostMapping("/{gymId}/setDailyFee")
+    public ResponseEntity<String> setDailyFee(
+            @PathVariable Long gymId,
+            @RequestParam Double dailyFee,
+            @AuthenticationPrincipal OAuth2User principal) {
+        String email = principal.getAttribute("email"); // Retrieve authenticated user's username
+        gymService.setDailyFeeForGym(gymId, dailyFee, email);
+        return ResponseEntity.ok("Daily fee updated successfully");
+    }
 
 }

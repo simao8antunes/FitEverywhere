@@ -40,4 +40,21 @@ public class GymService {
         return savedGym;
     }
 
+    @Transactional
+    public void setDailyFeeForGym(Long gymId, Double dailyFee, String email) {
+        // Fetch the gym by ID
+        Gym gym = gymRepository.findById(gymId)
+                .orElseThrow(() -> new IllegalArgumentException("Gym not found"));
+        // Fetch the GymManager by email
+        GymManager gymManager = gymManagerRepository.findById(email)
+                .orElseThrow(() -> new IllegalArgumentException("Gym Manager not found"));
+        // Verify that the GymManager is linked to the Gym
+        if (!gym.getLinkedGymManagers().contains(gymManager)) {
+            throw new SecurityException("Gym Manager does not have access to this gym");
+        }
+        // Update the dailyFee
+        gym.setDailyFee(dailyFee);
+        gymRepository.save(gym);
+    }
+
 }
