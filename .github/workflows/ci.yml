@@ -65,13 +65,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v2.0
-        with:
-          envkey_SERVER_NAME: ${{ env.SERVER_NAME }}
-          envkey_SPRING_DATASOURCE_URL: ${{ env.SPRING_DATASOURCE_URL }}
-          envkey_SPRING_DATASOURCE_USERNAME: ${{ env.SPRING_DATASOURCE_USERNAME }}
-          envkey_SPRING_DATASOURCE_PASSWORD: ${{ env.SPRING_DATASOURCE_PASSWORD }}
+      - name: Set .env file
+        run: |
+          cat <<EOF > .env
+          SERVER_NAME=${{ env.SERVER_NAME }}
+          SPRING_DATASOURCE_URL=${{ env.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME=${{ env.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD=${{ env.SPRING_DATASOURCE_PASSWORD }}
+          EOF
 
       - name: Clean and Compile with Maven
         run: mvn clean compile
