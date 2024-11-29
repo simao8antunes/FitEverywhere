@@ -37,6 +37,9 @@ jobs:
           
             cd ~/FitEverywhere-T2E
             echo "SERVER_NAME=${{ vars.SERVER_NAME }}" > .env
+            echo "SPRING_DATASOURCE_URL=jdbc:mysql://fiteverywhere-db.mysql.database.azure.com:3306/${{ vars.DB_NAME }}?serverTimezone=UTC&useSSL=true&requireSSL=false" >> .env
+            echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+            echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
             sudo docker stop $(sudo docker ps -a -q)      # Stop previous containers if any
             sudo docker rm $(sudo docker ps -a -q)        # Remove previous containers if any
             sudo docker rmi $(sudo docker images -a -q)
