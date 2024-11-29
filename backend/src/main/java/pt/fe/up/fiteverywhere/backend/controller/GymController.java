@@ -29,7 +29,8 @@ public class GymController {
     @PostMapping("/")
     public ResponseEntity<String> createGym(
             @AuthenticationPrincipal OAuth2User principal,
-            @RequestBody Gym gym
+            @RequestParam String name,
+            @RequestParam Long id
     ) {
         String email = principal.getAttribute("email");
         System.out.println("Creating gym of user: " + email); // Debug log
@@ -38,7 +39,8 @@ public class GymController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
         GymManager gymManager = gymManagerOpt.get();
-        Gym createdGym = gymService.createGymAndLinkToManager(gymManager, gym);
+        Gym newGym = new Gym(id, name);
+        Gym createdGym = gymService.createGymAndLinkToManager(gymManager, newGym);
         return ResponseEntity.ok("Successfully created gym with id: " + createdGym.getId());
     }
 

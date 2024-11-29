@@ -17,7 +17,7 @@ const GymList: React.FC<GymsProps> = ({
   }
 
   // Render no gyms message
-  if (gyms.length === 0) {
+  if (gyms?.length === 0) {
     return <p>No gyms found.</p>;
   }
 
@@ -29,22 +29,23 @@ const GymList: React.FC<GymsProps> = ({
 
   return (
     <ul className="gyms-list space-y-4">
-      {gyms.map((gym, index) => (
-        <li
-          key={index}
-          className="bg-background rounded-lg p-4 border border-secbackground hover:bg-secbackground transition-colors"
-        >
-          <h4 className="text-lg font-semibold">{gym.name}</h4>
-          <p className="text-sm text-gray-500">Distance: {gym.distance} km</p>
-
-          <button
-            onClick={() => handleSelectGym(index)} // When clicked, trigger the selection
-            className="mt-2 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+      {gyms &&
+        gyms.map((gym, index) => (
+          <li
+            key={index}
+            className="bg-background rounded-lg p-4 border border-secbackground hover:bg-secbackground transition-colors"
           >
-            Select Gym
-          </button>
-        </li>
-      ))}
+            <h4 className="text-lg font-semibold">{gym.name}</h4>
+            <p className="text-sm text-gray-500">Distance: {gym.distance} km</p>
+
+            <button
+              onClick={() => handleSelectGym(index)} // When clicked, trigger the selection
+              className="mt-2 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+            >
+              Select Gym
+            </button>
+          </li>
+        ))}
     </ul>
   );
 };

@@ -96,6 +96,7 @@ export const useFetchGyms = () => {
                   );
 
                   return {
+                    id: gym.id,
                     name: gym.tags?.name || "Unnamed Gym",
                     latitude: gym.lat,
                     longitude: gym.lon,
