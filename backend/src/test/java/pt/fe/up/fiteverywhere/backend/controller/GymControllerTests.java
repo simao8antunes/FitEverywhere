@@ -49,17 +49,13 @@ public class GymControllerTests {
     @Test
     @Order(1)
     public void testCreateGym_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
-        Gym gym = new Gym();
-        gym.setId(1L);
-        gym.setName("Test Gym");
-        gym.setDailyFee(10.0);
-        gym.setLatitude(41.15);
-        gym.setLongitude(-8.61);
+        String gymName = "Test Gym";
+        Long gymId = 1L;
 
         mockMvc.perform(post("/gym/")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(gym)))
+                        .param("name", gymName)  // Add `name` as a request parameter
+                        .param("id", String.valueOf(gymId)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Successfully created gym with id: 1")); // Adjust ID as needed
     }
@@ -68,17 +64,13 @@ public class GymControllerTests {
     @Test
     @Order(2)
     public void testCreateGym_InvalidUser_ShouldReturnNotFound() throws Exception {
-        Gym gym = new Gym();
-        gym.setId(2L);
-        gym.setName("Invalid Gym");
-        gym.setDailyFee(20.0);
-        gym.setLatitude(40.00);
-        gym.setLongitude(-7.00);
+        String gymName = "Invalid Gym";
+        Long gymId = 2L;
 
         mockMvc.perform(post("/gym/")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "unknown.user@test.com")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(gym)))
+                        .param("name", gymName)  // Add `name` as a request parameter
+                        .param("id", String.valueOf(gymId)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("User not found"));
     }
