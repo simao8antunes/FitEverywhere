@@ -66,13 +66,14 @@ interface GymSpec {
 }
 
 interface GymResponse {
-  name: string;
+  id: number;
   tags: {
     name: string;
   };
   lat: number;
   lon: number;
 }
+
 interface GymsProps {
   error: string | null;
   gyms: Gym[];

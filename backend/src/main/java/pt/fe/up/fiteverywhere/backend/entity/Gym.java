@@ -1,8 +1,10 @@
 package pt.fe.up.fiteverywhere.backend.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
 
@@ -29,10 +31,11 @@ public class Gym {
     @Column
     private Double longitude;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "linkedGyms", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("linkedGyms")
     private Set<GymManager> linkedGymManagers = new HashSet<>();
 
-    @OneToMany(mappedBy = "linkedGym", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "linkedGym", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<PersonalTrainer> linkedPersonalTrainers = new HashSet<>();
 
     public Gym() {

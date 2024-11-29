@@ -14,7 +14,7 @@ export function useFetchUser(): UseFetchUserResult {
       const response = await fetch("/api/auth/login/success", {
         credentials: "include",
       });
-
+      console.log("Fetched user data:", response, location.pathname);
       if (!response.ok) {
         if (response.status === 404) {
           // User not found, redirect to role selection
@@ -36,7 +36,7 @@ export function useFetchUser(): UseFetchUserResult {
       console.log("Fetched user data:", data, location.pathname);
       setIsAuthenticated(true);
       setUser(data.user);
-      sessionStorage.setItem("user", JSON.stringify(data.user));
+      sessionStorage.setItem("user", data.user.email);
     } catch (error) {
       console.error("Error fetching user data:", error);
       setIsAuthenticated(false);
