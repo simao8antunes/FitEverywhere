@@ -47,7 +47,7 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     env:
-      SERVER_NAME: http://fiteverywhere.me
+      SERVER_NAME: http://localhost
       SPRING_DATASOURCE_URL: jdbc:mysql://fiteverywhere-db.mysql.database.azure.com:3306/actions-fiteverywhere_db?serverTimezone=UTC&useSSL=true&requireSSL=false" >> .env
       SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
       SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -64,6 +64,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+      - name: Set .env file
+        run: |
+          echo "SERVER_NAME=${{ env.SERVER_NAME }}" > .env
+          echo "SPRING_DATASOURCE_URL=${{ env.SPRING_DATASOURCE_URL }}" >> .env
+          echo "SPRING_DATASOURCE_USERNAME=${{ env.SPRING_DATASOURCE_USERNAME }}" >> .env
+          echo "SPRING_DATASOURCE_PASSWORD=${{ env.SPRING_DATASOURCE_PASSWORD }}" >> .env
 
       - name: Clean and Compile with Maven
         run: mvn clean compile
