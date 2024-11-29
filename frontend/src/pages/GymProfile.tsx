@@ -24,6 +24,7 @@ const GymProfile: React.FC = () => {
 
   useEffect(() => {
     if (isGymManager(user) && myGyms.length === 0) {
+      console.log(user.linkedGyms);
       setMyGyms(user.linkedGyms);
     }
   }, [user]);

@@ -1,11 +1,14 @@
 package pt.fe.up.fiteverywhere.backend.entity.user.children;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.User;
 
@@ -18,8 +21,13 @@ import java.util.Set;
 @Entity
 public class GymManager extends User {
 
-    @ManyToMany(mappedBy = "linkedGymManagers", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "gym_manager_gym",
+            joinColumns = @JoinColumn(name = "gym_manager_email", referencedColumnName = "email"),
+            inverseJoinColumns = @JoinColumn(name = "gym_id", referencedColumnName = "id")
+    )
+    @JsonIgnoreProperties("linkedGymManagers")
     private Set<Gym> linkedGyms = new HashSet<>();
 
     public GymManager(String username, String email) {
