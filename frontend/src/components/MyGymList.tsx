@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import type { GymsProps } from "../types";
 
-const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error, onSelectGym }) => {
+const MyGymList: React.FC<GymsProps> = ({
+  gyms,
+  loading,
+  error,
+  onSelectGym,
+}) => {
   const [isChangingPrice, setIsChangingPrice] = useState<number | null>(null);
   const [newPrice, setNewPrice] = useState<string>(""); // Store the new price
   const [updateError, setUpdateError] = useState<string | null>(null);
@@ -29,13 +34,13 @@ const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error, onSelectGym }) =
     try {
       setUpdateError(null);
       setSuccessMessage(null);
-  
+
       // Fetch the current gym details
       const currentGym = gyms.find((gym) => gym.id === gymId);
       if (!currentGym) {
         throw new Error("Gym not found");
       }
-  
+
       const response = await fetch(`/api/gym/`, {
         method: "PUT",
         headers: {
@@ -47,19 +52,18 @@ const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error, onSelectGym }) =
           dailyFee: parseFloat(newPrice), // Update only the dailyFee
         }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to update the price");
       }
-  
+
       setSuccessMessage("Price updated successfully!");
       setIsChangingPrice(null);
     } catch (err: any) {
       setUpdateError(err.message);
     }
   };
-  
 
   return (
     <ul className="gyms-list space-y-4">
@@ -72,7 +76,9 @@ const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error, onSelectGym }) =
           <p className="text-sm text-gray-500">Daily Fee: ${gym.dailyFee}</p>
 
           <button
-            onClick={() => setIsChangingPrice(isChangingPrice === gym.id ? null : gym.id)}
+            onClick={() =>
+              setIsChangingPrice(isChangingPrice === gym.id ? null : gym.id)
+            }
             className="mt-2 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
           >
             {isChangingPrice === gym.id ? "Cancel" : "Change Price"}

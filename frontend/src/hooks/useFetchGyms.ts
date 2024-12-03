@@ -9,7 +9,7 @@ const calculateDistance = (
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number,
+  lon2: number
 ) => {
   const R = 6371; // Radius of the Earth in kilometers
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -57,7 +57,6 @@ export const useFetchGyms = () => {
     setLoading(false);
   };
 
-
   // api gyms
   const fetchGyms = async (location: string) => {
     setLoading(true);
@@ -66,7 +65,7 @@ export const useFetchGyms = () => {
     // Geocoding request to Nominatim API
     const encodedLocation = encodeURIComponent(location);
     await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodedLocation}&format=json`,
+      `https://nominatim.openstreetmap.org/search?q=${encodedLocation}&format=json`
     )
       .then((response) => {
         if (!response.ok) {
@@ -79,7 +78,7 @@ export const useFetchGyms = () => {
         if (geocodingData.length > 0) {
           const { lat, lon } = geocodingData[0];
           const response = await fetch(
-            `${OVERPASS_API_URL}?data=[out:json];node["leisure"="fitness_centre"](around:2000,${lat},${lon});out;`,
+            `${OVERPASS_API_URL}?data=[out:json];node["leisure"="fitness_centre"](around:2000,${lat},${lon});out;`
           );
           if (!response.ok) {
             throw new Error("Failed to fetch nearby gyms");
@@ -94,7 +93,7 @@ export const useFetchGyms = () => {
                     lat,
                     lon,
                     gym.lat,
-                    gym.lon,
+                    gym.lon
                   );
 
                   return {
@@ -107,14 +106,14 @@ export const useFetchGyms = () => {
                 })
                 .sort(
                   (a: { distance: number }, b: { distance: number }) =>
-                    a.distance - b.distance,
+                    a.distance - b.distance
                 ); // Sort by distance
 
               setGyms(sortedGyms);
             } else {
               setGyms([]); // Clear gyms if none found
               setError(
-                "No nearby gyms found. Try a different location or increase the search radius.",
+                "No nearby gyms found. Try a different location or increase the search radius."
               );
             }
           });
@@ -141,7 +140,7 @@ export const useFetchGyms = () => {
       const geocodingResponse = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodedLocation}&format=json`
       );
-      
+
       if (!geocodingResponse.ok) {
         throw new Error("Failed to fetch geocoding data");
       }
@@ -153,9 +152,9 @@ export const useFetchGyms = () => {
         setGyms([]);
         return;
       }
-  
+
       const { lat, lon } = geocodingData[0];
-      
+
       // Fetch gyms from database
       const dbResponse = await fetch("/api/gym/all", {
         credentials: "include",
@@ -170,43 +169,43 @@ export const useFetchGyms = () => {
       const dbGyms = dbData || [];
       console.log("DB GYMS: ", dbGyms);
 
-    // Fetch gyms from OpenStreetMap API
-    const osmResponse = await fetch(
-      `${OVERPASS_API_URL}?data=[out:json];node["leisure"="fitness_centre"](around:2000,${lat},${lon});out;`
-    );
-
-    if (!osmResponse.ok) {
-      throw new Error("Failed to fetch nearby gyms from OpenStreetMap API");
-    }
-
-    const osmData = await osmResponse.json();
-    const osmGyms = osmData.elements || [];
-    console.log("API GYMS: ", osmGyms);
-
-    // Merge gyms from the database and OpenStreetMap
-    const mergedGyms = osmGyms.map((osmGym: GymResponse) => {
-      const matchingDbGym = dbGyms.find(
-        (dbGym: Gym) => dbGym.id === osmGym.id
+      // Fetch gyms from OpenStreetMap API
+      const osmResponse = await fetch(
+        `${OVERPASS_API_URL}?data=[out:json];node["leisure"="fitness_centre"](around:2000,${lat},${lon});out;`
       );
 
-      const distance = calculateDistance(lat, lon, osmGym.lat, osmGym.lon);
+      if (!osmResponse.ok) {
+        throw new Error("Failed to fetch nearby gyms from OpenStreetMap API");
+      }
 
-      return {
-        id: osmGym.id,
-        name: matchingDbGym?.name || osmGym.tags?.name || "Unnamed Gym",
-        dailyFee: matchingDbGym?.dailyFee || "-",
-        latitude: osmGym.lat,
-        longitude: osmGym.lon,
-        distance: distance.toFixed(2),
-      };
-    });
+      const osmData = await osmResponse.json();
+      const osmGyms = osmData.elements || [];
+      console.log("API GYMS: ", osmGyms);
 
-    setGyms(mergedGyms);
-  } catch (err: any) {
-    setError("Error: " + err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+      // Merge gyms from the database and OpenStreetMap
+      const mergedGyms = osmGyms.map((osmGym: GymResponse) => {
+        const matchingDbGym = dbGyms.find(
+          (dbGym: Gym) => dbGym.id === osmGym.id
+        );
+
+        const distance = calculateDistance(lat, lon, osmGym.lat, osmGym.lon);
+
+        return {
+          id: osmGym.id,
+          name: matchingDbGym?.name || osmGym.tags?.name || "Unnamed Gym",
+          dailyFee: matchingDbGym?.dailyFee || "-",
+          latitude: osmGym.lat,
+          longitude: osmGym.lon,
+          distance: distance.toFixed(2),
+        };
+      });
+
+      setGyms(mergedGyms);
+    } catch (err: any) {
+      setError("Error: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return { gyms, fetchNearbyGyms, loading, error, fetchOwnGyms, fetchGyms };
 };
