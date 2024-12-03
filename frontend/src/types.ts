@@ -92,6 +92,5 @@ export type {
   UseFetchEventsResult,
   UseFetchUserResult,
   User,
-  UserOptions
+  UserOptions,
 };
-
