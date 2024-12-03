@@ -1,5 +1,6 @@
 package pt.fe.up.fiteverywhere.backend.controller.user.children;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public class ClientController {
         if (client.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
+
         clientService.updatePreferences(client.get(), number, time);
 
         return ResponseEntity.ok(Map.of("message", "Preferences saved successfully"));
