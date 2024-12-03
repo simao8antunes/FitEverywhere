@@ -5,7 +5,6 @@ const MyGymList: React.FC<GymsProps> = ({
   gyms,
   loading,
   error,
-  onSelectGym,
 }) => {
   const [isChangingPrice, setIsChangingPrice] = useState<number | null>(null);
   const [newPrice, setNewPrice] = useState<string>(""); // Store the new price
@@ -23,12 +22,6 @@ const MyGymList: React.FC<GymsProps> = ({
   if (gyms?.length === 0) {
     return <p>You have {gyms?.length}</p>;
   }
-
-  const handleSelectGym = (gymId: number) => {
-    if (onSelectGym) {
-      onSelectGym(gyms[gymId]);
-    }
-  };
 
   const updateGymPrice = async (gymId: number) => {
     try {

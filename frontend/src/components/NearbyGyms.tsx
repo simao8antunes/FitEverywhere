@@ -32,7 +32,7 @@ const NearbyGyms: React.FC<GymsProps> = ({
   }, [sortOption, gyms]);
 
   // Render loading state
-  const [selectedGym] = useState<Gym | undefined>(undefined);
+  const [_selectedGym] = useState<Gym | undefined>(undefined);
   if (loading) {
     return <div>Loading nearby gyms...</div>;
   }
