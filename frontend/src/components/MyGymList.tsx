@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import type { GymsProps } from "../types";
 
-const MyGymList: React.FC<GymsProps> = ({
-  gyms,
-  loading,
-  error,
-}) => {
+const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
   const [isChangingPrice, setIsChangingPrice] = useState<number | null>(null);
   const [newPrice, setNewPrice] = useState<string>(""); // Store the new price
   const [updateError, setUpdateError] = useState<string | null>(null);
