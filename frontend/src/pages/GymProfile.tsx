@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FiUser } from "react-icons/fi";
+import MyGymList from "../components/MyGymList.tsx";
+import NearbyGyms from "../components/NearbyGyms.tsx";
+import ShowGym from "../components/ShowGym.tsx"; // Assuming this hook fetches nearby gyms
 import { useAuth } from "../hooks/useAuth";
 import { useFetchGyms } from "../hooks/useFetchGyms";
 import type { Gym, GymManager, UserOptions } from "../types.ts";
-import GymList from "../components/GymList.tsx";
-import NearbyGyms from "../components/NearbyGyms.tsx";
-import ShowGym from "../components/ShowGym.tsx"; // Assuming this hook fetches nearby gyms
 
 const GymProfile: React.FC = () => {
   const { user } = useAuth();
@@ -83,7 +83,7 @@ const GymProfile: React.FC = () => {
         )}
       </div>
       <div className="bg-background rounded-lg shadow-lg p-8  w-full mx-4">
-        <GymList gyms={myGyms} loading={false} error={null} />
+        <MyGymList gyms={myGyms} loading={false} error={null} />
         <NearbyGyms
           gyms={gyms}
           loading={false}

@@ -37,7 +37,8 @@ const GymList: React.FC<GymsProps> = ({
           >
             <h4 className="text-lg font-semibold">{gym.name}</h4>
             <p className="text-sm text-gray-500">Distance: {gym.distance} km</p>
-
+            <p className="text-sm text-gray-500">Price: {gym.dailyFee} $</p>
+      
             <button
               onClick={() => handleSelectGym(index)} // When clicked, trigger the selection
               className="mt-2 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
