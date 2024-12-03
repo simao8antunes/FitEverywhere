@@ -82,15 +82,11 @@ interface GymsProps {
 }
 
 export type {
-  Event,
-  Gym,
-  GymResponse,
-  GymsProps,
-  UseFetchEventsResult,
+  Client, Event,
+  Gym, GymManager, GymResponse,
+  GymsProps, PersonalTrainer, UseFetchEventsResult,
   UseFetchUserResult,
   User,
-  UserOptions,
-  Client,
-  GymManager,
-  PersonalTrainer,
+  UserOptions
 };
+

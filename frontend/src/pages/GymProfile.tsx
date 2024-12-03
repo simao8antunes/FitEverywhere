@@ -15,7 +15,7 @@ const GymProfile: React.FC = () => {
 
   const [gymAddress, setGymAddress] = useState<string>("");
 
-  const { gyms, fetchOwnGyms, fetchNearbyGyms } = useFetchGyms(); // Call the hook at the top level
+  const { gyms, fetchOwnGyms, fetchGyms } = useFetchGyms(); // Call the hook at the top level
 
   const [selectedGym, setSelectedGym] = useState<Gym | undefined>(undefined);
   const isGymManager = (user: UserOptions | null): user is GymManager => {
@@ -74,7 +74,7 @@ const GymProfile: React.FC = () => {
             />
             <button
               className="px-4 py-2 bg-primary rounded"
-              onClick={() => fetchNearbyGyms(gymAddress)}
+              onClick={() => fetchGyms(gymAddress)}
             >
               {" "}
               Search Gym

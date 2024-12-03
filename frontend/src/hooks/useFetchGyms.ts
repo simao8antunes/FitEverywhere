@@ -57,7 +57,9 @@ export const useFetchGyms = () => {
     setLoading(false);
   };
 
-  const fetchNearbyGyms = async (location: string) => {
+
+  // api gyms
+  const fetchGyms = async (location: string) => {
     setLoading(true);
     setError(null);
 
@@ -127,5 +129,84 @@ export const useFetchGyms = () => {
         setLoading(false);
       });
   };
-  return { gyms, fetchNearbyGyms, loading, error, fetchOwnGyms };
+
+  // api gyms and db gyms
+  const fetchNearbyGyms = async (location: string) => {
+    setLoading(true);
+    setError(null);
+
+    // Geocoding request to Nominatim API
+    const encodedLocation = encodeURIComponent(location);
+    try {
+      const geocodingResponse = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodedLocation}&format=json`
+      );
+      
+      if (!geocodingResponse.ok) {
+        throw new Error("Failed to fetch geocoding data");
+      }
+
+      const geocodingData = await geocodingResponse.json();
+
+      if (geocodingData.length === 0) {
+        setError("Geocoding failed: No results found for the location.");
+        setGyms([]);
+        return;
+      }
+  
+      const { lat, lon } = geocodingData[0];
+      
+      // Fetch gyms from database
+      const dbResponse = await fetch("/api/gym/all", {
+        credentials: "include",
+      });
+
+      if (!dbResponse.ok) {
+        throw new Error("Failed to fetch gyms from the database");
+      }
+
+      const dbData = await dbResponse.json();
+      console.log(dbData);
+      const dbGyms = dbData || [];
+      console.log("DB GYMS: ", dbGyms);
+
+    // Fetch gyms from OpenStreetMap API
+    const osmResponse = await fetch(
+      `${OVERPASS_API_URL}?data=[out:json];node["leisure"="fitness_centre"](around:2000,${lat},${lon});out;`
+    );
+
+    if (!osmResponse.ok) {
+      throw new Error("Failed to fetch nearby gyms from OpenStreetMap API");
+    }
+
+    const osmData = await osmResponse.json();
+    const osmGyms = osmData.elements || [];
+    console.log("API GYMS: ", osmGyms);
+
+    // Merge gyms from the database and OpenStreetMap
+    const mergedGyms = osmGyms.map((osmGym: GymResponse) => {
+      const matchingDbGym = dbGyms.find(
+        (dbGym: Gym) => dbGym.id === osmGym.id
+      );
+
+      const distance = calculateDistance(lat, lon, osmGym.lat, osmGym.lon);
+
+      return {
+        id: osmGym.id,
+        name: matchingDbGym?.name || osmGym.tags?.name || "Unnamed Gym",
+        dailyFee: matchingDbGym?.dailyFee || "-",
+        latitude: osmGym.lat,
+        longitude: osmGym.lon,
+        distance: distance.toFixed(2),
+      };
+    });
+
+    setGyms(mergedGyms);
+  } catch (err: any) {
+    setError("Error: " + err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+  return { gyms, fetchNearbyGyms, loading, error, fetchOwnGyms, fetchGyms };
 };
