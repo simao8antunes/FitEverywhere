@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest --coverage",
     "style-check": "prettier --check 'src/**/*.{ts,tsx,js,jsx,json}'"
   },
   "dependencies": {
@@ -15,13 +17,16 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
-    "react-router-dom": "^7.0.1"
+    "react-router-dom": "^7.0.1",
+    "vitest-browser-react": "^0.0.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
+    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/ui": "^2.1.8",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
@@ -29,11 +34,13 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.13",
     "globals": "^15.11.0",
+    "playwright": "^1.49.0",
     "postcss": "^8.4.49",
     "prettier": "3.3.3",
     "tailwindcss": "^3.4.14",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.15.0",
-    "vite": "^5.4.9"
+    "vite": "^5.4.9",
+    "vitest": "^2.1.8"
   }
 }

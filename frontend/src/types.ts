@@ -4,6 +4,7 @@ interface User {
   username: string;
   role: "gym_manager" | "client" | "personal_trainer";
   email: string;
+  userSpecs: UserSpec;
 }
 
 interface Client extends User {
@@ -80,6 +81,17 @@ interface GymsProps {
   loading: boolean;
   onSelectGym?: Dispatch<SetStateAction<Gym | undefined>>;
 }
+
+type UserSpec = {
+  email: string;
+  email_verified: boolean;
+  family_name: string;
+  given_name: string;
+  hd: string;
+  name: string;
+  picture: string;
+  sub: string;
+};
 
 export type {
   Event,

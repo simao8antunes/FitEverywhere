@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "/logo.svg";
 import { useAuth } from "../hooks/useAuth.ts";
-import { FiHome, FiGrid, FiUser } from "react-icons/fi";
+import { FiHome, FiGrid } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 
 interface SidebarProps {
@@ -17,7 +17,7 @@ type SidebarStyles = {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ userName }) => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const menuItems = [
     { name: "Home", icon: <FiHome />, link: "/" },
@@ -75,7 +75,11 @@ const Sidebar: React.FC<SidebarProps> = ({ userName }) => {
           <div
             className={`text-xl transition-transform duration-200 ease-in-out`}
           >
-            <FiUser />
+            <img
+              src={user?.userSpecs.picture}
+              alt={"profile"}
+              className="rounded-circle size-10"
+            />
           </div>
 
           <span

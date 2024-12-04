@@ -35,6 +35,7 @@ export function useFetchUser(): UseFetchUserResult {
       const data = await response.json();
       console.log("Fetched user data:", data, location.pathname);
       setIsAuthenticated(true);
+      data.user.userSpecs = data.userSpecs;
       setUser(data.user);
       sessionStorage.setItem("user", data.user.email);
     } catch (error) {
@@ -47,7 +48,10 @@ export function useFetchUser(): UseFetchUserResult {
   };
 
   useEffect(() => {
-    if (location.pathname !== "/login") {
+    if (
+      location.pathname !== "/login" &&
+      location.pathname !== "/api/oauth2/authorization/google"
+    ) {
       fetchUsers();
     }
   }, [location.pathname]);
