@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/select-role", true)
+                        .defaultSuccessUrl("/", true)
                         .failureUrl("/error") // Redirect on failure
                 );
 

@@ -22,14 +22,12 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (selectedEvent && selectedEvent.location) {
-      fetchNearbyGyms(selectedEvent.location).then(() => {
-        console.log("Fetched nearby gyms for event:", selectedEvent.summary);
-      });
+      fetchNearbyGyms(selectedEvent.location);
     }
   }, [selectedEvent]);
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div data-testid="dashboard" className="container mx-auto px-4 py-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Events Section */}
         <div className="bg-intense rounded-lg shadow-lg p-6">
