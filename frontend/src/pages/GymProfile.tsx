@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+
+import MyGymList from "../components/MyGymList.tsx";
+import NearbyGyms from "../components/NearbyGyms.tsx";
+import ShowGym from "../components/ShowGym.tsx"; // Assuming this hook fetches nearby gyms
 import { useAuth } from "../hooks/useAuth";
 import { useFetchGyms } from "../hooks/useFetchGyms";
 import type { Gym, GymManager, UserOptions } from "../types.ts";
-import GymList from "../components/GymList.tsx";
-import NearbyGyms from "../components/NearbyGyms.tsx";
-import ShowGym from "../components/ShowGym.tsx"; // Assuming this hook fetches nearby gyms
 
 const GymProfile: React.FC = () => {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ const GymProfile: React.FC = () => {
 
   const [gymAddress, setGymAddress] = useState<string>("");
 
-  const { gyms, fetchOwnGyms, fetchNearbyGyms } = useFetchGyms(); // Call the hook at the top level
+  const { gyms, fetchOwnGyms, fetchGyms } = useFetchGyms(); // Call the hook at the top level
 
   const [selectedGym, setSelectedGym] = useState<Gym | undefined>(undefined);
   const isGymManager = (user: UserOptions | null): user is GymManager => {
@@ -77,7 +78,7 @@ const GymProfile: React.FC = () => {
             />
             <button
               className="px-4 py-2 bg-primary rounded"
-              onClick={() => fetchNearbyGyms(gymAddress)}
+              onClick={() => fetchGyms(gymAddress)}
             >
               {" "}
               Search Gym
@@ -86,7 +87,7 @@ const GymProfile: React.FC = () => {
         )}
       </div>
       <div className="bg-background rounded-lg shadow-lg p-8  w-full mx-4">
-        <GymList gyms={myGyms} loading={false} error={null} />
+        <MyGymList gyms={myGyms} loading={false} error={null} />
         <NearbyGyms
           gyms={gyms}
           loading={false}

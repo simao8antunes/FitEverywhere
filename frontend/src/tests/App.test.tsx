@@ -6,12 +6,16 @@ import App from "../App.tsx";
 const mocks = vi.hoisted(() => {
   return {
     useAuth: vi.fn(),
+    useFetchGyms: vi.fn(),
   };
 });
 
 // Mock the `useAuth` hook
 vi.mock(import("../hooks/useAuth.ts"), () => ({
   useAuth: mocks.useAuth,
+}));
+vi.mock(import("../hooks/useFetchGyms.ts"), () => ({
+  useFetchGyms: mocks.useFetchGyms,
 }));
 
 afterEach(() => {
@@ -79,6 +83,16 @@ describe("App Component", () => {
         error: null,
       })),
     }));
+    const mockFetchOwnGyms = vi
+      .fn()
+      .mockResolvedValue([{ name: "Gym A" }, { name: "Gym B" }]);
+    mocks.useFetchGyms.mockReturnValue({
+      gyms: [{ name: "Gym A" }, { name: "Gym B" }],
+      fetchNearbyGyms: vi.fn(),
+      loading: true,
+      error: null,
+      fetchOwnGyms: mockFetchOwnGyms,
+    });
 
     const screen = render(
       <MemoryRouter initialEntries={["/"]}>
