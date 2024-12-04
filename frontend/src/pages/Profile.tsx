@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FiUser } from "react-icons/fi";
 import { useAuth } from "../hooks/useAuth.ts";
 import type { Client, UserOptions } from "../types.ts";
 
@@ -30,14 +29,14 @@ const Profile: React.FC = () => {
         {
           method: "PUT",
           credentials: "include",
-        },
+        }
       );
 
       if (!response.ok) {
         const errorData = await response.json();
         console.error(
           "Failed to save preferences:",
-          errorData.message || response.statusText,
+          errorData.message || response.statusText
         );
         alert("Failed to save preferences");
         return;
@@ -63,7 +62,11 @@ const Profile: React.FC = () => {
     >
       <div className="bg-background rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
         <div className="flex justify-center mb-6">
-          <FiUser className="w-20 h-20" />
+          <img
+            src={user?.userSpecs.picture}
+            alt={"profile"}
+            className="rounded-circle size-32"
+          />
         </div>
         <h2 className="text-2xl font-semibold text-primary mb-4">
           {username ? `Welcome, ${username}!` : "Welcome!"}
