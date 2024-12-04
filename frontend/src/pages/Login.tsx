@@ -23,6 +23,7 @@ const Login: React.FC = () => {
 
         {/* Login Button with Google Icon */}
         <button
+          data-testid="login-button"
           onClick={handleLogin}
           className="flex items-center justify-center w-full bg-white text-gray-700 border border-gray-300 py-3 rounded-lg font-medium shadow hover:bg-gray-100 transition"
         >

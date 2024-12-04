@@ -48,9 +48,6 @@ public class UserController {
         }
         try {
             String email = principal.getAttribute("email");
-            String name = principal.getAttribute("name");
-            System.out.println("Authenticated user: " + name);  // Add debug log to check the value
-
 
             Optional<User> user = userService.findUserByEmail(email);
             System.out.println("Authenticated user: " + user);
@@ -59,7 +56,7 @@ public class UserController {
             }
             System.out.println(user.get());
 
-            return ResponseEntity.ok(Map.of("message", "Login successful", "user", user.get()));
+            return ResponseEntity.ok(Map.of("message", "Login successful", "user", user.get(), "userSpecs", principal.getAttributes()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while fetching user info");
         }

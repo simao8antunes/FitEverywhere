@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FiUser } from "react-icons/fi";
+
 import MyGymList from "../components/MyGymList.tsx";
 import NearbyGyms from "../components/NearbyGyms.tsx";
 import ShowGym from "../components/ShowGym.tsx"; // Assuming this hook fetches nearby gyms
@@ -34,11 +34,15 @@ const GymProfile: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center">
+    <div data-testid="gym-profile" className="flex justify-center items-center">
       <div className="bg-background rounded-lg shadow-lg p-8  w-full mx-4">
         <hr className="my-4" />
         <div className="flex justify-center mb-6">
-          <FiUser className="w-20 h-20" />
+          <img
+            src={user?.userSpecs.picture}
+            alt={"profile"}
+            className="rounded-circle size-32"
+          />
         </div>
         <h2 className="text-2xl font-semibold text-primary mb-4">
           {username ? `Welcome, ${username}!` : "Welcome!"}

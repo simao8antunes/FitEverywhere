@@ -57,7 +57,10 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div className="flex justify-center items-center w-max">
+    <div
+      data-testid="client-profile"
+      className="flex justify-center items-center w-max"
+    >
       <div className="bg-background rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
         <div className="flex justify-center mb-6">
           <FiUser className="w-20 h-20" />
