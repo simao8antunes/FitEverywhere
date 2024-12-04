@@ -22,7 +22,7 @@ const NearbyGyms: React.FC<GymsProps> = ({
   }
 
   // Render no gyms message
-  if (gyms.length === 0) {
+  if (gyms && gyms.length === 0) {
     return <p>No nearby gyms found.</p>;
   }
 
