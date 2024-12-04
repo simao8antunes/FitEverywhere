@@ -49,8 +49,9 @@ const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
 
       setSuccessMessage("Price updated successfully!");
       setIsChangingPrice(null);
-    } catch (err: any) {
-      setUpdateError(err.message);
+    } catch (err: unknown) {
+      const error = err as Error;
+      setUpdateError(error.message);
     }
   };
 

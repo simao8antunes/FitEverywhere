@@ -201,8 +201,9 @@ export const useFetchGyms = () => {
       });
 
       setGyms(mergedGyms);
-    } catch (err: any) {
-      setError("Error: " + err.message);
+    } catch (err: unknown) {
+      const error = err as Error;
+      setError("Error: " + error.message);
     } finally {
       setLoading(false);
     }
