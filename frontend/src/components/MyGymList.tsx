@@ -15,8 +15,8 @@ const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
     return <div>Error: {error}</div>;
   }
 
-  if (gyms?.length === 0) {
-    return <p>You have {gyms?.length}</p>;
+  if (gyms === undefined || gyms?.length === 0) {
+    return <p>You have no gyms.</p>;
   }
 
   const updateGymPrice = async (gymId: number) => {
