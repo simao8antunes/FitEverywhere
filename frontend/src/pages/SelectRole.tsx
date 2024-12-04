@@ -76,6 +76,7 @@ const SelectRole: React.FC = () => {
           />
           <h3 className="text-lg font-semibold text-gray-800 mb-3">Gym</h3>
           <button
+            data-testid={"gym-button"}
             className={`px-4 py-2 rounded-full font-medium transition-all ${
               role === "gym"
                 ? "bg-primary text-gray-800"
@@ -101,6 +102,7 @@ const SelectRole: React.FC = () => {
           />
           <h3 className="text-lg font-semibold text-gray-800 mb-3">Client</h3>
           <button
+            data-testid={"client-button"}
             className={`px-4 py-2 rounded-full font-medium transition-all ${
               role === "client"
                 ? "bg-primary text-gray-800"

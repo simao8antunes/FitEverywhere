@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
+    "coverage": "vitest --coverage",
     "style-check": "prettier --check 'src/**/*.{ts,tsx,js,jsx,json}'"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@eslint/js": "^9.15.0",
     "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
     "@vitest/coverage-v8": "^2.1.8",
     "@vitest/ui": "^2.1.8",
