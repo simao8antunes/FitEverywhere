@@ -1,19 +1,26 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
 import pt.fe.up.fiteverywhere.backend.service.GymService;
 import pt.fe.up.fiteverywhere.backend.service.user.children.GymManagerService;
-
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/gym")
@@ -102,5 +109,15 @@ public class GymController {
         return ResponseEntity.ok(gymInfo);
     }
 
+
+    // GET ALL GYMS
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllGyms() {
+        Iterable<Gym> gyms = gymService.getAllGyms();
+        if (gyms == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Map.of("error", "No gyms found."));
+        }
+        return ResponseEntity.ok(gyms);
+    }
 
 }

@@ -94,15 +94,15 @@ type UserSpec = {
 };
 
 export type {
+  Client,
   Event,
   Gym,
+  GymManager,
   GymResponse,
   GymsProps,
+  PersonalTrainer,
   UseFetchEventsResult,
   UseFetchUserResult,
   User,
   UserOptions,
-  Client,
-  GymManager,
-  PersonalTrainer,
 };
