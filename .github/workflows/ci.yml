@@ -30,6 +30,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
+        run: npx playwright install
+        working-directory: ./frontend
+
+      - name: Install dependencies
         run: npm install
         working-directory: ./frontend
 
