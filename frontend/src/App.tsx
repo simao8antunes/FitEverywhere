@@ -8,6 +8,7 @@ import SelectRole from "./pages/SelectRole";
 import Profile from "./pages/Profile.tsx";
 import GymProfile from "./pages/GymProfile.tsx";
 import { useAuth } from "./hooks/useAuth.ts";
+import PersonalTrainerProfile from "./pages/PersonalTrainerProfile.tsx";
 
 const App: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
@@ -44,7 +45,7 @@ const App: React.FC = () => {
               {user.role === "personal_trainer" && (
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Dashboard />} />
-                  <Route path="profile" element={<Profile />} />
+                  <Route path="profile" element={<PersonalTrainerProfile />} />
                 </Route>
               )}
             </>
