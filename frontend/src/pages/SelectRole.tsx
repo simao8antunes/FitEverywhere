@@ -92,16 +92,16 @@ const SelectRole: React.FC = () => {
         <div
           onClick={() => setRole("pt")}
           className={`cursor-pointer bg-white shadow-lg rounded-lg p-8 w-56 text-center transition-transform transform hover:scale-105 ${
-            role === "pt"
-              ? "border-2 border-primary"
-              : "border border-gray-300"
+            role === "pt" ? "border-2 border-primary" : "border border-gray-300"
           }`}
         >
           <GiMuscleUp
             className="mx-auto mb-4 text-primary"
             style={{ fontSize: "36px" }}
           />
-          <h3 className="text-lg font-semibold text-gray-800 mb-3">Personal Trainer</h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-3">
+            Personal Trainer
+          </h3>
           <button
             className={`px-4 py-2 rounded-full font-medium transition-all ${
               role === "pt"

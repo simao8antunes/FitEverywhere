@@ -5,16 +5,16 @@ import type { PersonalTrainer, UserOptions } from "../types.ts";
 const PersonalTrainerProfile: React.FC = () => {
   const { user } = useAuth();
   const { username, email, role } = user || {};
-  const [myGym, setMyGym] = useState<String>();
+  const [myGym, setMyGym] = useState<string | undefined>();
 
   const isPersonalTrainer = (
-    user: UserOptions | null
+    user: UserOptions | null,
   ): user is PersonalTrainer => {
     return user?.role === "personal_trainer";
   };
 
   useEffect(() => {
-    if (isPersonalTrainer(user) && !myGym === undefined) {
+    if (isPersonalTrainer(user) && myGym === undefined) {
       console.log(user.linkedGym);
       setMyGym(user.linkedGym);
     }
