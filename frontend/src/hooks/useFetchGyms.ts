@@ -35,7 +35,7 @@ export const useFetchGyms = () => {
   const fetchOwnGyms = async () => {
     setLoading(true);
     setError(null);
-    const response = await fetch(API_URL + "/api/gym-manager/list-gyms", {
+    const response = await fetch(API_URL + "/gym-manager/list-gyms", {
       credentials: "include",
     });
     if (!response.ok) {
