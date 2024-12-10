@@ -5,9 +5,7 @@ import { SiGoogle } from "react-icons/si";
 const Login: React.FC = () => {
   const handleLogin = () => {
     window.location.href =
-      "https://" +
-      import.meta.env.VITE_API_BASE_URL +
-      "/oauth2/authorization/google";
+      import.meta.env.VITE_API_BASE_URL + "/oauth2/authorization/google";
   };
   console.log("hostname=" + import.meta.env.VITE_API_BASE_URL);
   return (

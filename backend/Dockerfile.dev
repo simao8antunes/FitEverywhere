@@ -6,4 +6,4 @@ RUN chmod 777 -R /app
 
 RUN apt update && apt install -y wget
 
-CMD mvn spring-boot:run
+CMD mvn spring-boot:run -Dspring-boot.run.profiles=local,general

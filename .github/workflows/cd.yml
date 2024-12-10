@@ -27,9 +27,20 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - run: |
-          docker build --platform linux/amd64 --build-arg VITE_API_BASE_URL=${{ github.ref_name == 'main' && 'api-fiteverywhere.azurewebsites.net' || 'api-fiteverywhere-dev.azurewebsites.net'}} -t fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }} frontend/
+          docker build \
+          --platform linux/amd64 \
+          --build-arg VITE_API_BASE_URL=${{ github.ref_name == 'main' && 'https://api-fiteverywhere.azurewebsites.net' || 'https://api-fiteverywhere-dev.azurewebsites.net'}} \
+          -t fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }} \
+          frontend/
           docker push fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }}
-          docker build --platform linux/amd64 --build-arg SPRING_PROFILES_ACTIVE=${{ github.ref_name }},general -t fiteverywherecr.azurecr.io/backend:${{ github.ref_name }} backend/
+          docker build \
+          --platform linux/amd64 \
+          --build-arg SPRING_PROFILES_ACTIVE=${{ github.ref_name }},general \
+          --build-arg SPRING_DATASOURCE_URL=${{DB_URL}} \
+          --build-arg SPRING_DATASOURCE_USERNAME=${{DB_USERNAME}} \
+          --build-arg SPRING_DATASOURCE_PASSWORD=${{DB_PASSWORD}} \
+          -t fiteverywherecr.azurecr.io/backend:${{ github.ref_name }} \
+          backend/
           docker push fiteverywherecr.azurecr.io/backend:${{ github.ref_name }}
 
   deploy:
