@@ -52,8 +52,12 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
+        String clientOrigin = environment.getProperty("CLIENT_ORIGIN");
+        if (clientOrigin == null || clientOrigin.isBlank()) {
+            throw new IllegalStateException("CLIENT_ORIGIN is not set! Please configure it in your environment.");
+        }
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Collections.singletonList(environment.getProperty("SERVER_NAME")));
+        config.setAllowedOrigins(Collections.singletonList(environment.getProperty("CLIENT_ORIGIN")));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         source.registerCorsConfiguration("/**", config);

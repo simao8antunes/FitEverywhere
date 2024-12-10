@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import type { Event, UseFetchEventsResult } from "../types";
-
+const API_URL = import.meta.env.VITE_API_URL as string;
 export function useFetchEvents(): UseFetchEventsResult {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchEvents = async () => {
-    return await fetch("/api/calendar/events", {
+    return await fetch(API_URL + "/api/calendar/events", {
       mode: "no-cors",
       method: "GET",
       credentials: "include",

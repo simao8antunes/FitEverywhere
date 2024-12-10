@@ -4,9 +4,12 @@ import { SiGoogle } from "react-icons/si";
 
 const Login: React.FC = () => {
   const handleLogin = () => {
-    window.location.href = "/api/oauth2/authorization/google";
+    window.location.href =
+      "https://" +
+      import.meta.env.VITE_API_BASE_URL +
+      "/oauth2/authorization/google";
   };
-
+  console.log("hostname=" + import.meta.env.VITE_API_BASE_URL);
   return (
     <div className="flex items-center justify-center min-h-screen w-[100vw]">
       <div className="bg-background  rounded-lg shadow-lg p-8 max-w-md w-full mx-4 text-center">

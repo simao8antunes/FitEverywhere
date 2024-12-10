@@ -10,38 +10,45 @@ on:
       - main
       - dev
 
+permissions:
+  contents: read
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/docker-login@v2
+        with:
+          login-server: fiteverywherecr.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - run: |
+          docker build --platform linux/amd64 --build-arg VITE_API_BASE_URL=api-fiteverywhere.azurewebsites.net -t fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }} frontend/
+          docker push fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }}
+          docker build --platform linux/amd64 --build-arg SPRING_PROFILES_ACTIVE=${{ github.ref_name }},general -t fiteverywherecr.azurecr.io/backend:${{ github.ref_name }} backend/
+          docker push fiteverywherecr.azurecr.io/backend:${{ github.ref_name }}
+
   deploy:
+    permissions:
+      contents: none
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
-      url: ${{ vars.SERVER_NAME }}
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.9.0
+      - uses: azure/webapps-deploy@v3.0.1
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          app-name: 'node-rnc'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONTEND }}
+          images: 'fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }}'
 
-      - name: Clean and Copy files to Azure VM
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }} "rm -rf ~/FitEverywhere-T2E/*"
-          scp -r -o StrictHostKeyChecking=no * ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:~/FitEverywhere-T2E
-
-      - name: SSH into VM and deploy
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }} << 'EOF'
-          
-            cd ~/FitEverywhere-T2E
-            echo "SERVER_NAME=${{ vars.SERVER_NAME }}" > .env
-            echo "SPRING_DATASOURCE_URL=jdbc:mysql://fiteverywhere-db.mysql.database.azure.com:3306/${{ vars.DB_NAME }}?serverTimezone=UTC&useSSL=true&requireSSL=false" >> .env
-            echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-            echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-            sudo docker stop $(sudo docker ps -a -q)      # Stop previous containers if any
-            sudo docker rm $(sudo docker ps -a -q)        # Remove previous containers if any
-            sudo docker rmi $(sudo docker images -a -q)
-            sudo docker compose -f docker-compose.yml up -d     # Start new containers
-          EOF
+      - uses: azure/webapps-deploy@v3.0.1
+        with:
+          app-name: 'node-rnc'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_BACKEND }}
+          images: 'fiteverywherecr.azurecr.io/backend:${{ github.ref_name }}'

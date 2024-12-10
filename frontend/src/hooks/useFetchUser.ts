@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { UseFetchUserResult, UserOptions } from "../types";
-
+const API_URL = import.meta.env.VITE_API_URL as string;
 export function useFetchUser(): UseFetchUserResult {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<UserOptions | null>(null);
@@ -11,7 +11,7 @@ export function useFetchUser(): UseFetchUserResult {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("/api/auth/login/success", {
+      const response = await fetch(API_URL + "/api/auth/login/success", {
         credentials: "include",
       });
       console.log("Fetched user data:", response, location.pathname);
@@ -49,15 +49,15 @@ export function useFetchUser(): UseFetchUserResult {
 
   useEffect(() => {
     if (
-      location.pathname !== "/login" &&
-      location.pathname !== "/api/oauth2/authorization/google"
+      location.pathname !== API_URL + "/login" &&
+      location.pathname !== API_URL + "/api/oauth2/authorization/google"
     ) {
       fetchUsers();
     }
   }, [location.pathname]);
 
   const logout = async () => {
-    return await fetch("/api/logout", {
+    return await fetch(API_URL + "/api/logout", {
       method: "GET",
       credentials: "include",
     })

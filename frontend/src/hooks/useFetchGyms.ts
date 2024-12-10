@@ -3,6 +3,7 @@ import { Gym, GymResponse } from "../types";
 
 // OpenStreetMap-related URLs
 const OVERPASS_API_URL = "http://overpass-api.de/api/interpreter";
+const API_URL = import.meta.env.VITE_API_URL as string;
 
 // Function to calculate the distance between two coordinates (lat1, lon1) and (lat2, lon2)
 const calculateDistance = (
@@ -34,7 +35,7 @@ export const useFetchGyms = () => {
   const fetchOwnGyms = async () => {
     setLoading(true);
     setError(null);
-    const response = await fetch("/api/gym-manager/list-gyms", {
+    const response = await fetch(API_URL + "/api/gym-manager/list-gyms", {
       credentials: "include",
     });
     if (!response.ok) {
@@ -162,7 +163,7 @@ export const useFetchGyms = () => {
       const { lat, lon } = geocodingData[0];
 
       // Fetch gyms from database
-      const dbResponse = await fetch("/api/gym/all", {
+      const dbResponse = await fetch(API_URL + "/api/gym/all", {
         credentials: "include",
       });
 
