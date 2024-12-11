@@ -163,7 +163,7 @@ export const useFetchGyms = () => {
       const { lat, lon } = geocodingData[0];
 
       // Fetch gyms from database
-      const dbResponse = await fetch(API_URL + "/api/gym/all", {
+      const dbResponse = await fetch(API_URL + "/gym/all", {
         credentials: "include",
       });
 

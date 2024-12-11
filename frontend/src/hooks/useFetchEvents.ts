@@ -7,7 +7,7 @@ export function useFetchEvents(): UseFetchEventsResult {
   const [error, setError] = useState<string | null>(null);
 
   const fetchEvents = async () => {
-    return await fetch(API_URL + "/api/calendar/events", {
+    return await fetch(API_URL + "/calendar/events", {
       mode: "no-cors",
       method: "GET",
       credentials: "include",

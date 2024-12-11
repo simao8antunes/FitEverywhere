@@ -25,7 +25,7 @@ const Profile: React.FC = () => {
   const handleSavePreferences = async () => {
     try {
       const response = await fetch(
-        `/api/client/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
+        `/client/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
         {
           method: "PUT",
           credentials: "include",

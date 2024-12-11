@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaDumbbell, FaUser } from "react-icons/fa";
 import { GiMuscleUp } from "react-icons/gi";
 import { useLocation, useNavigate } from "react-router-dom";
-
+const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const SelectRole: React.FC = () => {
   const [role, setRole] = useState<string>("");
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const SelectRole: React.FC = () => {
 
   const handleRoleSelection = async () => {
     try {
-      const response = await fetch(`/api/auth/signup?role=${role}`, {
+      const response = await fetch(API_URL + `/auth/signup?role=${role}`, {
         method: "POST",
         credentials: "include",
       });

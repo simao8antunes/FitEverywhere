@@ -9,7 +9,7 @@ const ShowGym: React.FC<ShowGymProps> = ({ gym }) => {
   const [message, setMessage] = useState<string | null>(null);
   const handleCreateGym = async () => {
     try {
-      const url = new URL("/api/gym/", window.location.origin);
+      const url = new URL("/gym/", window.location.origin);
       url.searchParams.append("name", gym?.name || "");
       url.searchParams.append("id", gym?.id?.toString() || "");
       console.log(gym?.id);

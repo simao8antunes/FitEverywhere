@@ -30,7 +30,7 @@ const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
         throw new Error("Gym not found");
       }
 
-      const response = await fetch(`/api/gym/`, {
+      const response = await fetch(`/gym/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -58,7 +58,7 @@ describe("SelectRole", () => {
     await userEvent.click(screen.getByText("Gym").element());
     await userEvent.click(screen.getByText("Continue").element());
 
-    expect(mockFetch).toHaveBeenCalledWith("/api/auth/signup?role=gym", {
+    expect(mockFetch).toHaveBeenCalledWith("/auth/signup?role=gym", {
       method: "POST",
       credentials: "include",
     });
@@ -84,7 +84,7 @@ describe("SelectRole", () => {
     await userEvent.click(screen.getByText("Client").element());
     await userEvent.click(screen.getByText("Continue").element());
 
-    expect(mockFetch).toHaveBeenCalledWith("/api/auth/signup?role=client", {
+    expect(mockFetch).toHaveBeenCalledWith("/auth/signup?role=client", {
       method: "POST",
       credentials: "include",
     });
