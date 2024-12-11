@@ -8,7 +8,6 @@ export function useFetchEvents(): UseFetchEventsResult {
 
   const fetchEvents = async () => {
     return await fetch(API_URL + "/calendar/events", {
-      mode: "no-cors",
       method: "GET",
       credentials: "include",
     });
@@ -31,6 +30,7 @@ export function useFetchEvents(): UseFetchEventsResult {
         setEvents(upcomingEvents);
       })
       .catch((err) => {
+        console.log("Error fetching events:", err);
         setError("Failed to load events.");
         throw new Error(`Error fetching calendar events: ${err}`);
       })

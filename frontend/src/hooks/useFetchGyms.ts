@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Gym, GymResponse } from "../types";
 
 // OpenStreetMap-related URLs
-const OVERPASS_API_URL = "http://overpass-api.de/api/interpreter";
+const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter";
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 // Function to calculate the distance between two coordinates (lat1, lon1) and (lat2, lon2)
