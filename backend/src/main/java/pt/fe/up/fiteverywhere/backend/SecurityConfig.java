@@ -40,8 +40,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/error") // Redirect on failure
+                        .defaultSuccessUrl(environment.getProperty("CLIENT_ORIGIN") + "/", true)
+                        .failureUrl(environment.getProperty("CLIENT_ORIGIN") + "/error") // Redirect on failure
                 );
 
         return http.build();
