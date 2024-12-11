@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./index.css";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -50,12 +50,22 @@ const App: React.FC = () => {
               )}
             </>
           ) : (
-            <Route path="*" element={<Navigate to="/select-role" replace />} />
+            <>
+              <Route
+                path="*"
+                element={<Navigate to="/select-role" replace />}
+              />
+              <Route path="/" element={<Dashboard />} />
+            </>
           )}
         </>
       ) : (
-        <Route path="login" element={<Login />} />
+        <>
+          <Route path="login" element={<Login />} />
+          <Route path="/" element={<Dashboard />} />
+        </>
       )}
+      <Route path="*" element={<Navigate to="/select-role" replace />} />
     </Routes>
   );
 };
