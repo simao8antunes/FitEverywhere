@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { UseFetchUserResult, UserOptions } from "../types";
-const API_URL = import.meta.env.VITE_API_BASE_URL as string;
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 export function useFetchUser(): UseFetchUserResult {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<UserOptions | null>(null);
@@ -58,19 +58,16 @@ export function useFetchUser(): UseFetchUserResult {
 
   const logout = async () => {
     return await fetch(API_URL + "/logout", {
+      mode: "no-cors",
       method: "GET",
       credentials: "include",
     })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("Logged out successfully");
-          setIsAuthenticated(false);
-          setUser(null);
-          sessionStorage.removeItem("user");
-          navigate("/login");
-        } else {
-          console.error("Failed to logout");
-        }
+      .then(() => {
+        console.log("Logged out successfully");
+        setIsAuthenticated(false);
+        setUser(null);
+        sessionStorage.removeItem("user");
+        navigate("/login");
       })
       .catch((error) => console.error("Error during logout:", error));
   };

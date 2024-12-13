@@ -25,7 +25,8 @@ const Profile: React.FC = () => {
   const handleSavePreferences = async () => {
     try {
       const response = await fetch(
-        `/client/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
+        import.meta.env.VITE_API_BASE_URL +
+          `/client/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
         {
           method: "PUT",
           credentials: "include",

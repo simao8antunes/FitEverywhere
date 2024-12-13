@@ -1,6 +1,5 @@
 package pt.fe.up.fiteverywhere.backend.controller.user.children;
 
-import com.google.auth.oauth2.GoogleCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +28,7 @@ public class ClientController {
             @RequestParam String time,
             @AuthenticationPrincipal OAuth2User principal) {
 
+        System.out.println("Principal: " + principal); // Debug log
         String email = principal.getAttribute("email");
         System.out.println("Updating preferences for user: " + email); // Debug log
         Optional<Client> client = clientService.findClientByEmail(email);
