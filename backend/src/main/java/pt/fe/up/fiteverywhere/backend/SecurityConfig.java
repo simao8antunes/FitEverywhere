@@ -16,6 +16,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -42,6 +43,9 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl(environment.getProperty("CLIENT_ORIGIN") + "/", true)
                         .failureUrl(environment.getProperty("CLIENT_ORIGIN") + "/error") // Redirect on failure
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl(environment.getProperty("CLIENT_ORIGIN") + "/login")
                 );
 
         return http.build();
@@ -56,10 +60,11 @@ public class SecurityConfig {
         if (clientOrigin == null || clientOrigin.isBlank()) {
             throw new IllegalStateException("CLIENT_ORIGIN is not set! Please configure it in your environment.");
         }
-        config.setAllowCredentials(true);
         config.setAllowedOrigins(Collections.singletonList(clientOrigin));
+        config.setAllowCredentials(true);
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Access-Control-Allow-Origin")); // Common headers
+        config.setExposedHeaders(List.of("Authorization"));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

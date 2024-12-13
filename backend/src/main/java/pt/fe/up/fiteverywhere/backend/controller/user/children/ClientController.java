@@ -38,6 +38,7 @@ public class ClientController {
             @RequestParam String time,
             @AuthenticationPrincipal OAuth2User principal) {
 
+        System.out.println("Principal: " + principal); // Debug log
         String email = principal.getAttribute("email");
         System.out.println("Updating preferences for user: " + email); // Debug log
         Optional<Client> client = clientService.findClientByEmail(email);
