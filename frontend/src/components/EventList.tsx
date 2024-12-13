@@ -1,5 +1,5 @@
 import React from "react";
-import type { UseFetchEventsResult, Event } from "../types";
+import type { Event, UseFetchEventsResult } from "../types";
 
 interface EventListProps extends UseFetchEventsResult {
   onEventClick: (event: Event) => void; // Replace `any` with your event type
@@ -40,6 +40,7 @@ const EventList: React.FC<EventListProps> = ({
             <p className="text-sm ">
               {new Date(event.start.dateTime).toLocaleString()} -{" "}
               {new Date(event.end.dateTime).toLocaleString()}
+              {" "}
               <label>{event.location}</label>
             </p>
           </div>

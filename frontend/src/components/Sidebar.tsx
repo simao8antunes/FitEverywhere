@@ -1,8 +1,8 @@
 import React from "react";
-import logo from "/logo.svg";
-import { useAuth } from "../hooks/useAuth.ts";
-import { FiHome, FiGrid } from "react-icons/fi";
+import { FiGrid, FiHome } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth.ts";
+import logo from "/logo.svg";
 
 interface SidebarProps {
   userName: string;
@@ -21,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userName }) => {
 
   const menuItems = [
     { name: "Home", icon: <FiHome />, link: "/" },
-    { name: "Workout Itineraries", icon: <FiGrid />, link: "/itineraries" },
+    { name: "Workouts", icon: <FiGrid />, link: "/workouts" },
   ];
 
   const navItemStyles: SidebarStyles = {
