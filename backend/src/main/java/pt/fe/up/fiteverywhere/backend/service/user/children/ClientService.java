@@ -1,14 +1,17 @@
 package pt.fe.up.fiteverywhere.backend.service.user.children;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import pt.fe.up.fiteverywhere.backend.entity.User;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
-import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
+import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
 
 @Service
 public class ClientService {
@@ -30,25 +33,115 @@ public class ClientService {
         clientRepository.save(client);
     }
 
-    public List<String> generateWorkoutSchedule(User user, List<Map<String, Object>> calendarEvents) {
-//        int workoutsPerWeek = user.getWorkoutsPerWeek();
-//        String preferredTime = user.getPreferredTime();
-//        List<String> schedule = new ArrayList<>();
-//
-//        // Example: Distribute workouts while avoiding calendar events
-//        for (int i = 0; i < 7; i++) {
-//            if (schedule.size() >= workoutsPerWeek) break;
-//
-//            String day = LocalDate.now().plusDays(i).getDayOfWeek().name();
-//            boolean hasConflict = calendarEvents.stream()
-//                    .anyMatch(event -> event.get("day").equals(day) && event.get("time").equals(preferredTime));
-//
-//            if (!hasConflict) {
-//                schedule.add(day + " " + preferredTime);
-//            }
-//        }
-//
-//        return schedule;
-        return List.of();
+    public List<String> generateWorkoutSuggestions(Client client, Map<String, Object> calendarEvents) {
+        // Extract busy times from the events
+        List<Map<String, Object>> events = (List<Map<String, Object>>) calendarEvents.get("items");
+        List<String> busyTimes = extractBusyTimes(events);
+
+        String preferredTime = client.getPreferredTime();
+        int workoutsPerWeek = client.getWorkoutsPerWeek();
+
+        List<String> suggestions = new ArrayList<>();
+
+        for (int i = 0; i < workoutsPerWeek; i++) {
+            // Suggest a day and time
+            String suggestedDayTime = findAvailableSlot(busyTimes, preferredTime);
+            System.out.println(suggestedDayTime);
+
+            suggestions.add(suggestedDayTime);
+            System.out.println(suggestions);
+        }
+
+        return suggestions;
+    }
+
+    private List<String> extractBusyTimes(List<Map<String, Object>> events) {
+        List<String> busyTimes = new ArrayList<>();
+        if (events == null) {
+            return busyTimes; // Return an empty list if no events are present
+        }
+    
+        for (Map<String, Object> event : events) {
+            try {
+                String start = (String) ((Map<String, Object>) event.get("start")).getOrDefault("dateTime", (String) ((Map<String, Object>) event.get("start")).get("date"));
+                String end = (String) ((Map<String, Object>) event.get("end")).getOrDefault("dateTime", (String) ((Map<String, Object>) event.get("end")).get("date"));
+    
+                busyTimes.add(formatBusyTime(start, end));
+            } catch (Exception e) {
+                // Log and skip malformed events
+                System.err.println("Malformed event: " + event);
+            }
+        }
+    
+        return busyTimes;
+    }
+    
+
+    private String formatBusyTime(String start, String end) {
+        // Extract date and time components (assume ISO 8601 format)
+        String date = start.substring(0, 10); // Extract "YYYY-MM-DD"
+        String startTime = start.substring(11, 16); // Extract "HH:MM"
+        String endTime = end.substring(11, 16); // Extract "HH:MM"
+
+        return date + " " + startTime + "-" + endTime;
+    }
+
+    public String findAvailableSlot(List<String> busyTimes, String preferredTime) {
+        // Map preferred time to time range (using 24-hour format)
+        LocalDateTime preferredDateTimeStart = getPreferredTimeRange(preferredTime).get(0);
+        LocalDateTime preferredDateTimeEnd = getPreferredTimeRange(preferredTime).get(1);
+    
+        // Loop through next 7 days to find a slot
+        for (int i = 0; i < 7; i++) { // Check the next 7 days
+            LocalDateTime currentTimeStart = preferredDateTimeStart.plusDays(i);
+            LocalDateTime currentTimeEnd = preferredDateTimeEnd.plusDays(i);
+    
+            String currentSlotStart = currentTimeStart.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            String currentSlotEnd = currentTimeEnd.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    
+            boolean isConflict = false;
+            for (String busyTime : busyTimes) {
+                String[] timeRange = busyTime.split(" ");
+                String busyDate = timeRange[0];
+                String busyRange = timeRange[1];
+                String[] busyStartEnd = busyRange.split("-");
+    
+                LocalDateTime busyStart = LocalDateTime.parse(busyDate + " " + busyStartEnd[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                LocalDateTime busyEnd = LocalDateTime.parse(busyDate + " " + busyStartEnd[1], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    
+                // Check if the current slot conflicts with the busy time
+                if (!(currentTimeStart.isAfter(busyEnd) || currentTimeEnd.isBefore(busyStart))) {
+                    isConflict = true;
+                    break;
+                }
+            }
+    
+            if (!isConflict) {
+                String newBusyTime = currentSlotStart.split(" ")[0] + " " + currentSlotStart.split(" ")[1] + "-" + currentSlotEnd.split(" ")[1];
+                busyTimes.add(newBusyTime); // Add the new slot to the busy times
+                return currentSlotStart + "/" + currentSlotEnd; // Return the first available slot
+            }
+        }
+    
+        // Fallback: No slot found
+        return "No available slots";
+    }
+    
+    
+    
+    private List<LocalDateTime> getPreferredTimeRange(String preferredTime) {
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay(); // Get today's start of day
+    
+        // Map preferred time to time range
+        switch (preferredTime.toLowerCase()) {
+            case "morning":
+                return List.of(startOfDay.plusHours(7), startOfDay.plusHours(11));
+            case "afternoon":
+                return List.of(startOfDay.plusHours(12), startOfDay.plusHours(19));
+            case "evening":
+                return List.of(startOfDay.plusHours(19), startOfDay.plusHours(23));
+            default:
+                throw new IllegalArgumentException("Invalid preferred time");
+        }
     }
 }
