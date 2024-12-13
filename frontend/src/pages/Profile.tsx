@@ -26,7 +26,7 @@ const Profile: React.FC = () => {
     try {
       const response = await fetch(
         import.meta.env.VITE_API_BASE_URL +
-          `/client/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
+        `/client/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
         {
           method: "PUT",
           credentials: "include",

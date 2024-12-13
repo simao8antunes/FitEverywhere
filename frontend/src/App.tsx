@@ -1,15 +1,16 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import { useAuth } from "./hooks/useAuth.ts";
 import "./index.css";
 import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import Layout from "./components/Layout";
-import SelectRole from "./pages/SelectRole";
-import Profile from "./pages/Profile.tsx";
 import GymProfile from "./pages/GymProfile.tsx";
+import Login from "./pages/Login";
 import MyGyms from "./pages/MyGyms.tsx";
-import { useAuth } from "./hooks/useAuth.ts";
 import PersonalTrainerProfile from "./pages/PersonalTrainerProfile.tsx";
+import Profile from "./pages/Profile.tsx";
+import SelectRole from "./pages/SelectRole";
+import Workouts from "./pages/Workouts.tsx";
 
 const App: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
@@ -36,6 +37,7 @@ const App: React.FC = () => {
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Dashboard />} />
                   <Route path="profile" element={<Profile />} />
+                  <Route path="workouts" element={<Workouts />} />
                 </Route>
               )}
 
