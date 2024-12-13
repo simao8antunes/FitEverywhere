@@ -28,7 +28,7 @@ const EventList: React.FC<EventListProps> = ({
 
   // Render list of events
   return (
-    <div className="">
+    <div>
       <div className="space-y-4">
         {events.map((event) => (
           <div

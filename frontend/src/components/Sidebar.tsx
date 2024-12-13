@@ -8,11 +8,14 @@ import { BiPurchaseTag } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.ts";
 
+interface SidebarProps {
+  userName: string;
+}
+
 const Sidebar: React.FC = () => {
   const { user } = useAuth();
   const menuItems = [
     { name: "Home", icon: <FiHome />, link: "/" },
-    { name: "Workout Itineraries", icon: <FiGrid />, link: "/itineraries" },
     { name: "My Gyms", icon: <CgGym />, link: "/my-gyms", role: "gym_manager" },
     {
       name: "My Services",
@@ -32,6 +35,7 @@ const Sidebar: React.FC = () => {
       link: "/my-pt",
       role: "client",
     },
+    { name: "Workouts", icon: <FiGrid />, link: "/workouts" },
   ];
 
   return (
