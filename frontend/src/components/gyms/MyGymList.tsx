@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { GymsProps } from "../types";
+import type { GymsProps } from "../../types.ts";
 
 const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
   const [isChangingPrice, setIsChangingPrice] = useState<number | null>(null);
@@ -30,20 +30,17 @@ const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
         throw new Error("Gym not found");
       }
 
-      const response = await fetch(
-        import.meta.env.VITE_API_BASE_URL + `/gym/`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            ...currentGym, // Include all current gym fields
-            dailyFee: parseFloat(newPrice), // Update only the dailyFee
-          }),
+      const response = await fetch(import.meta.env.VITE_API_BASE_URL + `/gym`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        credentials: "include",
+        body: JSON.stringify({
+          ...currentGym, // Include all current gym fields
+          dailyFee: parseFloat(newPrice), // Update only the dailyFee
+        }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();

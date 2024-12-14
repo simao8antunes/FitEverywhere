@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import GoogleMap from "../components/GoogleMap";
-import type { Gym, GymsProps } from "../types";
+import GoogleMap from "../GoogleMap.tsx";
+import type { Gym, GymsProps } from "../../types.ts";
 import GymList from "./GymList.tsx";
 
 const NearbyGyms: React.FC<GymsProps> = ({
@@ -46,7 +46,7 @@ const NearbyGyms: React.FC<GymsProps> = ({
   }
 
   return (
-    <div className="bg-intense shadow-md rounded-lg p-6 ">
+    <>
       {/* Sorting options */}
       <div className="mb-4 flex justify-end">
         <label htmlFor="sort" className="mr-2 font-semibold">
@@ -75,7 +75,7 @@ const NearbyGyms: React.FC<GymsProps> = ({
         error={error}
         onSelectGym={onSelectGym}
       />
-    </div>
+    </>
   );
 };
 
