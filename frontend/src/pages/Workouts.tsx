@@ -30,7 +30,20 @@ const Workouts: React.FC = () => {
 
       const data = await response.json();
       console.log(data);
-      setSuggestedWorkouts(data.suggestions || []);
+
+      // Transform the data
+      if (Array.isArray(data)) {
+        const suggestions = data.map((item: string) => {
+          const [startTime, endTime] = item.split("/"); // Split by "/"
+          return {
+            time: `${startTime} to ${endTime}`, // Combine start and end times
+            gym: "Unknown Gym", // Replace with real gym name if available
+          };
+        });
+        setSuggestedWorkouts(suggestions);
+      } else {
+        setSuggestedWorkouts([]);
+      }
     } catch (error) {
       console.error("Error fetching suggestions:", error);
       setError("Error fetching workout suggestions. Please try again later.");
