@@ -28,6 +28,9 @@ public class Gym {
     @Column
     private Double dailyFee;
 
+    @Column
+    private Double weeklyMembership;
+
     @ManyToMany(mappedBy = "linkedGyms", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("linkedGyms")
     private Set<GymManager> linkedGymManagers = new HashSet<>();

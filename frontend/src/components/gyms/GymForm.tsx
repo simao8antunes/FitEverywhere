@@ -69,6 +69,22 @@ const GymForm = ({ selectedGym }: GymFormProps) => {
                   className="input input-bordered"
                 />
               </label>
+              <label className="form-control">
+                <div className="label">
+                  <span className="label-text">Weekly Membership</span>
+                </div>
+                <input
+                  type="number"
+                  value={selectedGymForm?.weeklyMembership ?? 0}
+                  onChange={(e) => {
+                    setSelectedGymForm({
+                      ...selectedGymForm,
+                      weeklyMembership: e.target.value,
+                    });
+                  }}
+                  className="input input-bordered"
+                />
+              </label>
               {selectedGymForm?.overpassData && (
                 <div className="grid grid-cols-2 gap-base">
                   <label className="form-control">

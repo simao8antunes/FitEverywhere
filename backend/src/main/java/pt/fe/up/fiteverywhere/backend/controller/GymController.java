@@ -66,8 +66,10 @@ public class GymController {
         // Update gym details
         Gym existingGym = gymOpt.get();
         existingGym.setName(gym.getName());
-        existingGym.setDailyFee(gym.getDailyFee());
         existingGym.setDescription(gym.getDescription());
+        existingGym.setDailyFee(gym.getDailyFee());
+        existingGym.setWeeklyMembership(gym.getWeeklyMembership());
+        
         gymService.saveOrUpdateGym(existingGym);
 
         return ResponseEntity.ok(Map.of("message", "Gym details updated successfully!"));
@@ -96,6 +98,7 @@ public class GymController {
         gymInfo.put("name", gym.getName());
         gymInfo.put("description", gym.getDescription());
         gymInfo.put("dailyFee", gym.getDailyFee());
+        gymInfo.put("weeklyMembership", gym.getWeeklyMembership());
         gymInfo.put("personalTrainers", gym.getLinkedPersonalTrainers());
         RestTemplate restTemplate = new RestTemplate();
         String overpassQuery = "[out:json];node(" + gym.getId() + ");out body;";
