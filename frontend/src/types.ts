@@ -52,7 +52,7 @@ interface Gym {
   dailyFee: number;
   weeklyMembership: number;
   description: string;
-  personalTrainers: any;
+  personalTrainers: PersonalTrainer[];
   overpassData?: GymOverpass;
 }
 
