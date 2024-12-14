@@ -50,6 +50,7 @@ interface Gym {
   id: number;
   name: string;
   dailyFee: number;
+  weeklyMembership: number;
   description: string;
   personalTrainers: any;
   overpassData?: GymOverpass;

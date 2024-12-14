@@ -42,6 +42,7 @@ public class GymManagerController {
                     gymData.put("id", gym.getId());
                     gymData.put("name", gym.getName());
                     gymData.put("dailyFee", gym.getDailyFee());
+                    gymData.put("weeklyMembership", gym.getWeeklyMembership());
                     return gymData;
                 })
                 .toList();
