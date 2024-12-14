@@ -13,8 +13,8 @@ const Profile: React.FC = () => {
   const [workoutsPerWeek, setWorkoutsPerWeek] = useState<number | null>(null);
   const [preferredTime, setPreferredTime] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [validationMessage, setValidationMessage] = useState<string>("");
 
-  // If the user is a client, set initial state values
   useEffect(() => {
     if (isClient(user) && workoutsPerWeek === null && preferredTime === null) {
       setWorkoutsPerWeek(user.workoutsPerWeek);
@@ -23,6 +23,11 @@ const Profile: React.FC = () => {
   }, [user, workoutsPerWeek, preferredTime]);
 
   const handleSavePreferences = async () => {
+    if (workoutsPerWeek === null || workoutsPerWeek <= 0) {
+      setValidationMessage("Workouts per week must be greater than 0.");
+      return;
+    }
+
     try {
       const response = await fetch(
         import.meta.env.VITE_API_BASE_URL +
@@ -50,6 +55,16 @@ const Profile: React.FC = () => {
       console.error("Error saving preferences:", error);
       alert("Error saving preferences");
     }
+  };
+
+  const handleWorkoutsChange = (value: string) => {
+    const numberValue = Number(value);
+    if (numberValue < 0) {
+      setValidationMessage("Workouts per week must be greater than 0.");
+    } else {
+      setValidationMessage("");
+    }
+    setWorkoutsPerWeek(numberValue);
   };
 
   if (!isClient(user)) {
@@ -112,6 +127,9 @@ const Profile: React.FC = () => {
                   value={workoutsPerWeek || ""}
                   onChange={(e) => setWorkoutsPerWeek(Number(e.target.value))}
                 />
+                  {validationMessage && (
+                      <p className="text-red-500 text-sm mt-1">{validationMessage}</p>
+                  )}
               </div>
               <div>
                 <label className="font-bold">Preferred Time:</label>
