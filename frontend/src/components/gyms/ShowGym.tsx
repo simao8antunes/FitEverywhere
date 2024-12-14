@@ -1,4 +1,4 @@
-import type { Gym } from "../types.ts";
+import type { Gym } from "../../types.ts";
 import React, { useState } from "react";
 
 interface ShowGymProps {
@@ -10,7 +10,7 @@ const ShowGym: React.FC<ShowGymProps> = ({ gym }) => {
   const handleCreateGym = async () => {
     try {
       const url = new URL(
-        import.meta.env.VITE_API_BASE_URL + "/gym/",
+        import.meta.env.VITE_API_BASE_URL + "/gym",
         window.location.origin,
       );
       url.searchParams.append("name", gym?.name || "");

@@ -33,7 +33,7 @@ public class GymController {
     private GymManagerService gymManagerService;
 
     // CREATE A GYM
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<String> createGym(
             @AuthenticationPrincipal OAuth2User principal,
             @RequestParam String name,
@@ -53,7 +53,7 @@ public class GymController {
 
     // UPDATE A GYM
     @Transactional
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<?> updateGymDetails(@RequestBody Gym gym, @AuthenticationPrincipal OAuth2User principal) {
         Optional<GymManager> existingUserOpt = gymManagerService.findGymManagerByEmail(principal.getAttribute("email"));
         if (existingUserOpt.isEmpty()) {
@@ -82,7 +82,7 @@ public class GymController {
     }
 
     // GET GYM DETAILS
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> getGymDetails(@AuthenticationPrincipal OAuth2User principal) {
 
         Optional<GymManager> existingUserOpt = gymManagerService.findGymManagerByEmail(principal.getAttribute("email"));

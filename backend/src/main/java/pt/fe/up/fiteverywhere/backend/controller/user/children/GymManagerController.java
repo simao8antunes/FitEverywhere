@@ -49,6 +49,6 @@ public class GymManagerController {
                 .toList();
 
         // Convert gyms to a simpler DTO (Data Transfer Object) if necessary
-        return ResponseEntity.ok(gymList);
+        return ResponseEntity.ok(Collections.singletonMap("gyms", gymList));
     }
 }
