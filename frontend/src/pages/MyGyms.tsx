@@ -27,9 +27,7 @@ const MyGyms = () => {
             >
               <div className="card-body">
                 <h2 className="card-title">{gym.name}</h2>
-                <p>
-                  {gym.latitude} {gym.longitude}
-                </p>
+                <p>{gym.id}</p>
               </div>
             </div>
           ))}

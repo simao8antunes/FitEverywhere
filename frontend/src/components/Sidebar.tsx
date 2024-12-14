@@ -10,7 +10,7 @@ const Sidebar: React.FC = () => {
   const menuItems = [
     { name: "Home", icon: <FiHome />, link: "/" },
     { name: "Workout Itineraries", icon: <FiGrid />, link: "/itineraries" },
-    { name: "MyGyms", icon: <CgGym />, link: "/my-gyms", role: "gym_manager" },
+    { name: "My Gyms", icon: <CgGym />, link: "/my-gyms", role: "gym_manager" },
   ];
 
   return (
