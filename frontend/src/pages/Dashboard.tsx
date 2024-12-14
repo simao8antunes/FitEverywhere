@@ -28,9 +28,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <div data-testid="dashboard" className="container p-base">
-      <div className="flex gap-s">
+      <div className="grid grid-cols-4 gap-base">
         {/* Events Section */}
-        <div className="card bg-base-100 w-96 shadow-xl">
+        <div className="card bg-base-100 shadow-xl">
           <div className="card-body">
             <h2 className="card-title">Upcoming Events</h2>
             <EventList
@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
             />
           </div>
         </div>
-        <div className="card bg-base-100 w-[540px] shadow-xl">
+        <div className="card bg-base-100 shadow-xl col-span-2">
           <div className="card-body">
             {selectedEvent ? (
               <>

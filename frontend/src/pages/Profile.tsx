@@ -61,84 +61,86 @@ const Profile: React.FC = () => {
       data-testid="client-profile"
       className="flex justify-center items-center w-max"
     >
-      <div className="bg-background rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
-        <div className="flex justify-center mb-6">
-          <img
-            src={user?.userSpecs.picture}
-            alt={"profile"}
-            className="rounded-circle size-32"
-          />
-        </div>
-        <h2 className="text-2xl font-semibold text-primary mb-4">
-          {username ? `Welcome, ${username}!` : "Welcome!"}
-        </h2>
-        <div className="text-left space-y-3">
-          <div>
-            <span className="font-bold">Username:</span> {username || "N/A"}
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body">
+          <div className="flex justify-center mb-6">
+            <img
+              src={user?.userSpecs.picture}
+              alt={"profile"}
+              className="rounded-circle size-32"
+            />
           </div>
-          <div>
-            <span className="font-bold">Email:</span> {email || "N/A"}
-          </div>
-          <div>
-            <span className="font-bold">Role:</span> {role || "N/A"}
-          </div>
-        </div>
-        <hr className="my-4" />
-        {!isEditing ? (
-          <div>
+          <h2 className="text-2xl font-semibold text-primary mb-4">
+            {username ? `Welcome, ${username}!` : "Welcome!"}
+          </h2>
+          <div className="text-left space-y-3">
             <div>
-              <span className="font-bold">Workouts Per Week:</span>{" "}
-              {workoutsPerWeek !== null ? workoutsPerWeek : "Not set"}
+              <span className="font-bold">Username:</span> {username || "N/A"}
             </div>
             <div>
-              <span className="font-bold">Preferred Time:</span>{" "}
-              {preferredTime || "Not set"}
+              <span className="font-bold">Email:</span> {email || "N/A"}
             </div>
-            <button
-              className="bg-primary text-white py-2 px-4 rounded mt-4"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit Preferences
-            </button>
+            <div>
+              <span className="font-bold">Role:</span> {role || "N/A"}
+            </div>
           </div>
-        ) : (
-          <div>
+          <hr className="my-4" />
+          {!isEditing ? (
             <div>
-              <label className="font-bold">Workouts Per Week:</label>
-              <input
-                type="number"
-                className="border p-2 rounded w-full"
-                value={workoutsPerWeek || ""}
-                onChange={(e) => setWorkoutsPerWeek(Number(e.target.value))}
-              />
-            </div>
-            <div>
-              <label className="font-bold">Preferred Time:</label>
-              <select
-                className="border p-2 rounded w-full"
-                value={preferredTime || ""}
-                onChange={(e) => setPreferredTime(e.target.value)}
+              <div>
+                <span className="font-bold">Workouts Per Week:</span>{" "}
+                {workoutsPerWeek !== null ? workoutsPerWeek : "Not set"}
+              </div>
+              <div>
+                <span className="font-bold">Preferred Time:</span>{" "}
+                {preferredTime || "Not set"}
+              </div>
+              <button
+                className="bg-primary text-white py-2 px-4 rounded mt-4"
+                onClick={() => setIsEditing(true)}
               >
-                <option value="">Select</option>
-                <option value="morning">Morning</option>
-                <option value="afternoon">Afternoon</option>
-                <option value="evening">Evening</option>
-              </select>
+                Edit Preferences
+              </button>
             </div>
-            <button
-              className="bg-primary text-white py-2 px-4 rounded mt-4"
-              onClick={handleSavePreferences}
-            >
-              Save Preferences
-            </button>
-            <button
-              className="bg-secondary text-white py-2 px-4 rounded mt-4 ml-2"
-              onClick={() => setIsEditing(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        )}
+          ) : (
+            <div>
+              <div>
+                <label className="font-bold">Workouts Per Week:</label>
+                <input
+                  type="number"
+                  className="border p-2 rounded w-full"
+                  value={workoutsPerWeek || ""}
+                  onChange={(e) => setWorkoutsPerWeek(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <label className="font-bold">Preferred Time:</label>
+                <select
+                  className="border p-2 rounded w-full"
+                  value={preferredTime || ""}
+                  onChange={(e) => setPreferredTime(e.target.value)}
+                >
+                  <option value="">Select</option>
+                  <option value="morning">Morning</option>
+                  <option value="afternoon">Afternoon</option>
+                  <option value="evening">Evening</option>
+                </select>
+              </div>
+              <button
+                className="bg-primary text-white py-2 px-4 rounded mt-4"
+                onClick={handleSavePreferences}
+              >
+                Save Preferences
+              </button>
+              <button
+                className="bg-secondary text-white py-2 px-4 rounded mt-4 ml-2"
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
