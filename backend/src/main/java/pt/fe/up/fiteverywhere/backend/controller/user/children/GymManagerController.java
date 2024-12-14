@@ -42,13 +42,11 @@ public class GymManagerController {
                     gymData.put("id", gym.getId());
                     gymData.put("name", gym.getName());
                     gymData.put("dailyFee", gym.getDailyFee());
-                    gymData.put("latitude", gym.getLatitude());
-                    gymData.put("longitude", gym.getLongitude());
                     return gymData;
                 })
                 .toList();
 
         // Convert gyms to a simpler DTO (Data Transfer Object) if necessary
-        return ResponseEntity.ok(gymList);
+        return ResponseEntity.ok(Collections.singletonMap("gyms", gymList));
     }
 }
