@@ -7,7 +7,6 @@ import Layout from "./components/Layout";
 import SelectRole from "./pages/SelectRole";
 import Profile from "./pages/Profile.tsx";
 import GymProfile from "./pages/GymProfile.tsx";
-import MyGyms from "./pages/MyGyms.tsx";
 import { useAuth } from "./hooks/useAuth.ts";
 import PersonalTrainerProfile from "./pages/PersonalTrainerProfile.tsx";
 
@@ -31,7 +30,6 @@ const App: React.FC = () => {
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Dashboard />} />
                   <Route path="profile" element={<GymProfile />} />
-                  <Route path="my-gyms" element={<MyGyms />} />
                 </Route>
               )}
 

@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar.tsx";
 import { useAuth } from "../hooks/useAuth.ts";
-import Navbar from "./Navbar.tsx";
 
 const Layout = () => {
   const auth = useAuth();
@@ -9,12 +8,9 @@ const Layout = () => {
 
   return (
     <>
-      <Sidebar />
-      <main className="ml-64 h-screen bg-base-200">
-        <Navbar />
-        <main className="p-base bg-base-200">
-          <Outlet />
-        </main>
+      <Sidebar userName={auth.user!.username} />
+      <main className="p-base ml-64 bg-secbackground">
+        <Outlet />
       </main>
     </>
   );

@@ -83,6 +83,8 @@ public class GymControllerTests {
         gym.setId(1L); // Use a valid gym ID
         gym.setName("Updated Gym Name");
         gym.setDailyFee(15.0);
+        gym.setLatitude(41.20);
+        gym.setLongitude(-8.60);
 
         mockMvc.perform(put("/gym/")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com")))
@@ -100,6 +102,8 @@ public class GymControllerTests {
         gym.setId(1L); // Use a valid gym ID
         gym.setName("Unauthorized Gym Update");
         gym.setDailyFee(25.0);
+        gym.setLatitude(42.0);
+        gym.setLongitude(-9.0);
 
         mockMvc.perform(put("/gym/")
                         .with(oauth2Login().attributes(attrs -> {
@@ -118,6 +122,8 @@ public class GymControllerTests {
         gym.setId(1L); // Use a valid gym ID
         gym.setName("Unauthorized Gym Update");
         gym.setDailyFee(25.0);
+        gym.setLatitude(42.0);
+        gym.setLongitude(-9.0);
 
         mockMvc.perform(put("/gym/")
                         .with(oauth2Login().attributes(attrs -> {

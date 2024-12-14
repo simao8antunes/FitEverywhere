@@ -12,6 +12,7 @@
   --color-primary: #80411b;
   --color-secondary: #6E6E6E;
   --color-intense: white;
+
   /* Font Size Variables */
   --font-size-h1: 2.25rem;
   --font-size-h2: 1.875rem;
@@ -47,8 +48,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  background-color: var(--secondary-background-color);
+  color: var(--color-text);
 
 }
+
 
 /* Custom Reset */
 *,
