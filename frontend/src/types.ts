@@ -50,10 +50,16 @@ interface Gym {
   id: number;
   name: string;
   dailyFee: number;
-  latitude: number;
-  longitude: number;
-  distance?: number;
-  tags?: GymSpec;
+  description: string;
+  personalTrainers: any;
+  overpassData?: GymOverpass;
+}
+
+interface GymOverpass {
+  id: number;
+  tags: GymSpec;
+  lat: number;
+  lon: number;
 }
 
 interface GymSpec {

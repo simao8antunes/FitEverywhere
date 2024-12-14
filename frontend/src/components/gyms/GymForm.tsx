@@ -1,50 +1,109 @@
-const GymForm = ({ selectedGym }) => {
+import { useFetchGyms } from "../../hooks/useFetchGyms.ts";
+import { useEffect, useState } from "react";
+import { Gym } from "../../types.ts";
+
+interface GymFormProps {
+  selectedGym: Gym | null;
+}
+
+const GymForm = ({ selectedGym }: GymFormProps) => {
+  const { fetchGymDetails, updateGym } = useFetchGyms();
+  const [selectedGymForm, setSelectedGymForm] = useState<Gym | null>(
+    selectedGym,
+  );
+
+  useEffect(() => {
+    if (selectedGym) {
+      fetchGymDetails(selectedGym.id, setSelectedGymForm);
+    }
+  }, [selectedGym]);
+
   return (
     <>
       <h1 className="text-3xl font-bold">Gym Form</h1>
       <p className="text-text opacity-30">
         Here you can see all the details of the gym you manage.
       </p>
-      <div className="p-3 flex gap-base">
-        {selectedGym && (
-          <div className="card bg-base-100 w-96 shadow-xl">
-            <div className="card-body">
-              <label className="form-control w-full max-w-xs">
+      <div className="p-base grid grid-cols-3">
+        {selectedGymForm && (
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body gap-10">
+              <label className="form-control">
                 <div className="label">
                   <span className="card-title">Name</span>
                 </div>
                 <input
-                  value={selectedGym?.name}
-                  className="input input-bordered"
+                  disabled
+                  value={selectedGymForm?.name}
+                  className="input input-bordered card-title"
                 />
               </label>
-              <label className="form-control w-full max-w-xs">
+              <label className="form-control">
                 <div className="label">
                   <span className="label-text">Description</span>
                 </div>
                 <textarea
-                  value={selectedGym?.description}
+                  value={selectedGymForm?.description ?? ""}
+                  onChange={(e) => {
+                    setSelectedGymForm({
+                      ...selectedGymForm,
+                      description: e.target.value,
+                    });
+                  }}
                   className="textarea textarea-bordered"
                 />
               </label>
-              <label className="form-control w-full max-w-xs">
+              <label className="form-control">
                 <div className="label">
                   <span className="label-text">Daily Fee</span>
                 </div>
                 <input
-                  value={selectedGym?.dailyFee}
+                  type="number"
+                  value={selectedGymForm?.dailyFee ?? 0}
+                  onChange={(e) => {
+                    setSelectedGymForm({
+                      ...selectedGymForm,
+                      dailyFee: e.target.value,
+                    });
+                  }}
                   className="input input-bordered"
                 />
               </label>
-              <label className="form-control w-full max-w-xs">
-                <div className="label">
-                  <span className="label-text">Latitude</span>
+              {selectedGymForm?.overpassData && (
+                <div className="grid grid-cols-2 gap-base">
+                  <label className="form-control">
+                    <div className="label">
+                      <span className="label-text">Latitude</span>
+                    </div>
+                    <input
+                      type="number"
+                      disabled
+                      value={selectedGymForm?.overpassData.lat}
+                      className="input input-bordered"
+                    />
+                  </label>
+                  <label className="form-control">
+                    <div className="label">
+                      <span className="label-text">Longitude</span>
+                    </div>
+                    <input
+                      type="number"
+                      disabled
+                      value={selectedGymForm?.overpassData.lon}
+                      className="input input-bordered"
+                    />
+                  </label>
                 </div>
-                <input
-                  value={selectedGym?.latitude}
-                  className="input input-bordered"
-                />
-              </label>
+              )}
+
+              <div className="card-actions justify-center">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => updateGym(selectedGymForm)}
+                >
+                  Save Gym Details
+                </button>
+              </div>
             </div>
           </div>
         )}
