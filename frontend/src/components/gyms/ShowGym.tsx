@@ -32,6 +32,7 @@ const ShowGym: React.FC<ShowGymProps> = ({ gym }) => {
       setMessage("Error creating gym. Please try again later." + error);
     }
   };
+  if (!gym) return;
   return (
     <div>
       <h1> {gym?.name} </h1>
