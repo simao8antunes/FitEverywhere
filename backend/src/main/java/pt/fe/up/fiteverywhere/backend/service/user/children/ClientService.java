@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.WorkoutSuggestion;
+import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
 import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
-import pt.fe.up.fiteverywhere.backend.repository.user.children.WorkoutSuggestionRepository;
+import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
 
 @Service
 public class ClientService {

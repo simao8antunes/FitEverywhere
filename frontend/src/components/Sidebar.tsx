@@ -11,7 +11,6 @@ const Sidebar: React.FC = () => {
     { name: "Home", icon: <FiHome />, link: "/" },
     { name: "Workouts", icon: <FiGrid />, link: "/workouts", role: "client" },
     { name: "My Gyms", icon: <CgGym />, link: "/my-gyms", role: "gym_manager" },
-    { name: "Workouts", icon: <FiGrid />, link: "/workouts" },
   ];
 
   return (

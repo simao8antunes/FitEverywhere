@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,11 +26,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.WorkoutSuggestion;
-import pt.fe.up.fiteverywhere.backend.repository.user.children.WorkoutSuggestionRepository;
+import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
+import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
 import pt.fe.up.fiteverywhere.backend.service.CalendarService;
 import pt.fe.up.fiteverywhere.backend.service.user.children.ClientService;
-import pt.fe.up.fiteverywhere.backend.service.user.children.WorkoutSuggestionService;
+import pt.fe.up.fiteverywhere.backend.service.WorkoutSuggestionService;
 
 @RestController
 @RequestMapping("/client")
@@ -160,7 +161,7 @@ public class ClientController {
     public ResponseEntity<?> deleteWorkoutSuggestion(@PathVariable Long id, @AuthenticationPrincipal OAuth2User principal) {
         System.out.println("Received request to delete workout suggestion with ID: " + id); // Log request
 
-        Optional<WorkoutSuggestion> suggestionOptional = workoutSuggestionRepository.findById(id);
+        Optional<WorkoutSuggestion> suggestionOptional = workoutSuggestionService.getWorkoutSuggestionById(id);
         if (suggestionOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Workout suggestion not found.");
         }
@@ -168,9 +169,8 @@ public class ClientController {
         WorkoutSuggestion suggestion = suggestionOptional.get();
         System.out.println("Found workout suggestion: " + suggestion); // Log suggestion details
 
-        workoutSuggestionService.deleteWorkoutSuggestion(id);
+        workoutSuggestionService.deleteWorkoutSuggestion(suggestion.getId());
 
-        List<WorkoutSuggestion> savedSuggestions = workoutSuggestionRepository.findAll();
-        return ResponseEntity.ok(savedSuggestions);
+        return ResponseEntity.ok(Map.of("message", "Workout suggestion deleted successfully"));
     }
 }
