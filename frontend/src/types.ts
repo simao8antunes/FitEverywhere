@@ -22,6 +22,16 @@ interface PersonalTrainer extends User {
   linkedGym?: string;
   description: string;
   role: "personal_trainer";
+  services: PTService[];
+}
+
+interface PTService {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  duration: number;
+  type: string;
 }
 
 type UserOptions = Client | GymManager | PersonalTrainer;
@@ -114,4 +124,5 @@ export type {
   UseFetchUserResult,
   User,
   UserOptions,
+  PTService,
 };

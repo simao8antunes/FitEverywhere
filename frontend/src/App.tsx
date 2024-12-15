@@ -10,6 +10,7 @@ import GymProfile from "./pages/GymProfile.tsx";
 import MyGyms from "./pages/MyGyms.tsx";
 import { useAuth } from "./hooks/useAuth.ts";
 import PersonalTrainerProfile from "./pages/PersonalTrainerProfile.tsx";
+import PTServices from "./pages/PTServices.tsx";
 
 const App: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
@@ -44,6 +45,7 @@ const App: React.FC = () => {
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Dashboard />} />
                   <Route path="profile" element={<PersonalTrainerProfile />} />
+                  <Route path="my-services" element={<PTServices />} />
                 </Route>
               )}
             </>
