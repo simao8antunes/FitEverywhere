@@ -9,12 +9,18 @@ interface WorkoutSuggestion {
 
 const Workouts: React.FC = () => {
   const [savedWorkouts, setSavedWorkouts] = useState<WorkoutSuggestion[]>([]);
-  const [suggestedWorkouts, setSuggestedWorkouts] = useState<WorkoutSuggestion[]>([]);
+  const [suggestedWorkouts, setSuggestedWorkouts] = useState<
+    WorkoutSuggestion[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showSearchOptions, setShowSearchOptions] = useState<number | null>(null);
+  const [showSearchOptions, setShowSearchOptions] = useState<number | null>(
+    null,
+  );
   const [streetInput, setStreetInput] = useState<string>("");
-  const [selectedWorkoutIndex, setSelectedWorkoutIndex] = useState<number | null>(null);
+  const [selectedWorkoutIndex, setSelectedWorkoutIndex] = useState<
+    number | null
+  >(null);
 
   const {
     gyms,
@@ -33,7 +39,7 @@ const Workouts: React.FC = () => {
         {
           method: "GET",
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -77,7 +83,7 @@ const Workouts: React.FC = () => {
       setSelectedWorkoutIndex(index); // Set the selected workout index
     } else {
       alert(
-        `Searching for gyms near the event location for workout ${index + 1}`
+        `Searching for gyms near the event location for workout ${index + 1}`,
       );
     }
     setShowSearchOptions(null); // Close options after selection
@@ -88,8 +94,8 @@ const Workouts: React.FC = () => {
 
     setSuggestedWorkouts((prev) =>
       prev.map((workout, index) =>
-        index === selectedWorkoutIndex ? { ...workout, gym: gymName } : workout
-      )
+        index === selectedWorkoutIndex ? { ...workout, gym: gymName } : workout,
+      ),
     );
 
     setSelectedWorkoutIndex(null); // Reset selected workout index
@@ -101,19 +107,22 @@ const Workouts: React.FC = () => {
     setError(null); // Reset error before saving
 
     try {
-      const response = await fetch(import.meta.env.VITE_API_BASE_URL + "/client/save-workout-suggestions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/client/save-workout-suggestions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(
+            suggestedWorkouts.map((workout) => ({
+              time: workout.time,
+              gym: workout.gym,
+            })),
+          ),
+          credentials: "include",
         },
-        body: JSON.stringify(
-          suggestedWorkouts.map((workout) => ({
-            time: workout.time,
-            gym: workout.gym,
-          }))
-        ),
-        credentials: "include",
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -137,26 +146,33 @@ const Workouts: React.FC = () => {
   // Make API call to fetch saved workouts
   const fetchSavedWorkouts = async () => {
     try {
-      const response = await fetch(import.meta.env.VITE_API_BASE_URL + '/client/saved-workout-suggestions', {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/client/saved-workout-suggestions",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
 
       const workouts = await response.json();
       console.log(workouts); // Ensure the updated list is returned
       setSavedWorkouts(workouts); // Update the state with the new list
     } catch (error) {
-    console.error("Error fetching saved workouts:", error);
+      console.error("Error fetching saved workouts:", error);
     }
   };
 
   const handleDeleteWorkout = async (id: number) => {
     try {
-      const response = await fetch(import.meta.env.VITE_API_BASE_URL + `/client/delete-workout-suggestion/${id}`, {
-        method: 'DELETE',
-        credentials: "include",
-      });
-      
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL +
+          `/client/delete-workout-suggestion/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
       if (response.ok) {
         const message = await response.text();
         console.log(message); // Should log "Workout suggestion deleted successfully!"
@@ -164,20 +180,18 @@ const Workouts: React.FC = () => {
         fetchSavedWorkouts();
       } else {
         const errorMessage = await response.text();
-        console.error('Failed to delete workout suggestion:', errorMessage);
+        console.error("Failed to delete workout suggestion:", errorMessage);
       }
     } catch (error) {
-      console.error('Error deleting workout suggestion:', error);
+      console.error("Error deleting workout suggestion:", error);
     }
   };
-  
-  
 
   // Fetch suggestions when the component loads
   useEffect(() => {
     fetchSavedWorkouts();
     handleFetchSuggestions();
-  },[]);
+  }, []);
 
   return (
     <div className="flex justify-center items-start">
@@ -274,15 +288,22 @@ const Workouts: React.FC = () => {
 
         {/* Saved Workouts */}
         <div className="w-80">
-          <h2 className="text-2xl font-semibold text-primary mb-6">Saved Workouts</h2>
+          <h2 className="text-2xl font-semibold text-primary mb-6">
+            Saved Workouts
+          </h2>
           <div>
             {savedWorkouts.length === 0 ? (
               <p>No saved workouts</p>
             ) : (
               <ul>
                 {savedWorkouts.map((workout) => (
-                  <li key={workout.id} className="flex justify-between items-center">
-                    <span>{workout.time} - {workout.gym}</span>
+                  <li
+                    key={workout.id}
+                    className="flex justify-between items-center"
+                  >
+                    <span>
+                      {workout.time} - {workout.gym}
+                    </span>
                     <button
                       onClick={() => handleDeleteWorkout(workout.id)}
                       className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600"
