@@ -19,7 +19,7 @@ const SelectRole: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("User created successfully:", data.message);
-        navigate("/", { state: { userName: userNameFromState, role } });
+        return navigate("/", { state: { userName: userNameFromState, role } });
       } else {
         const errorData = await response.json();
 
