@@ -29,7 +29,6 @@ export function useFetchUser(): UseFetchUserResult {
         }
         setIsAuthenticated(false);
         setUser(null);
-        return navigate("/login");
       }
 
       const data = await response.json();
@@ -43,15 +42,11 @@ export function useFetchUser(): UseFetchUserResult {
       setIsAuthenticated(false);
       setUser(null);
       setError("Failed to authenticate");
-      navigate("/login");
     }
   };
 
   useEffect(() => {
-    if (
-      location.pathname !== API_URL + "/login" &&
-      location.pathname !== API_URL + "/oauth2/authorization/google"
-    ) {
+    if (location.pathname === "/login") {
       fetchUsers();
     }
   }, [location.pathname]);
