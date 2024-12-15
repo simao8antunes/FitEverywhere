@@ -89,5 +89,21 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", "Created user with role: " + role));
     }
 
+    @Transactional
+    @PutMapping
+    public ResponseEntity<?> updateUserDetails(@RequestBody PersonalTrainer user, @AuthenticationPrincipal OAuth2User principal) {
+        Optional<User> existingUserOpt = userService.findUserByEmail(principal.getAttribute("email"));
+        if (existingUserOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not found for the provided email."));
+        }
+
+        PersonalTrainer personalTrainer = (PersonalTrainer) existingUserOpt.get();
+        personalTrainer.setDescription(user.getDescription());
+        personalTrainer.setLinkedGym(user.getLinkedGym());
+        personalTrainerService.save(personalTrainer);
+
+        return ResponseEntity.ok(Map.of("message", "User details updated successfully!"));
+    }
+
 
 }

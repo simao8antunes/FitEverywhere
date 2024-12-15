@@ -1,5 +1,6 @@
 package pt.fe.up.fiteverywhere.backend.entity.user.children;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,6 +13,9 @@ import pt.fe.up.fiteverywhere.backend.entity.User;
 @Setter
 @Entity
 public class PersonalTrainer extends User {
+
+    @Column
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "gym_id")

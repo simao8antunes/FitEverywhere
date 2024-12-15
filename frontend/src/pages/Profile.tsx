@@ -65,7 +65,7 @@ const Profile: React.FC = () => {
         <div className="card-body">
           <div className="flex justify-center mb-6">
             <img
-              src={user?.userSpecs.picture}
+              src={user?.userSpecs?.picture}
               alt={"profile"}
               className="rounded-circle size-32"
             />
