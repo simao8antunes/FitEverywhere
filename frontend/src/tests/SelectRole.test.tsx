@@ -64,7 +64,7 @@ describe("SelectRole", () => {
     });
 
     await vi.waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/");
+      expect(mockNavigate).toHaveBeenCalledWith("/login");
     });
   });
 
