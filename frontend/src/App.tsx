@@ -15,11 +15,7 @@ const App: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   return (
     <Routes>
-      <Route
-        path="select-role"
-        element={user ? <Navigate to="/" replace /> : <SelectRole />}
-      />
-
+      <Route path="/login" element={<Login />} />
       {/* Protected Routes */}
       {isAuthenticated ? (
         <>
@@ -53,21 +49,20 @@ const App: React.FC = () => {
             </>
           ) : (
             <>
+              <Route path="select-role" element={<SelectRole />} />
               <Route
                 path="*"
                 element={<Navigate to="/select-role" replace />}
               />
-              <Route path="/" element={<Dashboard />} />
             </>
           )}
         </>
       ) : (
         <>
-          <Route path="login" element={<Login />} />
           <Route path="/" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </>
       )}
-      <Route path="*" element={<Navigate to="/select-role" replace />} />
     </Routes>
   );
 };
