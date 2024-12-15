@@ -6,6 +6,7 @@ import "./index.css";
 import Dashboard from "./pages/Dashboard";
 import GymProfile from "./pages/GymProfile.tsx";
 import Login from "./pages/Login";
+import MyGyms from "./pages/MyGyms.tsx";
 import PersonalTrainerProfile from "./pages/PersonalTrainerProfile.tsx";
 import Profile from "./pages/Profile.tsx";
 import SelectRole from "./pages/SelectRole";
@@ -15,11 +16,7 @@ const App: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   return (
     <Routes>
-      <Route
-        path="select-role"
-        element={user ? <Navigate to="/" replace /> : <SelectRole />}
-      />
-
+      <Route path="/login" element={<Login />} />
       {/* Protected Routes */}
       {isAuthenticated ? (
         <>
@@ -31,6 +28,7 @@ const App: React.FC = () => {
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Dashboard />} />
                   <Route path="profile" element={<GymProfile />} />
+                  <Route path="my-gyms" element={<MyGyms />} />
                 </Route>
               )}
 
@@ -53,21 +51,20 @@ const App: React.FC = () => {
             </>
           ) : (
             <>
+              <Route path="select-role" element={<SelectRole />} />
               <Route
                 path="*"
                 element={<Navigate to="/select-role" replace />}
               />
-              <Route path="/" element={<Dashboard />} />
             </>
           )}
         </>
       ) : (
         <>
-          <Route path="login" element={<Login />} />
           <Route path="/" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </>
       )}
-      <Route path="*" element={<Navigate to="/select-role" replace />} />
     </Routes>
   );
 };

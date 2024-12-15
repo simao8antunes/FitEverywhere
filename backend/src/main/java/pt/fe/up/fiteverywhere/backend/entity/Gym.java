@@ -23,13 +23,13 @@ public class Gym {
     private String name;
 
     @Column
+    private String description;
+
+    @Column
     private Double dailyFee;
 
     @Column
-    private Double latitude;
-
-    @Column
-    private Double longitude;
+    private Double weeklyMembership;
 
     @ManyToMany(mappedBy = "linkedGyms", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("linkedGyms")

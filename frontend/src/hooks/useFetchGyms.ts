@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Gym, GymResponse } from "../types";
 
 // OpenStreetMap-related URLs
@@ -157,7 +157,7 @@ export const useFetchGyms = () => {
       if (geocodingData.length === 0) {
         setError("Geocoding failed: No results found for the location.");
         setGyms([]);
-        return;
+        return [];
       }
 
       const { lat, lon } = geocodingData[0];
@@ -201,8 +201,12 @@ export const useFetchGyms = () => {
           id: osmGym.id,
           name: matchingDbGym?.name || osmGym.tags?.name || "Unnamed Gym",
           dailyFee: matchingDbGym?.dailyFee || "-",
-          latitude: osmGym.lat,
-          longitude: osmGym.lon,
+          weeklyMembership: matchingDbGym?.weeklyMembership || "-",
+          description: matchingDbGym?.description || "-",
+          overpassData: {
+            lat: osmGym.lat,
+            lon: osmGym.lon,
+          },
           distance: distance.toFixed(2),
         };
       });
@@ -215,5 +219,56 @@ export const useFetchGyms = () => {
       setLoading(false);
     }
   };
-  return { gyms, fetchNearbyGyms, loading, error, fetchOwnGyms, fetchGyms };
+
+  const fetchGymDetails = async (
+    id: number,
+    setSelectedGymForm: Dispatch<SetStateAction<Gym | null>>,
+  ) => {
+    try {
+      const response = await fetch(API_URL + `/gym/${id}`, {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch gym details");
+      }
+      const data = await response.json();
+      console.log("Gym Details:", data);
+      setSelectedGymForm(data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching gym details:", error);
+    }
+  };
+
+  const updateGym = async (gym: Gym) => {
+    try {
+      const response = await fetch(API_URL + `/gym/${gym.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(gym),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update gym");
+      }
+      const data = await response.json();
+      console.log("Gym updated:", data);
+      return data;
+    } catch (error) {
+      console.error("Error updating gym:", error);
+    }
+  };
+
+  return {
+    gyms,
+    fetchNearbyGyms,
+    loading,
+    error,
+    fetchOwnGyms,
+    fetchGyms,
+    fetchGymDetails,
+    updateGym,
+  };
 };

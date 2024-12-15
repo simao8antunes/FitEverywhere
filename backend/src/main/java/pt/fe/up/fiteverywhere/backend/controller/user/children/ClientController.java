@@ -32,13 +32,15 @@ public class ClientController {
     @Autowired
     private CalendarService calendarService;
 
+    @Autowired
+    private CalendarService calendarService;
+
     @PutMapping("/workout-preferences")
     public ResponseEntity<?> saveWorkoutPreferences(
             @RequestParam int number,
             @RequestParam String time,
             @AuthenticationPrincipal OAuth2User principal) {
 
-        System.out.println("Principal: " + principal); // Debug log
         String email = principal.getAttribute("email");
         System.out.println("Updating preferences for user: " + email); // Debug log
         Optional<Client> client = clientService.findClientByEmail(email);

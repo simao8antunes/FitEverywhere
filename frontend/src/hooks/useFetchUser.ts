@@ -24,12 +24,12 @@ export function useFetchUser(): UseFetchUserResult {
         } else if (response.status === 401) {
           // User not authenticated, redirect to login
           setError("User not authenticated. Please log in.");
+          return navigate("/login");
         } else {
           setError("An unexpected error occurred.");
         }
         setIsAuthenticated(false);
         setUser(null);
-        return navigate("/login");
       }
 
       const data = await response.json();
@@ -38,6 +38,9 @@ export function useFetchUser(): UseFetchUserResult {
       data.user.userSpecs = data.userSpecs;
       setUser(data.user);
       sessionStorage.setItem("user", data.user.email);
+      if (location.pathname === "/login") {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error fetching user data:", error);
       setIsAuthenticated(false);
@@ -48,12 +51,7 @@ export function useFetchUser(): UseFetchUserResult {
   };
 
   useEffect(() => {
-    if (
-      location.pathname !== API_URL + "/login" &&
-      location.pathname !== API_URL + "/oauth2/authorization/google"
-    ) {
-      fetchUsers();
-    }
+    fetchUsers();
   }, [location.pathname]);
 
   const logout = async () => {

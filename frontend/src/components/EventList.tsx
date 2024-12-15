@@ -28,21 +28,22 @@ const EventList: React.FC<EventListProps> = ({
 
   // Render list of events
   return (
-    <div className="bg-intense shadow-md rounded-lg p-6">
+    <div className="">
       <div className="space-y-4">
         {events.map((event) => (
           <div
             key={event.id}
-            className="bg-background rounded-lg p-4 border border-secbackground hover:bg-secbackground transition-colors cursor-pointer"
+            className="card bg-base-200 hover:bg-neutral hover:text-neutral-content cursor-pointer transition-colors"
             onClick={() => onEventClick(event)}
           >
-            <h3 className="text-lg font-semibold">{event.summary}</h3>
-            <p className="text-sm ">
-              {new Date(event.start.dateTime).toLocaleString()} -{" "}
-              {new Date(event.end.dateTime).toLocaleString()}
-              {" "}
-              <label>{event.location}</label>
-            </p>
+            <div className="card-body">
+              <h3 className="card-title">{event.summary}</h3>
+              <p className="text-sm ">
+                {new Date(event.start.dateTime).toLocaleString()} -{" "}
+                {new Date(event.end.dateTime).toLocaleString()}
+                <label>{event.location}</label>
+              </p>
+            </div>
           </div>
         ))}
       </div>
