@@ -8,7 +8,9 @@ import pt.fe.up.fiteverywhere.backend.entity.PTService;
 import pt.fe.up.fiteverywhere.backend.entity.Purchase;
 import pt.fe.up.fiteverywhere.backend.entity.User;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -34,6 +36,9 @@ public class Client extends User {
     )
     @JsonIgnoreProperties("clients")
     private Set<PTService> ptServices = new HashSet<>();
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<WorkoutSuggestion> workoutSuggestions = new ArrayList<>();
 
     public Client(String username, String email) {
         super(username, email);
