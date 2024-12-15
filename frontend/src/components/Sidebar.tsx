@@ -16,7 +16,9 @@ const Sidebar: React.FC = () => {
   const { user } = useAuth();
   const menuItems = [
     { name: "Home", icon: <FiHome />, link: "/" },
+    { name: "Workouts", icon: <FiGrid />, link: "/workouts", role: "client" },
     { name: "My Gyms", icon: <CgGym />, link: "/my-gyms", role: "gym_manager" },
+    { name: "Workouts", icon: <FiGrid />, link: "/workouts" },
     {
       name: "My Services",
       icon: <MdMiscellaneousServices />,

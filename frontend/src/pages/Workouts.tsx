@@ -7,14 +7,25 @@ interface WorkoutSuggestion {
 }
 
 const Workouts: React.FC = () => {
-  const [suggestedWorkouts, setSuggestedWorkouts] = useState<WorkoutSuggestion[]>([]);
+  const [suggestedWorkouts, setSuggestedWorkouts] = useState<
+    WorkoutSuggestion[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showSearchOptions, setShowSearchOptions] = useState<number | null>(null);
+  const [showSearchOptions, setShowSearchOptions] = useState<number | null>(
+    null,
+  );
   const [streetInput, setStreetInput] = useState<string>("");
-  const [selectedWorkoutIndex, setSelectedWorkoutIndex] = useState<number | null>(null);
+  const [selectedWorkoutIndex, setSelectedWorkoutIndex] = useState<
+    number | null
+  >(null);
 
-  const { gyms, loading: gymLoading, error: gymError, fetchGyms } = useFetchGyms();
+  const {
+    gyms,
+    loading: gymLoading,
+    error: gymError,
+    fetchGyms,
+  } = useFetchGyms();
 
   const handleFetchSuggestions = async () => {
     setIsLoading(true);
@@ -26,7 +37,7 @@ const Workouts: React.FC = () => {
         {
           method: "GET",
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -68,7 +79,9 @@ const Workouts: React.FC = () => {
       await fetchGyms(streetInput);
       setSelectedWorkoutIndex(index); // Set the selected workout index
     } else {
-      alert(`Searching for gyms near the event location for workout ${index + 1}`);
+      alert(
+        `Searching for gyms near the event location for workout ${index + 1}`,
+      );
     }
     setShowSearchOptions(null); // Close options after selection
   };
@@ -78,8 +91,8 @@ const Workouts: React.FC = () => {
 
     setSuggestedWorkouts((prev) =>
       prev.map((workout, index) =>
-        index === selectedWorkoutIndex ? { ...workout, gym: gymName } : workout
-      )
+        index === selectedWorkoutIndex ? { ...workout, gym: gymName } : workout,
+      ),
     );
 
     setSelectedWorkoutIndex(null); // Reset selected workout index
@@ -93,7 +106,9 @@ const Workouts: React.FC = () => {
   return (
     <div className="flex justify-center items-center">
       <div className="bg-background rounded-lg shadow-lg p-8 w-full mx-4">
-        <h1 className="text-2xl font-semibold text-primary mb-6">Workout Suggestions</h1>
+        <h1 className="text-2xl font-semibold text-primary mb-6">
+          Workout Suggestions
+        </h1>
         {isLoading && <p>Loading suggestions...</p>}
         {error && <p className="error text-red-500">{error}</p>}
 
@@ -119,7 +134,9 @@ const Workouts: React.FC = () => {
 
                 {showSearchOptions === index && (
                   <div className="mt-4 p-4 bg-100 border rounded">
-                    <h3 className="font-semibold mb-2">Choose the Gym Search Location</h3>
+                    <h3 className="font-semibold mb-2">
+                      Choose the Gym Search Location
+                    </h3>
                     <div className="flex flex-col mb-4">
                       <input
                         type="text"
