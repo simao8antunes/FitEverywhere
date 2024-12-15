@@ -72,16 +72,6 @@ const Profile: React.FC = () => {
     setWorkoutsPerWeek(numberValue);
   };
 
-  const handleWorkoutsChange = (value: string) => {
-    const numberValue = Number(value);
-    if (numberValue < 0) {
-      setValidationMessage("Workouts per week must be greater than 0.");
-    } else {
-      setValidationMessage("");
-    }
-    setWorkoutsPerWeek(numberValue);
-  };
-
   if (!isClient(user)) {
     return <div>User is not a client.</div>;
   }
