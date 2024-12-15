@@ -4,7 +4,7 @@ interface User {
   username: string;
   role: "gym_manager" | "client" | "personal_trainer";
   email: string;
-  userSpecs: UserSpec;
+  userSpecs?: UserSpec;
 }
 
 interface Client extends User {
@@ -19,7 +19,8 @@ interface GymManager extends User {
 }
 
 interface PersonalTrainer extends User {
-  linkedGym: string;
+  linkedGym?: string;
+  description: string;
   role: "personal_trainer";
 }
 
