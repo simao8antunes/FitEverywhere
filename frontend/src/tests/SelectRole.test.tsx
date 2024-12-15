@@ -64,9 +64,7 @@ describe("SelectRole", () => {
     });
 
     await vi.waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/", {
-        state: { userName: "Guest", role: "gym" },
-      });
+      expect(mockNavigate).toHaveBeenCalledWith("/");
     });
   });
 

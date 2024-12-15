@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { UseFetchUserResult, UserOptions } from "../types";
+import type { UserOptions } from "../types";
 const API_URL = import.meta.env.VITE_API_BASE_URL;
-export function useFetchUser(): UseFetchUserResult {
+export function useFetchUser() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<UserOptions | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -70,5 +70,27 @@ export function useFetchUser(): UseFetchUserResult {
       .catch((error) => console.error("Error during logout:", error));
   };
 
-  return { isAuthenticated, user, error, logout };
+  const updateUserData = async (data: UserOptions) => {
+    try {
+      const response = await fetch(API_URL + "/auth", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update user data");
+      }
+      const updatedData = await response.json();
+      console.log("User data updated:", updatedData);
+      setUser(updatedData);
+      return updatedData;
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
+  };
+
+  return { isAuthenticated, user, error, logout, updateUserData };
 }

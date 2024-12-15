@@ -24,7 +24,7 @@ const GymProfile: React.FC = () => {
           <hr className="my-4" />
           <div className="flex justify-center mb-6">
             <img
-              src={user?.userSpecs.picture}
+              src={user?.userSpecs?.picture}
               alt={"profile"}
               className="rounded-circle size-32"
             />
