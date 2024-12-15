@@ -54,6 +54,7 @@ interface Gym {
   description: string;
   personalTrainers: PersonalTrainer[];
   overpassData?: GymOverpass;
+  distance: number;
 }
 
 interface GymOverpass {

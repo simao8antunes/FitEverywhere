@@ -157,7 +157,7 @@ export const useFetchGyms = () => {
       if (geocodingData.length === 0) {
         setError("Geocoding failed: No results found for the location.");
         setGyms([]);
-        return;
+        return [];
       }
 
       const { lat, lon } = geocodingData[0];
@@ -201,8 +201,12 @@ export const useFetchGyms = () => {
           id: osmGym.id,
           name: matchingDbGym?.name || osmGym.tags?.name || "Unnamed Gym",
           dailyFee: matchingDbGym?.dailyFee || "-",
-          latitude: osmGym.lat,
-          longitude: osmGym.lon,
+          weeklyMembership: matchingDbGym?.weeklyMembership || "-",
+          description: matchingDbGym?.description || "-",
+          overpassData: {
+            lat: osmGym.lat,
+            lon: osmGym.lon,
+          },
           distance: distance.toFixed(2),
         };
       });

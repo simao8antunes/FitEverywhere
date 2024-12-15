@@ -27,11 +27,11 @@ public class GymController {
     private GymManagerService gymManagerService;
 
     // CREATE A GYM
-    @PostMapping
+    @PostMapping("/{id}")
     public ResponseEntity<String> createGym(
             @AuthenticationPrincipal OAuth2User principal,
             @RequestParam String name,
-            @RequestParam Long id
+            @PathVariable Long id
     ) {
         String email = principal.getAttribute("email");
         System.out.println("Creating gym of user: " + email); // Debug log
