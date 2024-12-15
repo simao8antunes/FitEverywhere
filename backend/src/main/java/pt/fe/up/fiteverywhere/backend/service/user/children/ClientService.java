@@ -11,13 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.WorkoutSuggestion;
 import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
+import pt.fe.up.fiteverywhere.backend.repository.user.children.WorkoutSuggestionRepository;
 
 @Service
 public class ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private WorkoutSuggestionRepository workoutSuggestionRepository;
 
     public Optional<Client> findClientByEmail(String email) {
         return clientRepository.findById(email); // Return user if found, otherwise null
@@ -62,6 +67,26 @@ public class ClientService {
         return suggestions;
     }
     
+    public List<WorkoutSuggestion> saveWorkoutSuggestions(Client client, List<WorkoutSuggestion> workoutSuggestions) {
+        List<WorkoutSuggestion> savedSuggestions = new ArrayList<>();
+
+        for (WorkoutSuggestion workoutSuggestion : workoutSuggestions) {
+            // Create a new WorkoutSuggestion object
+            WorkoutSuggestion newWorkoutSuggestion = new WorkoutSuggestion();
+            newWorkoutSuggestion.setClient(client);
+            newWorkoutSuggestion.setTime(workoutSuggestion.getTime());
+            newWorkoutSuggestion.setGym(workoutSuggestion.getGym());
+
+            // Save the workout suggestion to the repository
+            workoutSuggestionRepository.save(newWorkoutSuggestion);
+            savedSuggestions.add(workoutSuggestion);
+        }
+
+        return savedSuggestions;
+    }
+
+
+
     public String findAvailableSlotWithRange(List<String> busyTimes, String preferredTime, int daysOffset, int range, LocalDateTime currentDate) {
         // Map preferred time to time range (using 24-hour format)
         LocalDateTime preferredDateTimeStart = getPreferredTimeRange(preferredTime).get(0);
