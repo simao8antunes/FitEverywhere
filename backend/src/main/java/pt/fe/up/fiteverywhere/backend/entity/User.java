@@ -1,18 +1,20 @@
 package pt.fe.up.fiteverywhere.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.persistence.*;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
 
 @Setter
 @Getter
 @Entity
-@EntityScan("pt.fe.up.fiteverywhere.backend.entity")
-// Define inheritance strategy
+@EntityScan(basePackageClasses = {Client.class, GymManager.class, PersonalTrainer.class})
 public abstract class User {
 
     @Id
@@ -28,11 +30,12 @@ public abstract class User {
     @Column
     private String role;
 
-    public User() {
-    }
-
     public User(String username, String email) {
         this.username = username;
         this.email = email;
+    }
+
+    public User() {
+
     }
 }
