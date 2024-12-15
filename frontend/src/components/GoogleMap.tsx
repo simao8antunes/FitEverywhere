@@ -1,6 +1,5 @@
 import React from "react";
 
-// Assuming you're using a library like Google Maps or Leaflet for the map
 import {
   AdvancedMarker,
   APIProvider,
@@ -8,18 +7,20 @@ import {
   Pin,
 } from "@vis.gl/react-google-maps";
 import { Gym } from "../types.ts";
-
 interface GoogleMapProps {
   gyms: Gym[];
 }
 
-const PoiMarkers = (props: { pois: Gym[] }) => {
+const PoiMarkers: React.FC<GoogleMapProps> = ({ gyms }) => {
   return (
     <>
-      {props.pois.map((poi: Gym) => (
+      {gyms.map((poi: Gym) => (
         <AdvancedMarker
           key={poi.name}
-          position={{ lat: poi.latitude, lng: poi.longitude }}
+          position={{
+            lat: poi.overpassData?.lat ?? 0,
+            lng: poi.overpassData?.lon ?? 0,
+          }}
         >
           <Pin
             background={"#FBBC04"}
@@ -35,7 +36,10 @@ const PoiMarkers = (props: { pois: Gym[] }) => {
 const GoogleMap: React.FC<GoogleMapProps> = ({ gyms }) => {
   const mapCenter =
     gyms.length > 0
-      ? { lat: gyms[0].latitude, lng: gyms[0].longitude }
+      ? {
+          lat: gyms[0].overpassData?.lat ?? 0,
+          lng: gyms[0].overpassData?.lon ?? 0,
+        }
       : { lat: 0, lng: 0 };
 
   console.log("Gyms:", gyms);
@@ -51,7 +55,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ gyms }) => {
         defaultZoom={12}
         defaultHeading={2}
       >
-        <PoiMarkers pois={gyms} />
+        <PoiMarkers gyms={gyms} />
       </Map>
     </APIProvider>
   );
