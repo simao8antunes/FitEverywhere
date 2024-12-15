@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { UserOptions } from "../types";
+import type { PTService, UserOptions } from "../types";
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 export function useFetchUser() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -92,5 +92,32 @@ export function useFetchUser() {
     }
   };
 
-  return { isAuthenticated, user, error, logout, updateUserData };
+  const addServiceToPersonalTrainer = async (service: PTService) => {
+    try {
+      const response = await fetch(
+        API_URL + `/personal-trainer/add-service?service=${service}`,
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Failed to add service to personal trainer");
+      }
+      const data = await response.json();
+      console.log("Service added to personal trainer:", data);
+      return data;
+    } catch (error) {
+      console.error("Error adding service to personal trainer:", error);
+    }
+  };
+
+  return {
+    isAuthenticated,
+    user,
+    error,
+    logout,
+    updateUserData,
+    addServiceToPersonalTrainer,
+  };
 }
