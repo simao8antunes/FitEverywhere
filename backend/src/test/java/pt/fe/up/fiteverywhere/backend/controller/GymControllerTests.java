@@ -52,7 +52,7 @@ public class GymControllerTests {
         String gymName = "Test Gym";
         Long gymId = 1L;
 
-        mockMvc.perform(post("/gym/")
+        mockMvc.perform(post("/gym/1")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com")))
                         .param("name", gymName)  // Add `name` as a request parameter
                         .param("id", String.valueOf(gymId)))
@@ -67,7 +67,7 @@ public class GymControllerTests {
         String gymName = "Invalid Gym";
         Long gymId = 2L;
 
-        mockMvc.perform(post("/gym/")
+        mockMvc.perform(post("/gym/1")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "unknown.user@test.com")))
                         .param("name", gymName)  // Add `name` as a request parameter
                         .param("id", String.valueOf(gymId)))
@@ -83,8 +83,9 @@ public class GymControllerTests {
         gym.setId(1L); // Use a valid gym ID
         gym.setName("Updated Gym Name");
         gym.setDailyFee(15.0);
-
-        mockMvc.perform(put("/gym/")
+        gym.setWeeklyMembership(100.0);
+        String gymPath = String.format("/gym/%s", gym.getId());
+        mockMvc.perform(put(gymPath)
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(gym)))
@@ -100,8 +101,9 @@ public class GymControllerTests {
         gym.setId(1L); // Use a valid gym ID
         gym.setName("Unauthorized Gym Update");
         gym.setDailyFee(25.0);
-
-        mockMvc.perform(put("/gym/")
+        gym.setWeeklyMembership(100.0);
+        String gymPath = String.format("/gym/%s", gym.getId());
+        mockMvc.perform(put(gymPath)
                         .with(oauth2Login().attributes(attrs -> {
                             attrs.put("email", "another.user@test.com"); // User without permission
                         }))
@@ -118,8 +120,9 @@ public class GymControllerTests {
         gym.setId(1L); // Use a valid gym ID
         gym.setName("Unauthorized Gym Update");
         gym.setDailyFee(25.0);
-
-        mockMvc.perform(put("/gym/")
+        gym.setWeeklyMembership(100.0);
+        String gymPath = String.format("/gym/%s", gym.getId());
+        mockMvc.perform(put(gymPath)
                         .with(oauth2Login().attributes(attrs -> {
                             attrs.put("email", "invalid.user@test.com"); // User without permission
                         })).contentType(MediaType.APPLICATION_JSON)
@@ -132,20 +135,19 @@ public class GymControllerTests {
     @Test
     @Order(5)
     public void testGetGymDetails_AuthenticatedUser_ShouldReturnGymInfo() throws Exception {
-        mockMvc.perform(get("/gym/")
+        mockMvc.perform(get("/gym/1")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com"))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").exists())
                 .andExpect(jsonPath("$.dailyFee").exists())
-                .andExpect(jsonPath("$.latitude").exists())
-                .andExpect(jsonPath("$.longitude").exists());
+                .andExpect(jsonPath("$.weeklyMembership").exists());
     }
 
     // Test for getting gym details with a user without gyms
     @Test
     @Order(5)
     public void testGetGymDetails_NoGymForUser_ShouldReturnNotFound() throws Exception {
-        mockMvc.perform(get("/gym/")
+        mockMvc.perform(get("/gym/1")
                         .with(oauth2Login().attributes(attrs -> {
                             attrs.put("email", "another.user@test.com"); // User without gyms
                         })))
@@ -156,7 +158,7 @@ public class GymControllerTests {
     @Test
     @Order(5)
     public void testGetGymDetails_UnauthorizedUser_ShouldReturnForbidden() throws Exception {
-        mockMvc.perform(get("/gym/")
+        mockMvc.perform(get("/gym/1")
                         .with(oauth2Login().attributes(attrs -> {
                             attrs.put("email", "invalid.user@test.com"); // User without permission
                         })))

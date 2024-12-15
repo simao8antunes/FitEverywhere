@@ -63,7 +63,7 @@ const GymForm = ({ selectedGym }: GymFormProps) => {
                   onChange={(e) => {
                     setSelectedGymForm({
                       ...selectedGymForm,
-                      dailyFee: e.target.value,
+                      dailyFee: Number(e.target.value),
                     });
                   }}
                   className="input input-bordered"
@@ -79,7 +79,7 @@ const GymForm = ({ selectedGym }: GymFormProps) => {
                   onChange={(e) => {
                     setSelectedGymForm({
                       ...selectedGymForm,
-                      weeklyMembership: e.target.value,
+                      weeklyMembership: Number(e.target.value),
                     });
                   }}
                   className="input input-bordered"

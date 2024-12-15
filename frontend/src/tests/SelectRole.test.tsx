@@ -2,7 +2,7 @@ import { render } from "vitest-browser-react";
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import SelectRole from "../pages/SelectRole.tsx";
-
+const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -58,7 +58,7 @@ describe("SelectRole", () => {
     await userEvent.click(screen.getByText("Gym").element());
     await userEvent.click(screen.getByText("Continue").element());
 
-    expect(mockFetch).toHaveBeenCalledWith("/auth/signup?role=gym", {
+    expect(mockFetch).toHaveBeenCalledWith(API_URL + "/auth/signup?role=gym", {
       method: "POST",
       credentials: "include",
     });
@@ -84,10 +84,13 @@ describe("SelectRole", () => {
     await userEvent.click(screen.getByText("Client").element());
     await userEvent.click(screen.getByText("Continue").element());
 
-    expect(mockFetch).toHaveBeenCalledWith("/auth/signup?role=client", {
-      method: "POST",
-      credentials: "include",
-    });
+    expect(mockFetch).toHaveBeenCalledWith(
+      API_URL + "/auth/signup?role=client",
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
 
     await vi.waitFor(() => {
       expect(alertMock).toHaveBeenCalledWith("Please select a valid role.");

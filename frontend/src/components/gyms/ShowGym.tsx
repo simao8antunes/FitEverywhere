@@ -10,12 +10,10 @@ const ShowGym: React.FC<ShowGymProps> = ({ gym }) => {
   const handleCreateGym = async () => {
     try {
       const url = new URL(
-        import.meta.env.VITE_API_BASE_URL + "/gym",
+        import.meta.env.VITE_API_BASE_URL + "/gym/" + gym?.id,
         window.location.origin,
       );
       url.searchParams.append("name", gym?.name || "");
-      url.searchParams.append("id", gym?.id?.toString() || "");
-      console.log(gym?.id);
 
       const response = await fetch(url.toString(), {
         method: "POST",
