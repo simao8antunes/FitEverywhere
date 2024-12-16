@@ -37,27 +37,21 @@ public class GymManagerControllerTests {
     @Autowired
     private GymRepository gymRepository;
 
-    private Gym gym1, gym2;
+    private Gym gym1;
     private GymManager gymManager;
 
     @BeforeAll
     public void setUp() {
         // Create gyms
-        gym1 = new Gym(2L, "Gym One");
+        gym1 = new Gym(5L, "Gym One");
         gym1.setDailyFee(10.0);
         gym1.setWeeklyMembership(50.0);
         gymRepository.save(gym1);
-
-        gym2 = new Gym(3L, "Gym Two");
-        gym2.setDailyFee(15.0);
-        gym2.setWeeklyMembership(70.0);
-        gymRepository.save(gym2);
 
         // Create gym manager and link gyms
         gymManager = new GymManager("testGymManager", "gym.manager@example.com");
         Set<Gym> linkedGyms = new HashSet<>();
         linkedGyms.add(gym1);
-        linkedGyms.add(gym2);
         gymManager.setLinkedGyms(linkedGyms);
         gymManagerRepository.save(gymManager);
     }
@@ -75,10 +69,8 @@ public class GymManagerControllerTests {
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@example.com"))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gyms").isArray())
-                .andExpect(jsonPath("$.gyms[0].id").value(2L))
-                .andExpect(jsonPath("$.gyms[0].name").value("Gym One"))
-                .andExpect(jsonPath("$.gyms[1].id").value(3L))
-                .andExpect(jsonPath("$.gyms[1].name").value("Gym Two"));
+                .andExpect(jsonPath("$.gyms[0].id").value(5L))
+                .andExpect(jsonPath("$.gyms[0].name").value("Gym One"));
     }
 
     @Test

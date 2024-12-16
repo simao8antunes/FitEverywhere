@@ -25,7 +25,7 @@ const MyServices = () => {
       </p>
       <div className="p-3 flex gap-base flex-wrap">
         {isPersonalTrainer(user) &&
-          user.services.map((service) => (
+          user.services?.map((service) => (
             <div
               key={service.id}
               className={`card bg-base-100 w-96 shadow-xl cursor-pointer ${service.id === selectedService?.id ? "border-2 border-primary" : ""}`}
