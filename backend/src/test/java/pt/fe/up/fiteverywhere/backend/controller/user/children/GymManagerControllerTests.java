@@ -37,29 +37,20 @@ public class GymManagerControllerTests {
     @Autowired
     private GymRepository gymRepository;
 
-    private Gym gym1;
-    private GymManager gymManager;
-
     @BeforeAll
     public void setUp() {
         // Create gyms
-        gym1 = new Gym(5L, "Gym One");
+        Gym gym1 = new Gym(5L, "Gym One");
         gym1.setDailyFee(10.0);
         gym1.setWeeklyMembership(50.0);
         gymRepository.save(gym1);
 
         // Create gym manager and link gyms
-        gymManager = new GymManager("testGymManager", "gym.manager@example.com");
+        GymManager gymManager = new GymManager("testGymManager", "gym.manager@example.com");
         Set<Gym> linkedGyms = new HashSet<>();
         linkedGyms.add(gym1);
         gymManager.setLinkedGyms(linkedGyms);
         gymManagerRepository.save(gymManager);
-    }
-
-    @AfterAll
-    public void tearDown() {
-        gymManagerRepository.deleteAll();
-        gymRepository.deleteAll();
     }
 
     @Test

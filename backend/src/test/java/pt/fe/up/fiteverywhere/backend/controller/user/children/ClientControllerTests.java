@@ -5,14 +5,16 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
+import pt.fe.up.fiteverywhere.backend.repository.GymRepository;
 import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
 
 import java.util.Optional;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,6 +33,10 @@ public class ClientControllerTests {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private GymRepository gymRepository;
+
+
     @BeforeAll
     public void setUp() {
         // Create a sample client for testing
@@ -38,11 +44,11 @@ public class ClientControllerTests {
         client.setWorkoutsPerWeek(3);
         client.setPreferredTime("Morning");
         clientRepository.save(client);
-    }
 
-    @AfterAll
-    public void tearDown() {
-        clientRepository.deleteAll();
+        Gym gym = new Gym(2050L, "Test Gym");
+        gym.setWeeklyMembership(10.0);
+        gym.setDailyFee(20.0);
+        gymRepository.save(gym);
     }
 
     @Test
@@ -100,5 +106,36 @@ public class ClientControllerTests {
         Assertions.assertTrue(updatedClient.isPresent());
         Assertions.assertEquals(5, updatedClient.get().getWorkoutsPerWeek());
         Assertions.assertEquals("Night", updatedClient.get().getPreferredTime());
+    }
+
+    @Test
+    @Order(6)
+    public void testPurchaseMembership_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
+
+        mockMvc.perform(post("/client/2050/purchase")
+                        .param("type", "dailyFee")
+                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "test.user@example.com"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Membership purchased successfully"));
+    }
+
+    @Test
+    @Order(7)
+    public void testPurchaseMembership_UserNotFound_ShouldReturnUnauthorized() throws Exception {
+        mockMvc.perform(post("/client/1/purchase")
+                        .param("type", "dailyFee")
+                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "unknown.user@example.com"))))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$").value("User not found"));
+    }
+
+    @Test
+    @Order(8)
+    public void testPurchaseMembership_InvalidGym_ShouldReturnNotFound() throws Exception {
+        mockMvc.perform(post("/client/999/purchase")
+                        .param("type", "dailyFee")
+                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "test.user@example.com"))))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Gym not found"));
     }
 }

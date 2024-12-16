@@ -36,7 +36,12 @@ public class Gym {
     private Set<GymManager> linkedGymManagers = new HashSet<>();
 
     @OneToMany(mappedBy = "linkedGym", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("linkedGym")
     private Set<PersonalTrainer> linkedPersonalTrainers = new HashSet<>();
+
+    @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("gym")
+    private Set<Purchase> purchases = new HashSet<>();
 
     public Gym() {
     }
