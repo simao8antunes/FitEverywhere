@@ -22,7 +22,7 @@ interface PersonalTrainer extends User {
   linkedGym?: string;
   description: string;
   role: "personal_trainer";
-  services: PTService[];
+  services?: PTService[];
 }
 
 interface PTService {

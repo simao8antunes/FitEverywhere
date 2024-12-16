@@ -21,6 +21,7 @@ const PersonalTrainerProfile: React.FC = () => {
     description:
       isPersonalTrainer(user) && user.description ? user.description : "",
     linkedGym: isPersonalTrainer(user) ? user.linkedGym : undefined,
+    services: isPersonalTrainer(user) && user.services ? user.services : [],
   });
 
   const [isEditing, setIsEditing] = useState(false); // Track edit mode
