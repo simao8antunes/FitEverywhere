@@ -2,6 +2,7 @@ import React from "react";
 import logo from "/logo.svg";
 import { CgGym } from "react-icons/cg";
 import { FiHome, FiGrid } from "react-icons/fi";
+import { MdMiscellaneousServices } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.ts";
 
@@ -11,6 +12,12 @@ const Sidebar: React.FC = () => {
     { name: "Home", icon: <FiHome />, link: "/" },
     { name: "Workout Itineraries", icon: <FiGrid />, link: "/itineraries" },
     { name: "My Gyms", icon: <CgGym />, link: "/my-gyms", role: "gym_manager" },
+    {
+      name: "My Services",
+      icon: <MdMiscellaneousServices />,
+      link: "/my-services",
+      role: "personal_trainer",
+    },
   ];
 
   return (
