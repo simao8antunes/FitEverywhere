@@ -1,5 +1,6 @@
 package pt.fe.up.fiteverywhere.backend.entity.user.children;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class PersonalTrainer extends User {
     private Gym linkedGym;
 
     @OneToMany(mappedBy = "personalTrainer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("personalTrainer")
     private Set<PTService> services = new HashSet<>();
 
     public PersonalTrainer(String username, String email) {

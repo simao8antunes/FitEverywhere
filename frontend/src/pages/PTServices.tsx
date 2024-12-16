@@ -28,20 +28,41 @@ const MyServices = () => {
           user.services.map((service) => (
             <div
               key={service.id}
-              className="card bg-base-100 w-96 shadow-xl cursor-pointer"
+              className={`card bg-base-100 w-96 shadow-xl cursor-pointer ${service.id === selectedService?.id ? "border-2 border-primary" : ""}`}
               onClick={() => setSelectedService(service)}
             >
               <div className="card-body">
-                <h2 className="card-title">{service.name}</h2>
-                <p>{service.description}</p>
-                <p>Price: €{service.price.toFixed(2)}</p>
-                <p>Duration: {service.duration} minutes</p>
-                <p>Type: {service.type}</p>
+                <h2 className="card-title text-2xl">{service.name}</h2>
+                <p>
+                  <b>{service.description}</b>
+                </p>
+                <p>
+                  <b>Price:</b> €{service.price.toFixed(2)}
+                </p>
+                <p>
+                  <b>Duration:</b> {service.duration} minutes
+                </p>
+                <p>
+                  <b>Type:</b> {service.type}
+                </p>
               </div>
             </div>
           ))}
+        <div>
+          {selectedService && (
+            <button
+              className="btn btn-primary"
+              onClick={() => setSelectedService(null)}
+            >
+              + Add Service
+            </button>
+          )}
+        </div>
       </div>
-      <PTServiceForm selectedService={selectedService} />
+      <PTServiceForm
+        selectedService={selectedService}
+        setSelectedService={setSelectedService}
+      />
     </div>
   );
 };

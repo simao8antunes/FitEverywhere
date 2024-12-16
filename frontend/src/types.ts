@@ -40,7 +40,10 @@ interface UseFetchUserResult {
   isAuthenticated: boolean;
   user: UserOptions | null;
   error: string | null;
-  logout: () => void;
+  logout: () => Promise<void>;
+  fetchUsers: () => Promise<void>;
+  updateUserData: (data: UserOptions) => void;
+  addServiceToPersonalTrainer: (service: PTService) => void;
 }
 
 interface Event {

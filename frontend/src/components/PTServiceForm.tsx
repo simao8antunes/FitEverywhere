@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from "react";
 import type { PTService } from "../types.ts";
-import { useFetchUser } from "../hooks/useFetchUser.ts";
+import { useAuth } from "../hooks/useAuth.ts";
 
 interface PTServiceFormProps {
   selectedService: PTService | null;
+  setSelectedService: (service: PTService | null) => void;
 }
 
-const PTServiceForm: React.FC<PTServiceFormProps> = ({ selectedService }) => {
-  const [formData, setFormData] = useState<PTService>({
-    id: 0,
-    name: "",
-    description: "",
-    price: 0,
-    duration: 0,
-    type: "",
-  });
-  const { addServiceToPersonalTrainer } = useFetchUser();
+const newPTService: PTService = {
+  id: 0,
+  name: "",
+  description: "",
+  price: 0,
+  duration: 0,
+  type: "",
+};
+
+const PTServiceForm: React.FC<PTServiceFormProps> = ({
+  selectedService,
+  setSelectedService,
+}) => {
+  const [formData, setFormData] = useState<PTService>(newPTService);
+  const { addServiceToPersonalTrainer } = useAuth();
 
   useEffect(() => {
     if (selectedService) {
       setFormData(selectedService);
+    } else {
+      setFormData(newPTService);
     }
   }, [selectedService]);
 
@@ -34,10 +42,12 @@ const PTServiceForm: React.FC<PTServiceFormProps> = ({ selectedService }) => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Updated Service Data:", formData);
     addServiceToPersonalTrainer(formData);
+    setFormData(newPTService);
+    setSelectedService(null);
   };
 
   return (
@@ -116,9 +126,11 @@ const PTServiceForm: React.FC<PTServiceFormProps> = ({ selectedService }) => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary w-full">
-          Save Service
-        </button>
+        <div className="card-actions justify-center">
+          <button type="submit" className="btn btn-primary">
+            Save Service
+          </button>
+        </div>
       </form>
     </div>
   );
