@@ -22,6 +22,16 @@ interface PersonalTrainer extends User {
   linkedGym?: string;
   description: string;
   role: "personal_trainer";
+  services: PTService[];
+}
+
+interface PTService {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  duration: number;
+  type: string;
 }
 
 type UserOptions = Client | GymManager | PersonalTrainer;
@@ -30,7 +40,10 @@ interface UseFetchUserResult {
   isAuthenticated: boolean;
   user: UserOptions | null;
   error: string | null;
-  logout: () => void;
+  logout: () => Promise<void>;
+  fetchUsers: () => Promise<void>;
+  updateUserData: (data: UserOptions) => void;
+  addServiceToPersonalTrainer: (service: PTService) => void;
 }
 
 interface Event {
@@ -114,4 +127,5 @@ export type {
   UseFetchUserResult,
   User,
   UserOptions,
+  PTService,
 };
