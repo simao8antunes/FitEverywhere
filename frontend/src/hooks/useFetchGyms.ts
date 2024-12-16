@@ -261,6 +261,22 @@ export const useFetchGyms = () => {
     }
   };
 
+  const getAllGyms = async () => {
+    try {
+      const response = await fetch(API_URL + "/gym/all", {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch gyms");
+      }
+      const data = await response.json();
+      console.log("Gyms:", data);
+      setGyms(data);
+    } catch (error) {
+      console.error("Error fetching gyms:", error);
+    }
+  };
+
   return {
     gyms,
     fetchNearbyGyms,
@@ -270,5 +286,6 @@ export const useFetchGyms = () => {
     fetchGyms,
     fetchGymDetails,
     updateGym,
+    getAllGyms,
   };
 };
