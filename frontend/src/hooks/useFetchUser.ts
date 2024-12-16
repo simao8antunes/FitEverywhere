@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { PTService, UserOptions } from "../types";
+import type { PTService, UseFetchUserResult, UserOptions } from "../types";
 const API_URL = import.meta.env.VITE_API_BASE_URL;
-export function useFetchUser() {
+export function useFetchUser(): UseFetchUserResult {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<UserOptions | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -93,20 +93,21 @@ export function useFetchUser() {
   };
 
   const addServiceToPersonalTrainer = async (service: PTService) => {
+    console.log("Adding service to personal trainer:", service);
     try {
-      const response = await fetch(
-        API_URL + `/personal-trainer/add-service?service=${service}`,
-        {
-          method: "POST",
-          credentials: "include",
+      const response = await fetch(API_URL + `/personal-trainer/add-service`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(service),
+      });
       if (!response.ok) {
         throw new Error("Failed to add service to personal trainer");
       }
-      const data = await response.json();
-      console.log("Service added to personal trainer:", data);
-      return data;
+      alert("Service added or updated to personal trainer successfully");
+      await fetchUsers();
     } catch (error) {
       console.error("Error adding service to personal trainer:", error);
     }
@@ -117,6 +118,7 @@ export function useFetchUser() {
     user,
     error,
     logout,
+    fetchUsers,
     updateUserData,
     addServiceToPersonalTrainer,
   };

@@ -1,5 +1,6 @@
 package pt.fe.up.fiteverywhere.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
 @Entity
 public class PTService {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -29,6 +31,7 @@ public class PTService {
 
     @ManyToOne
     @JoinColumn(name = "personal_trainer_email")
+    @JsonIgnoreProperties("services")
     private PersonalTrainer personalTrainer;
 
     public PTService(Long id, String name, String description, Double price, Integer duration, String type) {
