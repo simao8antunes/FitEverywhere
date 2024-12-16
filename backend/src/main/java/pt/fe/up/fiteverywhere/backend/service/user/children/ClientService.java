@@ -30,25 +30,4 @@ public class ClientService {
         clientRepository.save(client);
     }
 
-    public List<String> generateWorkoutSchedule(User user, List<Map<String, Object>> calendarEvents) {
-//        int workoutsPerWeek = user.getWorkoutsPerWeek();
-//        String preferredTime = user.getPreferredTime();
-//        List<String> schedule = new ArrayList<>();
-//
-//        // Example: Distribute workouts while avoiding calendar events
-//        for (int i = 0; i < 7; i++) {
-//            if (schedule.size() >= workoutsPerWeek) break;
-//
-//            String day = LocalDate.now().plusDays(i).getDayOfWeek().name();
-//            boolean hasConflict = calendarEvents.stream()
-//                    .anyMatch(event -> event.get("day").equals(day) && event.get("time").equals(preferredTime));
-//
-//            if (!hasConflict) {
-//                schedule.add(day + " " + preferredTime);
-//            }
-//        }
-//
-//        return schedule;
-        return List.of();
-    }
 }

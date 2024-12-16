@@ -166,4 +166,13 @@ public class GymControllerTests {
                 .andExpect(jsonPath("$.error").value("User not found for the provided email."));
     }
 
+
+    @Test
+    @Order(6)
+    public void testGetAllGyms_AuthenticatedUser_ShouldReturnGymList() throws Exception {
+        mockMvc.perform(get("/gym/all")
+                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com")))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }

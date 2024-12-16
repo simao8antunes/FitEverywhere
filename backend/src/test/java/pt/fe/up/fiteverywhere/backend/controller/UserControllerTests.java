@@ -1,14 +1,16 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
+import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +37,7 @@ public class UserControllerTests {
 
     // Test for /auth/login/success - successful login
     @Test
+    @Order(1)
     public void testAuthenticatedWithGoogle_ShouldReturnUserInfo() throws Exception {
         mockMvc.perform(get("/auth/login/success")
                         .with(oauth2Login().attributes(attrs -> {
@@ -88,6 +91,7 @@ public class UserControllerTests {
 
     // Test for /auth/signup - successful signup
     @Test
+    @Order(1)
     public void testCreateClient_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
         mockMvc.perform(post("/auth/signup")
                         .param("role", "client")
@@ -102,6 +106,7 @@ public class UserControllerTests {
 
     // Test for /auth/signup - successful signup
     @Test
+    @Order(1)
     public void testCreateGymManager_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
         mockMvc.perform(post("/auth/signup")
                 .param("role", "gym")
@@ -115,6 +120,7 @@ public class UserControllerTests {
 
     // Test for /auth/signup - successful signup
     @Test
+    @Order(1)
     public void testCreatePersonalTrainer_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
         mockMvc.perform(post("/auth/signup")
                 .param("role", "pt")
@@ -148,78 +154,40 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.error").value("User not authenticated"));
     }
 
+    @Test
+    @Order(2)
+    public void testUpdateUserDetails_UserNotFound_ShouldReturn401() throws Exception {
+        String userJson = """
+        {
+            "description": "Updated description",
+            "linkedGym": null
+        }
+        """;
 
-    // Test for /auth/calendar/events - successful event retrieval
-//    @Test
-//    public void testGetCalendarEvents_Authenticated_ShouldReturnEvents() throws Exception {
-//        /*mockMvc.perform(get("/auth/calendar/events")
-//                        .with(oauth2Login().attributes(attrs -> {
-//                            attrs.put("email", "testuser@gmail.com");
-//                            attrs.put("name", "Test User");
-//                        })))
-//                .andExpect(status().isOk());*/
-//    }
-//
-//    // Test for /auth/calendar/events - unauthenticated access
-//    @Test
-//    public void testGetCalendarEvents_Unauthenticated_ShouldReturn401() throws Exception {
-//        /*mockMvc.perform(get("/auth/calendar/events"))
-//                .andExpect(status().isUnauthorized());*/
-//    }
-//
-//    @Test
-//    public void testSaveWorkoutPreferences_AuthenticatedUser_ShouldSavePreferences() throws Exception {
-//        // Assume the user with email "testuser@gmail.com" exists in the database
-//        // and has "workoutsPerWeek" and "preferredTime" set.
-//
-//        mockMvc.perform(post("/auth/workout-preferences")
-//                        .param("number", "3")
-//                        .param("time", "Morning")
-//                        .with(oauth2Login().attributes(attrs -> {
-//                            attrs.put("email", "testuser@gmail.com");
-//                            attrs.put("name", "Test User");
-//                        })))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.message").value("Preferences saved successfully"));
-//    }
-//
-//    // Test for /workout-preferences - user not found in database
-//    @Test
-//    public void testSaveWorkoutPreferences_UserNotFound_ShouldReturn404() throws Exception {
-//        mockMvc.perform(post("/auth/workout-preferences")
-//                        .param("number", "3")
-//                        .param("time", "Morning")
-//                        .with(oauth2Login().attributes(attrs -> {
-//                            attrs.put("email", "nonexistentuser@example.com");
-//                            attrs.put("name", "Nonexistent User");
-//                        })))
-//                .andExpect(status().isNotFound())
-//                .andExpect(content().string("User not found"));
-//    }
-//
-//    // Test for /workout-preferences - authenticated user with valid data
-//    @Test
-//    public void testGetWorkoutPreferences_AuthenticatedUser_ShouldReturnPreferences() throws Exception {
-//        mockMvc.perform(get("/auth/workout-preferences")
-//                        .with(oauth2Login().attributes(attrs -> {
-//                            attrs.put("email", "testuser@gmail.com");
-//                            attrs.put("name", "Test User");
-//                        })))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.workoutsPerWeek").exists())
-//                .andExpect(jsonPath("$.preferredTime").exists());
-//    }
-//
-//    // Test for /workout-preferences - authenticated user not found in database
-//    @Test
-//    public void testGetWorkoutPreferences_UserNotFound_ShouldReturn404() throws Exception {
-//        mockMvc.perform(get("/auth/workout-preferences")
-//                        .with(oauth2Login().attributes(attrs -> {
-//                            attrs.put("email", "nonexistentuser@example.com");
-//                            attrs.put("name", "Nonexistent User");
-//                        })))
-//                .andExpect(status().isNotFound())
-//                .andExpect(jsonPath("$").value("User not found"));
-//    }
+        mockMvc.perform(put("/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "nouser@test.com"))))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("User not found for the provided email."));
+    }
+
+    @Test
+    @Order(3)
+    public void testUpdateUserDetails_Success_ShouldReturn200() throws Exception {
+        // Assuming a Personal Trainer user with email 'pt@gmail.com' exists in the system
+        String userJson = """
+        {
+            "description": "Updated description",
+            "linkedGym": null
+        }
+        """;
+        mockMvc.perform(put("/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "pt@gmail.com"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("User details updated successfully!"));
+    }
 
 }
