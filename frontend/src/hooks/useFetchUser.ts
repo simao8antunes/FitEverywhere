@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { PTService, UseFetchUserResult, UserOptions } from "../types";
+import type {
+  PTService,
+  Purchase,
+  UseFetchUserResult,
+  UserOptions,
+} from "../types";
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 export function useFetchUser(): UseFetchUserResult {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -113,6 +118,27 @@ export function useFetchUser(): UseFetchUserResult {
     }
   };
 
+  const purchaseGymMembership = async (purchase: Purchase) => {
+    try {
+      const response = await fetch(
+        API_URL + `/client/${purchase.gym.id}/purchase?type=${purchase.type}`,
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Failed to purchase gym membership");
+      }
+      const data = await response.json();
+      console.log("Gym membership purchased:", data);
+      alert("Gym membership purchased successfully");
+      await fetchUsers();
+    } catch (error) {
+      console.error("Error purchasing gym membership:", error);
+    }
+  };
+
   return {
     isAuthenticated,
     user,
@@ -121,5 +147,6 @@ export function useFetchUser(): UseFetchUserResult {
     fetchUsers,
     updateUserData,
     addServiceToPersonalTrainer,
+    purchaseGymMembership,
   };
 }

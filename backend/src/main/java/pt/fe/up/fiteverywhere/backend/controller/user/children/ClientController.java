@@ -42,9 +42,9 @@ public class ClientController {
         return ResponseEntity.ok(Map.of("message", "Preferences saved successfully"));
     }
 
-    @PostMapping("/purchase")
+    @PostMapping("/{gymId}/purchase")
     public ResponseEntity<?> purchaseMembership(
-            @RequestParam Long gymId,
+            @PathVariable Long gymId,
             @RequestParam String type,
             @AuthenticationPrincipal OAuth2User principal) {
 
