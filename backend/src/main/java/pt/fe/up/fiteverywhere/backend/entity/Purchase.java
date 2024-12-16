@@ -19,10 +19,12 @@ public class Purchase {
 
     @ManyToOne
     @JoinColumn(name = "client_email", nullable = false)
+    @JsonIgnoreProperties("purchases")
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "gym_id", nullable = false)
+    @JsonIgnoreProperties("purchases")
     private Gym gym;
 
     @Column(nullable = false)

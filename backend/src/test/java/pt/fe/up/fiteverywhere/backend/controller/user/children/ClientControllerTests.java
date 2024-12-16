@@ -99,8 +99,7 @@ public class ClientControllerTests {
     @Test
     @Order(5)
     public void testSaveWorkoutPreferences_UpdatesClientPreferences() throws Exception {
-        mockMvc.perform(put("/client/workout-preferences")
-                        .param("number", "5")
+        mockMvc.perform(put("/client/5/workout-preferences")
                         .param("time", "Night")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "test.user@example.com"))))
                 .andExpect(status().isOk())
@@ -116,8 +115,7 @@ public class ClientControllerTests {
     @Order(6)
     public void testPurchaseMembership_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
 
-        mockMvc.perform(post("/client/purchase")
-                        .param("gymId", "2050")
+        mockMvc.perform(post("/client/2050/purchase")
                         .param("type", "dailyFee")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "test.user@example.com"))))
                 .andExpect(status().isOk())
@@ -127,8 +125,7 @@ public class ClientControllerTests {
     @Test
     @Order(7)
     public void testPurchaseMembership_UserNotFound_ShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(post("/client/purchase")
-                        .param("gymId", "1")
+        mockMvc.perform(post("/client/1/purchase")
                         .param("type", "dailyFee")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "unknown.user@example.com"))))
                 .andExpect(status().isUnauthorized())
@@ -138,8 +135,7 @@ public class ClientControllerTests {
     @Test
     @Order(8)
     public void testPurchaseMembership_InvalidGym_ShouldReturnNotFound() throws Exception {
-        mockMvc.perform(post("/client/purchase")
-                        .param("gymId", "999") // Invalid gym ID
+        mockMvc.perform(post("/client/999/purchase")
                         .param("type", "dailyFee")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "test.user@example.com"))))
                 .andExpect(status().isNotFound())

@@ -11,6 +11,7 @@ interface Client extends User {
   workoutsPerWeek: number;
   preferredTime: string;
   role: "client";
+  purchases: Purchase[];
 }
 
 interface GymManager extends User {
@@ -34,6 +35,15 @@ interface PTService {
   type: string;
 }
 
+interface Purchase {
+  id: number;
+  client: string;
+  purchaseDate: string;
+  gym: Gym;
+  type: string;
+  price: number;
+}
+
 type UserOptions = Client | GymManager | PersonalTrainer;
 
 interface UseFetchUserResult {
@@ -44,6 +54,7 @@ interface UseFetchUserResult {
   fetchUsers: () => Promise<void>;
   updateUserData: (data: UserOptions) => void;
   addServiceToPersonalTrainer: (service: PTService) => void;
+  purchaseGymMembership: (purchase: Purchase) => Promise<void>;
 }
 
 interface Event {
@@ -128,4 +139,5 @@ export type {
   User,
   UserOptions,
   PTService,
+  Purchase,
 };

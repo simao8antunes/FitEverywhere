@@ -6,14 +6,13 @@ updates:
     target-branch: "dev"
     schedule:
       interval: "weekly"
-      time: "04:00"           # Set a specific time for updates
+      time: "22:00"           # Set a specific time for updates
       day: "monday"           # Set a specific day for consistency
     commit-message:
       prefix: "deps"
       prefix-development: "dev-deps"
     ignore:
       - dependency-name: "typescript"  # Example of ignoring specific dependencies
-    open-pull-requests-limit: 10
     labels:
       - "dependencies"
       - "frontend"
@@ -24,25 +23,24 @@ updates:
     target-branch: "dev"
     schedule:
       interval: "weekly"
-      time: "05:00"
+      time: "22:00"
       day: "monday"
     commit-message:
       prefix: "deps"
       prefix-development: "dev-deps"
     ignore:
       - dependency-name: "org.springframework:spring-boot" # Ignore Spring Boot if needed
-    open-pull-requests-limit: 10
     labels:
       - "dependencies"
       - "backend"
 
   # GitHub Actions dependencies
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directory: "/.github/workflows"
     target-branch: "dev"
     schedule:
       interval: "weekly"
-      time: "06:00"
+      time: "22:00"
       day: "monday"
     commit-message:
       prefix: "deps"
