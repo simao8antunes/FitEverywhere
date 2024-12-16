@@ -5,11 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
+import pt.fe.up.fiteverywhere.backend.service.PurchaseService;
 import pt.fe.up.fiteverywhere.backend.service.user.children.ClientService;
 
 import java.util.Map;
@@ -21,6 +19,9 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private PurchaseService purchaseService;
 
     @PutMapping("/workout-preferences")
     public ResponseEntity<?> saveWorkoutPreferences(
@@ -39,6 +40,27 @@ public class ClientController {
         clientService.updatePreferences(client.get(), number, time);
 
         return ResponseEntity.ok(Map.of("message", "Preferences saved successfully"));
+    }
+
+    @PostMapping("/purchase")
+    public ResponseEntity<?> purchaseMembership(
+            @RequestParam Long gymId,
+            @RequestParam String type,
+            @AuthenticationPrincipal OAuth2User principal) {
+
+        String email = principal.getAttribute("email");
+        System.out.println("Purchasing membership for user: " + email); // Debug log
+        Optional<Client> client = clientService.findClientByEmail(email);
+        if (client.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+        }
+
+        try {
+            purchaseService.purchaseMembership(client.get().getEmail(), gymId, type);
+            return ResponseEntity.ok(Map.of("message", "Membership purchased successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Gym not found", "message", e.getMessage()));
+        }
     }
 
 }
