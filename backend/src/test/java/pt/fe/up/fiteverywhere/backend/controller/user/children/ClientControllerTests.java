@@ -5,11 +5,9 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
 import pt.fe.up.fiteverywhere.backend.repository.GymRepository;
 import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
 
@@ -19,8 +17,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import pt.fe.up.fiteverywhere.backend.controller.GymControllerTests;
-import pt.fe.up.fiteverywhere.backend.repository.user.children.GymManagerRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -99,7 +95,8 @@ public class ClientControllerTests {
     @Test
     @Order(5)
     public void testSaveWorkoutPreferences_UpdatesClientPreferences() throws Exception {
-        mockMvc.perform(put("/client/5/workout-preferences")
+        mockMvc.perform(put("/client/workout-preferences")
+                        .param("number", "5")
                         .param("time", "Night")
                         .with(oauth2Login().attributes(attrs -> attrs.put("email", "test.user@example.com"))))
                 .andExpect(status().isOk())
