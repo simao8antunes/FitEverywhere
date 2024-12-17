@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 import { useFetchGyms } from "../hooks/useFetchGyms"; // Assuming the hooks are in this path
+import { Client, UserOptions } from "../types";
 
 interface WorkoutSuggestion {
   id: number;
@@ -29,6 +31,7 @@ const Workouts: React.FC = () => {
     fetchGyms,
   } = useFetchGyms();
 
+  const {user} = useAuth();
   const handleFetchSuggestions = async () => {
     setIsLoading(true);
     setError(null); // Reset error before fetching
@@ -187,15 +190,21 @@ const Workouts: React.FC = () => {
     }
   };
 
+  const isClient = (user: UserOptions | null): user is Client => {
+    return user?.role === "client";
+  };
+
   // Fetch suggestions when the component loads
   useEffect(() => {
-    fetchSavedWorkouts();
-    handleFetchSuggestions();
+    if (isClient(user) && user.workoutsPerWeek>0){
+      fetchSavedWorkouts();
+      handleFetchSuggestions();
+    }
   }, []);
 
   return (
     <div className="flex justify-center items-start">
-      <div className="bg-background rounded-lg shadow-lg p-8 w-full mx-4 flex space-x-8">
+      <div className="bg-base-100 rounded-lg shadow-lg p-8 w-full mx-4 flex space-x-8">
         {/* Workout Suggestions */}
         <div className="flex-1">
           <h1 className="text-2xl font-semibold text-primary mb-6">
@@ -263,7 +272,7 @@ const Workouts: React.FC = () => {
                 {gyms.map((gym, idx) => (
                   <li
                     key={idx}
-                    className="border p-2 rounded cursor-pointer hover:bg-black-100"
+                    className="border p-2 rounded cursor-pointer hover:bg-black-200"
                     onClick={() => handleSelectGym(gym.name)}
                   >
                     <p>
