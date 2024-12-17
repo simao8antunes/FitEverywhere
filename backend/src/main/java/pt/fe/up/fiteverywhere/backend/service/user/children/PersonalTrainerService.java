@@ -41,4 +41,10 @@ public class PersonalTrainerService {
         return ptServiceRepository.save(newService);
     }
 
+    public Iterable<PersonalTrainer> getAllPersonalTrainers() {
+        return personalTrainerRepository.findAll();
+    }
+
+
+
 }
