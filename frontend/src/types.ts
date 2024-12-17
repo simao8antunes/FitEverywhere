@@ -12,6 +12,7 @@ interface Client extends User {
   preferredTime: string;
   role: "client";
   purchases: Purchase[];
+  ptServices: PTService[];
 }
 
 interface GymManager extends User {
@@ -20,7 +21,7 @@ interface GymManager extends User {
 }
 
 interface PersonalTrainer extends User {
-  linkedGym?: string;
+  linkedGym?: Gym;
   description: string;
   role: "personal_trainer";
   services?: PTService[];
@@ -33,6 +34,7 @@ interface PTService {
   price: number;
   duration: number;
   type: string;
+  personalTrainer?: PersonalTrainer;
 }
 
 interface Purchase {
@@ -55,6 +57,9 @@ interface UseFetchUserResult {
   updateUserData: (data: UserOptions) => void;
   addServiceToPersonalTrainer: (service: PTService) => void;
   purchaseGymMembership: (purchase: Purchase) => Promise<void>;
+  fetchPersonalTrainers: () => Promise<PersonalTrainer[] | undefined>;
+  purchasePTService: (serviceId: number) => Promise<void>;
+  fetchAvailablePTs: () => Promise<PersonalTrainer[] | undefined>;
 }
 
 interface Event {

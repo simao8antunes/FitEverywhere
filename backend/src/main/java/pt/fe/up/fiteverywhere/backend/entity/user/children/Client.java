@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import pt.fe.up.fiteverywhere.backend.entity.Gym;
+import pt.fe.up.fiteverywhere.backend.entity.PTService;
 import pt.fe.up.fiteverywhere.backend.entity.Purchase;
 import pt.fe.up.fiteverywhere.backend.entity.User;
 
@@ -25,6 +25,15 @@ public class Client extends User {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnoreProperties("client")
     private Set<Purchase> purchases = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "client_ptservice",
+            joinColumns = @JoinColumn(name = "client_email", referencedColumnName = "email"),
+            inverseJoinColumns = @JoinColumn(name = "ptservice_id", referencedColumnName = "id")
+    )
+    @JsonIgnoreProperties("clients")
+    private Set<PTService> ptServices = new HashSet<>();
 
     public Client(String username, String email) {
         super(username, email);

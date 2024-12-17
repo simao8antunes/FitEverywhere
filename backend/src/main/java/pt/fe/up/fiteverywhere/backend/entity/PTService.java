@@ -4,7 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -34,16 +39,10 @@ public class PTService {
     @JsonIgnoreProperties("services")
     private PersonalTrainer personalTrainer;
 
-    public PTService(Long id, String name, String description, Double price, Integer duration, String type) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.type = type;
-    }
+    @ManyToMany(mappedBy = "ptServices", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("ptServices")
+    private Set<Client> clients = new HashSet<>();
 
     public PTService() {
-
     }
 }

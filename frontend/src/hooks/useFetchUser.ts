@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type {
+  PersonalTrainer,
   PTService,
   Purchase,
   UseFetchUserResult,
@@ -139,6 +140,65 @@ export function useFetchUser(): UseFetchUserResult {
     }
   };
 
+  const fetchAvailablePTs = async () => {
+    try {
+      const response = await fetch(
+        `${API_URL}/personal-trainer/get-available`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch available personal trainers");
+      }
+      const data = await response.json();
+      console.log("Available personal trainers:", data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching pts:", error);
+    }
+  };
+
+  const fetchPersonalTrainers = async () => {
+    try {
+      const response = await fetch(API_URL + "/personal-trainer", {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch personal trainers");
+      }
+      const data: PersonalTrainer[] = await response.json();
+      console.log("Personal Trainers:", data);
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching personal trainers:", error);
+    }
+  };
+
+  const purchasePTService = async (serviceId: number) => {
+    try {
+      const response = await fetch(
+        API_URL + `/client/${serviceId}/purchase-service`,
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
+      if (!response.ok) {
+        console.log(response);
+        throw new Error("Failed to purchase personal training service");
+      }
+      const data = await response.json();
+      console.log("Personal Training Service purchased:", data);
+      alert("Personal Training Service purchased successfully");
+      await fetchUsers();
+    } catch (error) {
+      console.error("Error purchasing personal training service:", error);
+    }
+  };
+
   return {
     isAuthenticated,
     user,
@@ -148,5 +208,8 @@ export function useFetchUser(): UseFetchUserResult {
     updateUserData,
     addServiceToPersonalTrainer,
     purchaseGymMembership,
+    fetchAvailablePTs,
+    fetchPersonalTrainers,
+    purchasePTService,
   };
 }
