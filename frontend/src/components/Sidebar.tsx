@@ -18,6 +18,12 @@ const Sidebar: React.FC = () => {
       link: "/my-services",
       role: "personal_trainer",
     },
+    {
+      name: "Workout Planner",
+      icon: <FiGrid />,
+      link: "/workout-planner",
+      role: "client",
+    },
   ];
 
   return (
