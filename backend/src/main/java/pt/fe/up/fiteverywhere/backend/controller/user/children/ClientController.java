@@ -39,7 +39,16 @@ public class ClientController {
     private WorkoutSuggestionService workoutSuggestionService;
 
     @Autowired
+    private WorkoutSuggestionService workoutSuggestionService;
+
+    @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private CalendarService calendarService;
+
+    @Autowired
+    private WorkoutSuggestionRepository workoutSuggestionRepository;
 
     @Autowired
     private CalendarService calendarService;
@@ -65,7 +74,7 @@ public class ClientController {
         return ResponseEntity.ok(Map.of("message", "Preferences saved successfully"));
     }
 
-    
+
     @GetMapping("/workout-suggestions")
     public ResponseEntity<?> getWorkoutSuggestions(
             @AuthenticationPrincipal OAuth2User principal,
@@ -111,7 +120,7 @@ public class ClientController {
         }
 
         Client client = clientOptional.get();
-        
+
         try {
             // Save the workout suggestions
             List<WorkoutSuggestion>  savedSuggestions = clientService.saveWorkoutSuggestions(client, workoutSuggestions);
@@ -160,7 +169,7 @@ public class ClientController {
     public ResponseEntity<?> deleteWorkoutSuggestion(@PathVariable Long id, @AuthenticationPrincipal OAuth2User principal) {
         System.out.println("Received request to delete workout suggestion with ID: " + id); // Log request
 
-        Optional<WorkoutSuggestion> suggestionOptional = workoutSuggestionRepository.findById(id);
+        Optional<WorkoutSuggestion> suggestionOptional = workoutSuggestionService.getWorkoutSuggestionById(id);
         if (suggestionOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Workout suggestion not found.");
         }
@@ -168,9 +177,8 @@ public class ClientController {
         WorkoutSuggestion suggestion = suggestionOptional.get();
         System.out.println("Found workout suggestion: " + suggestion); // Log suggestion details
 
-        workoutSuggestionService.deleteWorkoutSuggestion(id);
+        workoutSuggestionService.deleteWorkoutSuggestion(suggestion.getId());
 
-        List<WorkoutSuggestion> savedSuggestions = workoutSuggestionRepository.findAll();
-        return ResponseEntity.ok(savedSuggestions);
+        return ResponseEntity.ok(Map.of("message", "Workout suggestion deleted successfully"));
     }
 }
