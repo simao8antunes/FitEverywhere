@@ -126,7 +126,7 @@ export function useFetchUser(): UseFetchUserResult {
         {
           method: "POST",
           credentials: "include",
-        },
+        }
       );
       if (!response.ok) {
         throw new Error("Failed to purchase gym membership");
@@ -137,6 +137,26 @@ export function useFetchUser(): UseFetchUserResult {
       await fetchUsers();
     } catch (error) {
       console.error("Error purchasing gym membership:", error);
+    }
+  };
+
+  const fetchAvailablePTs = async () => {
+    try {
+      const response = await fetch(
+        `${API_URL}/personal-trainer/get-available`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch available personal trainers");
+      }
+      const data = await response.json();
+      console.log("Available personal trainers:", data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching pts:", error);
     }
   };
 
@@ -188,6 +208,7 @@ export function useFetchUser(): UseFetchUserResult {
     updateUserData,
     addServiceToPersonalTrainer,
     purchaseGymMembership,
+    fetchAvailablePTs,
     fetchPersonalTrainers,
     purchasePTService,
   };
