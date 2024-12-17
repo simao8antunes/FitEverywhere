@@ -21,7 +21,7 @@ interface GymManager extends User {
 }
 
 interface PersonalTrainer extends User {
-  linkedGym?: string;
+  linkedGym?: Gym;
   description: string;
   role: "personal_trainer";
   services?: PTService[];
@@ -59,6 +59,7 @@ interface UseFetchUserResult {
   purchaseGymMembership: (purchase: Purchase) => Promise<void>;
   fetchPersonalTrainers: () => Promise<PersonalTrainer[] | undefined>;
   purchasePTService: (serviceId: number) => Promise<void>;
+  fetchAvailablePTs: () => Promise<PersonalTrainer[] | undefined>;
 }
 
 interface Event {
