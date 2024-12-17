@@ -5,13 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pt.fe.up.fiteverywhere.backend.entity.PTService;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
+import pt.fe.up.fiteverywhere.backend.entity.User;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
+import pt.fe.up.fiteverywhere.backend.service.UserService;
 import pt.fe.up.fiteverywhere.backend.service.user.children.PersonalTrainerService;
 
 import java.util.Optional;
@@ -22,6 +20,8 @@ public class PersonalTrainerController {
 
     @Autowired
     private PersonalTrainerService personalTrainerService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/add-service")
     public ResponseEntity<String> addService(@RequestBody PTService serviceDTO,
@@ -49,6 +49,17 @@ public class PersonalTrainerController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getPersonalTrainers(@AuthenticationPrincipal OAuth2User principal) {
+        String email = principal.getAttribute("email");
+        Optional<User> user = userService.findUserByEmail(email);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        Iterable<PersonalTrainer> personalTrainers = personalTrainerService.getAllPersonalTrainers();
+        return ResponseEntity.ok(personalTrainers);
     }
 
 }

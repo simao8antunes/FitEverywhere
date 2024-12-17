@@ -3,6 +3,7 @@ import logo from "/logo.svg";
 import { CgGym } from "react-icons/cg";
 import { FiHome, FiGrid } from "react-icons/fi";
 import { MdMiscellaneousServices } from "react-icons/md";
+import { FaPersonChalkboard } from "react-icons/fa6";
 import { BiPurchaseTag } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.ts";
@@ -23,6 +24,12 @@ const Sidebar: React.FC = () => {
       name: "Purchases",
       icon: <BiPurchaseTag />,
       link: "/purchases",
+      role: "client",
+    },
+    {
+      name: "My PTs",
+      icon: <FaPersonChalkboard />,
+      link: "/my-pt",
       role: "client",
     },
   ];

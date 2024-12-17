@@ -63,4 +63,24 @@ public class ClientController {
         }
     }
 
+    @PostMapping("/{serviceId}/purchase-service")
+    public ResponseEntity<?> purchaseService(
+            @PathVariable Long serviceId,
+            @AuthenticationPrincipal OAuth2User principal) {
+
+        String email = principal.getAttribute("email");
+        System.out.println("Purchasing service for user: " + email); // Debug log
+        Optional<Client> client = clientService.findClientByEmail(email);
+        if (client.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+        }
+
+        try {
+            clientService.buyPTService(client.get(), serviceId);
+            return ResponseEntity.ok(Map.of("message", "Service purchased successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Service not found", "message", e.getMessage()));
+        }
+    }
+
 }
