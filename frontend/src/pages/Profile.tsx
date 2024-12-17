@@ -14,7 +14,6 @@ const Profile: React.FC = () => {
   const [preferredTime, setPreferredTime] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [validationMessage, setValidationMessage] = useState<string>("");
-  const [validationMessage, setValidationMessage] = useState<string>("");
 
   useEffect(() => {
     if (isClient(user) && workoutsPerWeek === null && preferredTime === null) {
@@ -29,20 +28,9 @@ const Profile: React.FC = () => {
       return;
     }
 
-    if (workoutsPerWeek === null || workoutsPerWeek <= 0) {
-      setValidationMessage("Workouts per week must be greater than 0.");
-      return;
-    }
-
-    if (workoutsPerWeek === null || workoutsPerWeek <= 0) {
-      setValidationMessage("Workouts per week must be greater than 0.");
-      return;
-    }
-
     try {
       const response = await fetch(
         import.meta.env.VITE_API_BASE_URL +
-        `/client/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
         `/client/workout-preferences?number=${workoutsPerWeek}&time=${preferredTime}`,
         {
           method: "PUT",
@@ -67,16 +55,6 @@ const Profile: React.FC = () => {
       console.error("Error saving preferences:", error);
       alert("Error saving preferences");
     }
-  };
-
-  const handleWorkoutsChange = (value: string) => {
-    const numberValue = Number(value);
-    if (numberValue < 0) {
-      setValidationMessage("Workouts per week must be greater than 0.");
-    } else {
-      setValidationMessage("");
-    }
-    setWorkoutsPerWeek(numberValue);
   };
 
   const handleWorkoutsChange = (value: string) => {
@@ -147,7 +125,6 @@ const Profile: React.FC = () => {
                   type="number"
                   className="border p-2 rounded w-full"
                   value={workoutsPerWeek || ""}
-                  onChange={(e) => handleWorkoutsChange(e.target.value)}
                   onChange={(e) => handleWorkoutsChange(e.target.value)}
                 />
                   {validationMessage && (
