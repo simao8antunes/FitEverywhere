@@ -24,12 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.WorkoutSuggestion;
-import pt.fe.up.fiteverywhere.backend.repository.user.children.WorkoutSuggestionRepository;
+import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
 import pt.fe.up.fiteverywhere.backend.service.CalendarService;
+import pt.fe.up.fiteverywhere.backend.service.WorkoutSuggestionService;
 import pt.fe.up.fiteverywhere.backend.service.user.children.ClientService;
-import pt.fe.up.fiteverywhere.backend.service.user.children.WorkoutSuggestionService;
 
 @RestController
 @RequestMapping("/client")
@@ -39,16 +39,7 @@ public class ClientController {
     private WorkoutSuggestionService workoutSuggestionService;
 
     @Autowired
-    private WorkoutSuggestionService workoutSuggestionService;
-
-    @Autowired
     private ClientService clientService;
-
-    @Autowired
-    private CalendarService calendarService;
-
-    @Autowired
-    private WorkoutSuggestionRepository workoutSuggestionRepository;
 
     @Autowired
     private CalendarService calendarService;

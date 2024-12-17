@@ -26,11 +26,16 @@ const EventList: React.FC<EventListProps> = ({
     return <p>No upcoming events.</p>;
   }
 
+  // Sort events by their start time (closest to farthest)
+  const sortedEvents = [...events].sort(
+    (a, b) => new Date(a.start.dateTime).getTime() - new Date(b.start.dateTime).getTime()
+  );
+
   // Render list of events
   return (
     <div className="">
       <div className="space-y-4">
-        {events.map((event) => (
+        {sortedEvents.map((event) => (
           <div
             key={event.id}
             className="card bg-base-200 hover:bg-neutral hover:text-neutral-content cursor-pointer transition-colors"
@@ -38,7 +43,7 @@ const EventList: React.FC<EventListProps> = ({
           >
             <div className="card-body">
               <h3 className="card-title">{event.summary}</h3>
-              <p className="text-sm ">
+              <p className="text-sm">
                 {new Date(event.start.dateTime).toLocaleString()} -{" "}
                 {new Date(event.end.dateTime).toLocaleString()}
                 <label>{event.location}</label>
