@@ -5,7 +5,7 @@ import { useFetchUser } from "../hooks/useFetchUser.ts";
 
 const PersonalTrainerProfile: React.FC = () => {
   const isPersonalTrainer = (
-    user: UserOptions | null
+    user: UserOptions | null,
   ): user is PersonalTrainer => {
     return user?.role === "personal_trainer";
   };
@@ -27,7 +27,7 @@ const PersonalTrainerProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false); // Track edit mode
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({

@@ -126,7 +126,7 @@ export function useFetchUser(): UseFetchUserResult {
         {
           method: "POST",
           credentials: "include",
-        }
+        },
       );
       if (!response.ok) {
         throw new Error("Failed to purchase gym membership");
@@ -147,7 +147,7 @@ export function useFetchUser(): UseFetchUserResult {
         {
           method: "GET",
           credentials: "include",
-        }
+        },
       );
       if (!response.ok) {
         throw new Error("Failed to fetch available personal trainers");
