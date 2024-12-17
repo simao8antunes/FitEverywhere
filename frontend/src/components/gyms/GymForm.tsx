@@ -14,7 +14,7 @@ const GymForm = ({ selectedGym }: GymFormProps) => {
   const [availablePTs, setAvailablePTs] = useState<PersonalTrainer[]>([]);
   const [isAddingPT, setIsAddingPT] = useState<boolean>(false);
   const [selectedGymForm, setSelectedGymForm] = useState<Gym | null>(
-    selectedGym
+    selectedGym,
   );
 
   const handleAddPT = async (index: number) => {
@@ -25,7 +25,7 @@ const GymForm = ({ selectedGym }: GymFormProps) => {
           "/gym/" +
           selectedGymForm?.id +
           "/link-pt",
-        window.location.origin
+        window.location.origin,
       );
       url.searchParams.append("ptEmail", availablePTs[index].email);
 
@@ -220,12 +220,14 @@ const GymForm = ({ selectedGym }: GymFormProps) => {
                     <div className="card-actions justify-end">
                       <button
                         onClick={() => {
-                          handleAddPT(index), setIsAddingPT(false);
+                          handleAddPT(index);
+                          setIsAddingPT(false);
                         }}
                         className="btn btn-primary"
                       >
                         Add to Gym
                       </button>
+                      {message && <div>{message}</div>}
                     </div>
                   </div>
                 </div>
