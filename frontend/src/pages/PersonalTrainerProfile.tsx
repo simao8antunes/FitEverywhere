@@ -5,7 +5,7 @@ import { useFetchUser } from "../hooks/useFetchUser.ts";
 
 const PersonalTrainerProfile: React.FC = () => {
   const isPersonalTrainer = (
-    user: UserOptions | null,
+    user: UserOptions | null
   ): user is PersonalTrainer => {
     return user?.role === "personal_trainer";
   };
@@ -27,7 +27,7 @@ const PersonalTrainerProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false); // Track edit mode
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -79,7 +79,8 @@ const PersonalTrainerProfile: React.FC = () => {
               </p>
               <p className="mb-2">
                 <strong>Linked Gym:</strong>{" "}
-                {formData.linkedGym || "Wait for your gym owner to add you."}
+                {formData.linkedGym?.name ||
+                  "Wait for your gym owner to add you."}
               </p>
               <div className="card-actions justify-end">
                 <button className="btn btn-secondary" onClick={toggleEditMode}>
@@ -146,7 +147,7 @@ const PersonalTrainerProfile: React.FC = () => {
                   placeholder="Wait for your gym owner to add you."
                   disabled
                   name="linkedGym"
-                  value={formData.linkedGym || ""}
+                  value={formData.linkedGym?.name || ""}
                   onChange={handleInputChange}
                   className="input input-bordered w-full"
                 />

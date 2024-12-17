@@ -1,13 +1,15 @@
 package pt.fe.up.fiteverywhere.backend.service.user.children;
 
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import pt.fe.up.fiteverywhere.backend.entity.PTService;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
 import pt.fe.up.fiteverywhere.backend.repository.PTServiceRepository;
 import pt.fe.up.fiteverywhere.backend.repository.user.children.PersonalTrainerRepository;
-
-import java.util.Optional;
 
 @Service
 public class PersonalTrainerService {
@@ -39,6 +41,16 @@ public class PersonalTrainerService {
 
         // Save the service
         return ptServiceRepository.save(newService);
+    }
+
+    public Optional<PersonalTrainer> findPTByEmail(String email) {
+        return personalTrainerRepository.findById(email);
+    }
+
+    public Iterable<PersonalTrainer> getAvailablePTs() {
+        return personalTrainerRepository.findAll().stream()
+                .filter(trainer -> trainer.getLinkedGym() == null)
+                .collect(Collectors.toList());
     }
 
     public Iterable<PersonalTrainer> getAllPersonalTrainers() {
