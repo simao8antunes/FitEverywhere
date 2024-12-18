@@ -4,7 +4,7 @@
 **Dev**:
 [![CD Development](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml/badge.svg?branch=dev)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml)
 
-<p align="center"><a href="http://fiteverywhere.me" target="_blank"><img src="frontend/public/logo.svg" width="300" alt="Laravel Logo"></a></p>
+<p align="center"><a href="https://fiteverywhere.azurewebsites.net" target="_blank"><img src="frontend/public/logo.svg" width="300" alt="Laravel Logo"></a></p>
 
 # Welcome to FitEverywhere!
 **FitEverywhere** is a fitness management platform designed to connect customers, personal trainers, and gym managers through a seamless digital experience. This README provides an overview of the deployed environments, steps to start the application, and a summary of the tech stack used. All project documentation, planning, and progress are available on our [Wiki Page](https://github.com/MESW-LES-2425/FitEverywhere-T2E/wiki).
@@ -33,12 +33,12 @@ The project leverages modern web development practices, advanced DevOps methodol
 **FitEverywhere** has two fully dockerized environments:
 
 1. **Production Environment**
-    - **URL**: [http://fiteverywhere.me](http://fiteverywhere.me)
+    - **URL**: [https://fiteverywhere.azurewebsites.net](https://fiteverywhere.azurewebsites.net)
     - **Port**: 80 (reverse-proxied via Nginx)
     - **Description**: The main production environment where stable and thoroughly tested features are available for end-users.
 
 2. **Development Environment**
-    - **URL**: [http://dev.fiteverywhere.me](http://dev.fiteverywhere.me)
+    - **URL**: [https://fiteverywhere-dev.azurewebsites.net](https://fiteverywhere-dev.azurewebsites.net)
     - **Port**: 80 (reverse-proxied via Nginx)
     - **Description**: A development environment for testing new features and ongoing development updates before they are released to production.
 
