@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { useFetchGyms } from "../hooks/useFetchGyms"; // Assuming the hooks are in this path
-import { Client, UserOptions } from "../types";
+import { Client, Gym, UserOptions } from "../types";
 
 interface WorkoutSuggestion {
   id: number;
@@ -14,24 +13,46 @@ const Workouts: React.FC = () => {
   const [suggestedWorkouts, setSuggestedWorkouts] = useState<
     WorkoutSuggestion[]
   >([]);
+  const [favouriteGyms, setFavouriteGyms] = useState<Gym[]>([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showSearchOptions, setShowSearchOptions] = useState<number | null>(
-    null,
-  );
-  const [streetInput, setStreetInput] = useState<string>("");
   const [selectedWorkoutIndex, setSelectedWorkoutIndex] = useState<
     number | null
   >(null);
 
-  const {
-    gyms,
-    loading: gymLoading,
-    error: gymError,
-    fetchGyms,
-  } = useFetchGyms();
-
   const { user } = useAuth();
+
+  // Fetch favorite gyms
+  const fetchFavoriteGyms = async () => {
+    setIsLoading(true);
+    setError(null);
+  
+    try {
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/client/favourites",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.message || "Failed to fetch favorite gyms");
+        return;
+      }
+  
+      const data = await response.json();
+      setFavouriteGyms(data);
+    } catch (error) {
+      console.error("Error fetching favorite gyms:", error);
+      setError("Error fetching favorite gyms. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleFetchSuggestions = async () => {
     setIsLoading(true);
     setError(null); // Reset error before fetching
@@ -74,34 +95,6 @@ const Workouts: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleSearchGym = async (type: "event" | "street", index: number) => {
-    if (type === "street") {
-      if (!streetInput.trim()) {
-        setError("Please enter a street name to search for gyms.");
-        return;
-      }
-      await fetchGyms(streetInput);
-      setSelectedWorkoutIndex(index); // Set the selected workout index
-    } else {
-      alert(
-        `Searching for gyms near the event location for workout ${index + 1}`,
-      );
-    }
-    setShowSearchOptions(null); // Close options after selection
-  };
-
-  const handleSelectGym = (gymName: string) => {
-    if (selectedWorkoutIndex === null) return;
-
-    setSuggestedWorkouts((prev) =>
-      prev.map((workout, index) =>
-        index === selectedWorkoutIndex ? { ...workout, gym: gymName } : workout,
-      ),
-    );
-
-    setSelectedWorkoutIndex(null); // Reset selected workout index
   };
 
   // Function to save the workout suggestions to the backend
@@ -190,6 +183,23 @@ const Workouts: React.FC = () => {
     }
   };
 
+  const handleFindGym = (index: number) => {
+    setSelectedWorkoutIndex(index);
+    fetchFavoriteGyms();
+  };
+
+  const handleSelectGym = (gymName: string) => {
+    if (selectedWorkoutIndex === null) return;
+
+    setSuggestedWorkouts((prev) =>
+      prev.map((workout, index) =>
+        index === selectedWorkoutIndex ? { ...workout, gym: gymName } : workout,
+      ),
+    );
+
+    setSelectedWorkoutIndex(null); // Reset selected workout index
+  };
+
   const isClient = (user: UserOptions | null): user is Client => {
     return user?.role === "client";
   };
@@ -228,33 +238,10 @@ const Workouts: React.FC = () => {
                   </p>
                   <button
                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    onClick={() => setShowSearchOptions(index)}
+                    onClick={() => handleFindGym(index)}
                   >
                     Find a Gym
                   </button>
-
-                  {showSearchOptions === index && (
-                    <div className="mt-4 p-4 bg-100 border rounded">
-                      <h3 className="font-semibold mb-2">
-                        Choose the Gym Search Location
-                      </h3>
-                      <div className="flex flex-col mb-4">
-                        <input
-                          type="text"
-                          value={streetInput}
-                          onChange={(e) => setStreetInput(e.target.value)}
-                          placeholder="Enter street name"
-                          className="border p-2 rounded mb-2"
-                        />
-                        <button
-                          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                          onClick={() => handleSearchGym("street", index)}
-                        >
-                          Search by Street
-                        </button>
-                      </div>
-                    </div>
-                  )}
                 </li>
               ))}
             </ul>
@@ -262,33 +249,24 @@ const Workouts: React.FC = () => {
             !isLoading && <p>No workout suggestions available.</p>
           )}
 
-          {/* Display nearby gyms if searched */}
-          {gymLoading && <p>Searching for gyms...</p>}
-          {gymError && <p className="error text-red-500">{gymError}</p>}
-          {gyms.length > 0 && selectedWorkoutIndex !== null && (
+          {favouriteGyms.length > 0 && selectedWorkoutIndex !== null && (
             <div className="mt-6">
-              <h2 className="text-lg font-semibold">Nearby Gyms</h2>
+              <h2 className="text-lg font-semibold">Favorite Gyms</h2>
               <ul className="space-y-2">
-                {gyms.map((gym, idx) => (
+                {favouriteGyms.map((gym) => (
                   <li
-                    key={idx}
+                    key={gym.id}
                     className="border p-2 rounded cursor-pointer hover:bg-black-200"
                     onClick={() => handleSelectGym(gym.name)}
                   >
-                    <p>
-                      <strong>Name:</strong> {gym.name}
-                    </p>
-                    <p>
-                      <strong>Distance:</strong> {gym.distance} km
-                    </p>
-                    <p>
-                      <strong>Daily Fee: €</strong> {gym.dailyFee}
-                    </p>
+                    <p>Name: {gym.name}</p>
+                    <p>Price: {gym.dailyFee} €</p>
                   </li>
                 ))}
               </ul>
             </div>
           )}
+
           {/* Button to save workout suggestions */}
           <button
             className="mt-6 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"

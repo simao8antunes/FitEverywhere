@@ -277,6 +277,36 @@ export const useFetchGyms = () => {
     }
   };
 
+  const addGymAndAddToFavourites = async (gym: any) => {
+    try {
+
+      const sendGym = {
+        id: gym.id,
+        name: gym.name,
+        description: null,
+        dailyFee: null,
+        weeklyMembership: null,
+      }
+      const response = await fetch(
+        API_URL + `/client/favourites`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(sendGym),
+        },
+      );
+      if (!response.ok) {
+        console.log(response);
+        throw new Error("Failed to add gym to favourites");
+      }
+    } catch (error) {
+      console.error("Error adding gym to favourites:", error);
+    }
+  }
+
   return {
     gyms,
     fetchNearbyGyms,
@@ -287,5 +317,6 @@ export const useFetchGyms = () => {
     fetchGymDetails,
     updateGym,
     getAllGyms,
+    addGymAndAddToFavourites,
   };
 };

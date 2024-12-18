@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import NearbyGyms from "../components/gyms/NearbyGyms.tsx";
+import NearbyGymsManager from "../components/gyms/NearbyGymsManager.tsx";
 import ShowGym from "../components/gyms/ShowGym.tsx"; // Assuming this hook fetches nearby gyms
 import { useAuth } from "../hooks/useAuth";
 import { useFetchGyms } from "../hooks/useFetchGyms";
@@ -76,7 +76,7 @@ const GymProfile: React.FC = () => {
       </div>
       <div className="card bg-base-100 shadow-xl col-span-2">
         <div className="card-body">
-          <NearbyGyms
+          <NearbyGymsManager
             gyms={gyms}
             loading={false}
             error={null}
