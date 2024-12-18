@@ -14,6 +14,7 @@ import java.util.Map;
 
 @Service
 public class CalendarService {
+
     private final RestTemplate restTemplate = new RestTemplate();
     String GOOGLE_CALENDAR_EVENTS_URL = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
 
@@ -26,9 +27,6 @@ public class CalendarService {
             ResponseEntity<Map> response = restTemplate.exchange(GOOGLE_CALENDAR_EVENTS_URL, HttpMethod.GET, entity, Map.class);
             // Return the response body (events)
             return response.getBody();
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            // Handle client and server-side HTTP errors
-            throw new RuntimeException("Failed to fetch calendar events: " + e.getStatusCode(), e);
         } catch (Exception e) {
             // Handle any other errors gracefully
             throw new RuntimeException("Unexpected error occurred while fetching calendar events", e);

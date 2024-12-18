@@ -1,193 +1,172 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import pt.fe.up.fiteverywhere.backend.entity.User;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
+import pt.fe.up.fiteverywhere.backend.service.UserService;
+import pt.fe.up.fiteverywhere.backend.service.user.children.ClientService;
+import pt.fe.up.fiteverywhere.backend.service.user.children.GymManagerService;
+import pt.fe.up.fiteverywhere.backend.service.user.children.PersonalTrainerService;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.Map;
+import java.util.Optional;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserControllerTests {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-    @Autowired
-    private MockMvc mockMvc;
+@ExtendWith(MockitoExtension.class)
+class UserControllerTests {
 
-    @BeforeAll
-    public void setUp() throws Exception {
-        mockMvc.perform(post("/auth/signup")
-                        .param("role", "gym")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "user@test.com");
-                            attrs.put("name", "Test User");
-                        })))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Created user with role: gym"));
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private ClientService clientService;
+
+    @Mock
+    private GymManagerService gymManagerService;
+
+    @Mock
+    private PersonalTrainerService personalTrainerService;
+
+    @InjectMocks
+    private UserController userController;
+
+    @Mock
+    private OAuth2User principal;
+
+    // ---- TESTS FOR handleError() ----
+    @Test
+    void handleError_ShouldReturnErrorMessage() {
+        ResponseEntity<?> response = userController.handleError();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        assertThat(response.getBody()).isEqualTo(Map.of("error", "Authentication error occurred"));
     }
 
-    // Test for /auth/login/success - successful login
+    // ---- TESTS FOR getUserInfo() ----
     @Test
-    @Order(1)
-    public void testAuthenticatedWithGoogle_ShouldReturnUserInfo() throws Exception {
-        mockMvc.perform(get("/auth/login/success")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "user@test.com");
-                            attrs.put("name", "Test User");
-                        })))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Login successful"))
-                .andExpect(jsonPath("$.user.email").value("user@test.com"));
-    }
+    void getUserInfo_UserNotAuthenticated() {
+        ResponseEntity<?> response = userController.getUserInfo(null);
 
-    // Test for /auth/login/success - user not found login
-    @Test
-    public void testAuthenticatedWithGoogle_ShouldReturnNotFound() throws Exception {
-        mockMvc.perform(get("/auth/login/success")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "nouser@gmail.com");
-                            attrs.put("name", "Not Internal User");
-                        })))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$").value("User not found"));
-    }
-
-    // Test for /auth/login/success - unauthenticated access
-    @Test
-    public void testLoginSuccess_Unauthenticated_ShouldReturn401() throws Exception {
-        mockMvc.perform(get("/auth/login/success"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$").value("User not authenticated"));
-    }
-
-    // Test for /auth/login/success - successful login
-    @Test
-    public void testAuthenticatedWithGoogle_ShouldReturnInternalError() throws Exception {
-        mockMvc.perform(get("/auth/login/success")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", 5);
-                            attrs.put("name", "Test User");
-                        })))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$").value("Error occurred while fetching user info"));
-    }
-
-    // Test for /auth/error - should return authentication error
-    @Test
-    public void testHandleError_ShouldReturnErrorMessage() throws Exception {
-        mockMvc.perform(get("/auth/error"))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.error").value("Authentication error occurred"));
-    }
-
-    // Test for /auth/signup - successful signup
-    @Test
-    @Order(1)
-    public void testCreateClient_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
-        mockMvc.perform(post("/auth/signup")
-                        .param("role", "client")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "client@gmail.com");
-                            attrs.put("name", "Client User");
-                        })))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Created user with role: client"));
-
-    }
-
-    // Test for /auth/signup - successful signup
-    @Test
-    @Order(1)
-    public void testCreateGymManager_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
-        mockMvc.perform(post("/auth/signup")
-                .param("role", "gym")
-                .with(oauth2Login().attributes(attrs -> {
-                    attrs.put("email", "gym@gmail.com");
-                    attrs.put("name", "Gym User");
-                })))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Created user with role: gym"));
-    }
-
-    // Test for /auth/signup - successful signup
-    @Test
-    @Order(1)
-    public void testCreatePersonalTrainer_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
-        mockMvc.perform(post("/auth/signup")
-                .param("role", "pt")
-                .with(oauth2Login().attributes(attrs -> {
-                    attrs.put("email", "pt@gmail.com");
-                    attrs.put("name", "PT User");
-                })))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Created user with role: pt"));
-    }
-
-    // Test for /auth/signup - successful signup
-    @Test
-    public void testCreateUser_AuthenticatedUser_ShouldReturnBadRequest() throws Exception {
-        mockMvc.perform(post("/auth/signup")
-                        .param("role", "random")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "pt@gmail.com");
-                            attrs.put("name", "PT User");
-                        })))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Invalid role"));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getBody()).isEqualTo("User not authenticated");
     }
 
     @Test
-    public void testCreateUser_AuthenticatedUser_ShouldReturn401() throws Exception {
-        mockMvc.perform(post("/auth/signup")
-                        .param("role", "client"))
+    void getUserInfo_UserNotFound() {
+        when(principal.getAttribute("email")).thenReturn("test@example.com");
+        when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.empty());
 
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.error").value("User not authenticated"));
+        ResponseEntity<?> response = userController.getUserInfo(principal);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isEqualTo("User not found");
     }
 
     @Test
-    @Order(2)
-    public void testUpdateUserDetails_UserNotFound_ShouldReturn401() throws Exception {
-        String userJson = """
-        {
-            "description": "Updated description",
-            "linkedGym": null
-        }
-        """;
+    void getUserInfo_Success() {
+        User user = new Client();
+        when(principal.getAttribute("email")).thenReturn("test@example.com");
+        when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(principal.getAttributes()).thenReturn(Map.of("name", "Test User"));
 
-        mockMvc.perform(put("/auth")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
-                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "nouser@test.com"))))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.error").value("User not found for the provided email."));
+        ResponseEntity<?> response = userController.getUserInfo(principal);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Map.of("message", "Login successful", "user", user, "userSpecs", Map.of("name", "Test User")));
+    }
+
+    // ---- TESTS FOR createNewUser() ----
+    @Test
+    void createNewUser_UserNotAuthenticated() {
+        ResponseEntity<?> response = userController.createNewUser("client", null);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getBody()).isEqualTo(Map.of("error", "User not authenticated"));
     }
 
     @Test
-    @Order(3)
-    public void testUpdateUserDetails_Success_ShouldReturn200() throws Exception {
-        // Assuming a Personal Trainer user with email 'pt@gmail.com' exists in the system
-        String userJson = """
-        {
-            "description": "Updated description",
-            "linkedGym": null
-        }
-        """;
-        mockMvc.perform(put("/auth")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
-                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "pt@gmail.com"))))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("User details updated successfully!"));
+    void createNewUser_InvalidRole() {
+        lenient().when(principal.getAttribute("email")).thenReturn("test@example.com");
+
+        ResponseEntity<?> response = userController.createNewUser("invalidRole", principal);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody()).isEqualTo(Map.of("error", "Invalid role"));
     }
 
+    @Test
+    void createNewUser_Success_Client() {
+        when(principal.getAttribute("email")).thenReturn("test@example.com");
+        when(principal.getAttribute("name")).thenReturn("Test Client");
+
+        ResponseEntity<?> response = userController.createNewUser("client", principal);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Map.of("message", "Created user with role: client"));
+        verify(clientService).save(any(Client.class));
+    }
+
+    @Test
+    void createNewUser_Success_GymManager() {
+        when(principal.getAttribute("email")).thenReturn("test@example.com");
+        when(principal.getAttribute("name")).thenReturn("Test GymManager");
+
+        ResponseEntity<?> response = userController.createNewUser("gym", principal);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Map.of("message", "Created user with role: gym"));
+        verify(gymManagerService).save(any(GymManager.class));
+    }
+
+    @Test
+    void createNewUser_Success_PersonalTrainer() {
+        when(principal.getAttribute("email")).thenReturn("test@example.com");
+        when(principal.getAttribute("name")).thenReturn("Test PT");
+
+        ResponseEntity<?> response = userController.createNewUser("pt", principal);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Map.of("message", "Created user with role: pt"));
+        verify(personalTrainerService).save(any(PersonalTrainer.class));
+    }
+
+    // ---- TESTS FOR updateUserDetails() ----
+    @Test
+    void updateUserDetails_UserNotFound() {
+        when(principal.getAttribute("email")).thenReturn("test@example.com");
+        when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.empty());
+
+        ResponseEntity<?> response = userController.updateUserDetails(new PersonalTrainer(), principal);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getBody()).isEqualTo(Map.of("error", "User not found for the provided email."));
+    }
+
+    @Test
+    void updateUserDetails_Success() {
+        PersonalTrainer existingUser = new PersonalTrainer();
+        PersonalTrainer updatedUser = new PersonalTrainer();
+        updatedUser.setDescription("Updated Description");
+
+        when(principal.getAttribute("email")).thenReturn("test@example.com");
+        when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(existingUser));
+
+        ResponseEntity<?> response = userController.updateUserDetails(updatedUser, principal);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Map.of("message", "User details updated successfully!"));
+        verify(personalTrainerService).save(existingUser);
+        assertThat(existingUser.getDescription()).isEqualTo("Updated Description");
+    }
 }
