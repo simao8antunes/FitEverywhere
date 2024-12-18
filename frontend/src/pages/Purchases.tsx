@@ -61,7 +61,7 @@ const Purchases: React.FC = () => {
         <BuyGymService selectedGym={selectedGym} />
       </div>
       <div className="grid gap-base">
-        <h1 className="text-3xl font-bold mb-base">My Purchases</h1>
+        <h1 className="text-3xl font-bold mb-base">My Gym Purchases</h1>
         {isClient(user) &&
           user.purchases?.map((purchase) => (
             <div key={purchase.id} className="card bg-base-100 w-96 shadow-xl">
@@ -98,7 +98,7 @@ const Purchases: React.FC = () => {
         <BuyPTService selectedPT={selectedPT} />
       </div>
       <div className="grid gap-base">
-        <h1 className="text-3xl font-bold mb-base">My Purchases</h1>
+        <h1 className="text-3xl font-bold mb-base">My PT Purchases</h1>
         {isClient(user) &&
           user.ptServices?.map((service) => (
             <div key={service.id} className="card bg-base-100 w-96 shadow-xl">

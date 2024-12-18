@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Gym, GymResponse } from "../types";
+import { Gym, GymResponse } from "../types"; // OpenStreetMap-related URLs
 
 // OpenStreetMap-related URLs
 const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter";
@@ -60,9 +60,9 @@ export const useFetchGyms = () => {
 
   //Fetch Gym for Personal Trainer
   /*const fetchPTGym = async () => {
-    setLoading(true);
-    setError(null);
-  };*/
+      setLoading(true);
+      setError(null);
+    };*/
 
   // api gyms
   const fetchGyms = async (location: string) => {

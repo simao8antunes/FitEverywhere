@@ -1,16 +1,12 @@
 import React from "react";
 import logo from "/logo.svg";
 import { CgGym } from "react-icons/cg";
-import { FiHome, FiGrid } from "react-icons/fi";
+import { FiGrid, FiHome } from "react-icons/fi";
 import { MdMiscellaneousServices } from "react-icons/md";
 import { FaPersonChalkboard } from "react-icons/fa6";
 import { BiPurchaseTag } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.ts";
-
-interface SidebarProps {
-  userName: string;
-}
 
 const Sidebar: React.FC = () => {
   const { user } = useAuth();
@@ -36,7 +32,6 @@ const Sidebar: React.FC = () => {
       link: "/my-pt",
       role: "client",
     },
-    { name: "Workouts", icon: <FiGrid />, link: "/workouts" },
   ];
 
   return (

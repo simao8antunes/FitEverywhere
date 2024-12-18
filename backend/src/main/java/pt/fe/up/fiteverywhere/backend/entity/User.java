@@ -1,12 +1,11 @@
 package pt.fe.up.fiteverywhere.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
@@ -23,7 +22,7 @@ public abstract class User {
 
     @Column(nullable = false)  // En§sure username is unique and not null
     private String username;
-    
+
     @Column(nullable = true)
     private String password;
 
