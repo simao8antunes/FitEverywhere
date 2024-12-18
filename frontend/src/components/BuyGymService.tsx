@@ -16,9 +16,9 @@ const BuyGymService: React.FC<GymFormProps> = ({ selectedGym }) => {
 
   // Update price dynamically
   const calculatePrice = (type: string | null, times: number) => {
-    if (type === "dailyFee") return times * selectedGym.dailyFee; // Example price
+    if (type === "dailyFee") return times * (selectedGym.dailyFee ?? 1); // Example price
     if (type === "weeklyMembership")
-      return times * selectedGym.weeklyMembership; // Example price
+      return times * (selectedGym.weeklyMembership ?? 1); // Example price
     return 0;
   };
 
