@@ -5,7 +5,6 @@ const GymList: React.FC<GymsProps> = ({
   gyms,
   loading,
   error,
-  onSelectGym,
 }) => {
   if (loading) {
     return <div>Loading nearby gyms...</div>;
@@ -20,12 +19,6 @@ const GymList: React.FC<GymsProps> = ({
   if (gyms?.length === 0) {
     return <p>No gyms found.</p>;
   }
-
-  const handleSelectGym = (gymId: number) => {
-    if (onSelectGym) {
-      onSelectGym(gyms[gymId]); // Pass the selected gym's ID back to the parent
-    }
-  };
 
   return (
     <div className="gyms-list space-y-4">
