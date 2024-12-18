@@ -63,7 +63,7 @@ const MyGymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
           className="bg-background rounded-lg p-4 border border-secbackground hover:bg-secbackground transition-colors"
         >
           <h4 className="text-lg font-semibold">{gym.name}</h4>
-          <p className="text-sm text-gray-500">Daily Fee: ${gym.dailyFee}</p>
+          <p className="text-sm text-gray-500">Daily Fee: €{gym.dailyFee}</p>
 
           <button
             onClick={() =>
