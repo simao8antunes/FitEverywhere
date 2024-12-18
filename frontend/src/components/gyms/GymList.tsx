@@ -39,14 +39,6 @@ const GymList: React.FC<GymsProps> = ({
               <h4 className="card-title">{gym.name}</h4>
               <p>Distance: {gym.distance} km</p>
               <p>Price: {gym.dailyFee} $</p>
-              <div className="card-actions justify-end">
-                <button
-                  onClick={() => handleSelectGym(index)} // When clicked, trigger the selection
-                  className="btn btn-primary"
-                >
-                  Select Gym
-                </button>
-              </div>
             </div>
           </div>
         ))}
