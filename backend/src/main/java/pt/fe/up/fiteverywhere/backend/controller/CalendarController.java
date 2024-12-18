@@ -25,7 +25,6 @@ public class CalendarController {
         try {
             // Retrieve access token from authorized client
             OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
-
             // Fetch events using the service
             Map<String, Object> events = calendarService.fetchCalendarEvents(accessToken);
 

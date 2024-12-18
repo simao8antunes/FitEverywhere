@@ -1,32 +1,24 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
 import pt.fe.up.fiteverywhere.backend.service.GymService;
 import pt.fe.up.fiteverywhere.backend.service.user.children.GymManagerService;
 import pt.fe.up.fiteverywhere.backend.service.user.children.PersonalTrainerService;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/gym")
@@ -67,6 +59,10 @@ public class GymController {
         Optional<GymManager> existingUserOpt = gymManagerService.findGymManagerByEmail(principal.getAttribute("email"));
         if (existingUserOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not found for the provided email."));
+        }
+
+        if (gym.getId() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Gym not found or not authorized to update."));
         }
 
         GymManager gymManager = existingUserOpt.get();
@@ -146,12 +142,12 @@ public class GymController {
     @PostMapping("/{id}/link-pt")
     public ResponseEntity<?> linkPT(@PathVariable Long id, @RequestParam String ptEmail) {
         Optional<Gym> gymOpt = gymService.getGymById(id);
-        if (gymOpt == null) {
+        if (gymOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Gym not found."));
         }
         Gym gym = gymOpt.get();
         Optional<PersonalTrainer> personalTrainerOpt = personalTrainerService.findPTByEmail(ptEmail);
-        if (personalTrainerOpt == null) {
+        if (personalTrainerOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Personal trainer not found."));
         }
         PersonalTrainer personalTrainer = personalTrainerOpt.get();

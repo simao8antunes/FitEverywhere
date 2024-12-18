@@ -76,22 +76,27 @@ interface UseFetchEventsResult {
   error: string | null;
 }
 
-interface Gym {
+class Gym {
   id: number;
   name: string;
-  dailyFee: number;
-  weeklyMembership: number;
-  description: string;
-  personalTrainers: PersonalTrainer[];
+  dailyFee?: number;
+  weeklyMembership?: number;
+  description?: string;
+  personalTrainers: PersonalTrainer[] = [];
   overpassData?: GymOverpass;
-  distance: number;
-}
+  distance?: number;
 
+  constructor(id: number, name: string) {
+    this.id = id;
+    this.name = name;
+  }
+}
 interface GymOverpass {
   id: number;
   tags: GymSpec;
   lat: number;
   lon: number;
+  name?: string;
 }
 
 interface GymSpec {
@@ -134,15 +139,13 @@ type UserSpec = {
 export type {
   Client,
   Event,
-  Gym,
-  GymManager,
-  GymResponse,
-  GymsProps,
-  PersonalTrainer,
-  UseFetchEventsResult,
+  GymManager, GymOverpass, GymResponse, GymsProps,
+  PersonalTrainer, PTService,
+  Purchase, UseFetchEventsResult,
   UseFetchUserResult,
   User,
-  UserOptions,
-  PTService,
-  Purchase,
+  UserOptions
 };
+
+  export { Gym };
+

@@ -7,7 +7,9 @@ import type {
   UseFetchUserResult,
   UserOptions,
 } from "../types";
+
 const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 export function useFetchUser(): UseFetchUserResult {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<UserOptions | null>(null);

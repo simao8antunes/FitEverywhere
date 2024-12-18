@@ -1,8 +1,5 @@
 package pt.fe.up.fiteverywhere.backend.controller.user.children;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +12,9 @@ import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
 import pt.fe.up.fiteverywhere.backend.service.UserService;
 import pt.fe.up.fiteverywhere.backend.service.user.children.PersonalTrainerService;
 
+import java.util.Map;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/personal-trainer")
 public class PersonalTrainerController {
@@ -26,7 +26,7 @@ public class PersonalTrainerController {
 
     @PostMapping("/add-service")
     public ResponseEntity<String> addService(@RequestBody PTService serviceDTO,
-            @AuthenticationPrincipal OAuth2User principal) {
+                                             @AuthenticationPrincipal OAuth2User principal) {
         // Get the trainer's email from the logged-in user
         String trainerEmail = principal.getAttribute("email");
         Optional<PersonalTrainer> gymManagerOpt = personalTrainerService.findPersonalByEmail(trainerEmail);

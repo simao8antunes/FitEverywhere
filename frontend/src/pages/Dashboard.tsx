@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (selectedEvent && selectedEvent.location) {
-      fetchNearbyGyms(selectedEvent.location);
+      fetchNearbyGyms(selectedEvent.location); 
     }
   }, [selectedEvent]);
 

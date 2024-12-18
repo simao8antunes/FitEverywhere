@@ -1,178 +1,172 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import pt.fe.up.fiteverywhere.backend.entity.Gym;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.GymManager;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
+import pt.fe.up.fiteverywhere.backend.service.GymService;
+import pt.fe.up.fiteverywhere.backend.service.user.children.GymManagerService;
+import pt.fe.up.fiteverywhere.backend.service.user.children.PersonalTrainerService;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class GymControllerTests {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-    @Autowired
-    private MockMvc mockMvc;
+@ExtendWith(MockitoExtension.class)
+class GymControllerTests {
 
-    @Autowired
-    private ObjectMapper objectMapper; // For JSON serialization
+    @Mock
+    private GymService gymService;
 
-    @BeforeAll
-    public void setUp() throws Exception {
-        mockMvc.perform(post("/auth/signup")
-                        .param("role", "gym")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "gym.manager@test.com");
-                            attrs.put("name", "Gym User");
-                        })))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Created user with role: gym"));
-        mockMvc.perform(post("/auth/signup")
-                        .param("role", "gym")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "another.user@test.com");
-                            attrs.put("name", "Another User");
-                        })))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Created user with role: gym"));
+    @Mock
+    private GymManagerService gymManagerService;
+
+    @Mock
+    private PersonalTrainerService personalTrainerService;
+
+    @Mock
+    private OAuth2User principal;
+
+    @InjectMocks
+    private GymController gymController;
+
+    private static final String MOCK_EMAIL = "test@gym.com";
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        lenient().when(principal.getAttribute("email")).thenReturn(MOCK_EMAIL);
     }
 
-    // Test for creating a gym with a valid user
-    @Test
-    @Order(1)
-    public void testCreateGym_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
-        String gymName = "Test Gym";
-        Long gymId = 1L;
 
-        mockMvc.perform(post("/gym/1")
-                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com")))
-                        .param("name", gymName)  // Add `name` as a request parameter
-                        .param("id", String.valueOf(gymId)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Successfully created gym with id: 1")); // Adjust ID as needed
+    @Test
+    void createGym_ShouldReturnOkResponse_WhenGymManagerExists() {
+        // Arrange
+        GymManager gymManager = new GymManager("TestUser", MOCK_EMAIL);
+        Gym createdGym = new Gym(1L, "Test Gym");
+
+        when(gymManagerService.findGymManagerByEmail(MOCK_EMAIL)).thenReturn(Optional.of(gymManager));
+        when(gymService.createGymAndLinkToManager(any(GymManager.class), any(Gym.class))).thenReturn(createdGym);
+
+        // Act
+        ResponseEntity<String> response = gymController.createGym(principal, "Test Gym", 1L);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo("Successfully created gym with id: 1");
     }
 
-    // Test for creating a gym with an invalid user
-    @Test
-    @Order(2)
-    public void testCreateGym_InvalidUser_ShouldReturnNotFound() throws Exception {
-        String gymName = "Invalid Gym";
-        Long gymId = 2L;
 
-        mockMvc.perform(post("/gym/1")
-                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "unknown.user@test.com")))
-                        .param("name", gymName)  // Add `name` as a request parameter
-                        .param("id", String.valueOf(gymId)))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("User not found"));
+    @Test
+    void createGym_ShouldReturnNotFound_WhenGymManagerDoesNotExist() {
+        // Arrange
+        when(gymManagerService.findGymManagerByEmail(MOCK_EMAIL)).thenReturn(Optional.empty());
+
+        // Act
+        ResponseEntity<String> response = gymController.createGym(principal, "Test Gym", 1L);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isEqualTo("User not found");
     }
 
-    // Test for updating gym details with a valid user and gym
     @Test
-    @Order(3)
-    public void testUpdateGym_AuthenticatedUser_ShouldReturnSuccess() throws Exception {
-        Gym gym = new Gym();
-        gym.setId(1L); // Use a valid gym ID
-        gym.setName("Updated Gym Name");
-        gym.setDailyFee(15.0);
+    void updateGymDetails_ShouldReturnOkResponse_WhenGymDetailsUpdatedSuccessfully() {
+        // Arrange
+        GymManager gymManager = new GymManager("TestUser", MOCK_EMAIL);
+        Gym gym = new Gym(1L, "Updated Gym");
+        gym.setDescription("Updated Description");
+        gym.setDailyFee(20.0);
         gym.setWeeklyMembership(100.0);
-        String gymPath = String.format("/gym/%s", gym.getId());
-        mockMvc.perform(put(gymPath)
-                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(gym)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Gym details updated successfully!"));
-    }
 
-    // Test for updating gym details with an unauthorized user
-    @Test
-    @Order(4)
-    public void testUpdateGym_NoGym_ShouldReturnNotFound() throws Exception {
-        Gym gym = new Gym();
-        gym.setId(1L); // Use a valid gym ID
-        gym.setName("Unauthorized Gym Update");
-        gym.setDailyFee(25.0);
-        gym.setWeeklyMembership(100.0);
-        String gymPath = String.format("/gym/%s", gym.getId());
-        mockMvc.perform(put(gymPath)
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "another.user@test.com"); // User without permission
-                        }))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(gym)))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.error").value("Gym not found or not authorized to update."));
+        Gym existingGym = new Gym(1L, "Original Gym");
+        existingGym.setLinkedGymManagers(Set.of(gymManager));
+
+        when(gymManagerService.findGymManagerByEmail(MOCK_EMAIL)).thenReturn(Optional.of(gymManager));
+        when(gymService.getGymById(1L)).thenReturn(Optional.of(existingGym));
+
+        // Act
+        ResponseEntity<?> response = gymController.updateGymDetails(gym, principal);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Map.of("message", "Gym details updated successfully!"));
+        verify(gymService).saveOrUpdateGym(existingGym);
     }
 
     @Test
-    @Order(4)
-    public void testUpdateGym_UnauthorizedUser_ShouldReturnUnauthenticated() throws Exception {
-        Gym gym = new Gym();
-        gym.setId(1L); // Use a valid gym ID
-        gym.setName("Unauthorized Gym Update");
-        gym.setDailyFee(25.0);
-        gym.setWeeklyMembership(100.0);
-        String gymPath = String.format("/gym/%s", gym.getId());
-        mockMvc.perform(put(gymPath)
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "invalid.user@test.com"); // User without permission
-                        })).contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(gym)))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.error").value("User not found for the provided email."));
-    }
+    void updateGymDetails_ShouldReturnUnauthorized_WhenGymManagerNotFound() {
+        // Arrange
+        when(gymManagerService.findGymManagerByEmail(MOCK_EMAIL)).thenReturn(Optional.empty());
 
-    // Test for getting gym details with a valid user
-    @Test
-    @Order(5)
-    public void testGetGymDetails_AuthenticatedUser_ShouldReturnGymInfo() throws Exception {
-        mockMvc.perform(get("/gym/1")
-                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com"))))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").exists())
-                .andExpect(jsonPath("$.dailyFee").exists())
-                .andExpect(jsonPath("$.weeklyMembership").exists());
-    }
+        // Act
+        ResponseEntity<?> response = gymController.updateGymDetails(new Gym(1L, "Test Gym"), principal);
 
-    // Test for getting gym details with a user without gyms
-    @Test
-    @Order(5)
-    public void testGetGymDetails_NoGymForUser_ShouldReturnNotFound() throws Exception {
-        mockMvc.perform(get("/gym/1")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "another.user@test.com"); // User without gyms
-                        })))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.error").value("No gym found for the current user."));
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getBody()).isEqualTo(Map.of("error", "User not found for the provided email."));
     }
 
     @Test
-    @Order(5)
-    public void testGetGymDetails_UnauthorizedUser_ShouldReturnForbidden() throws Exception {
-        mockMvc.perform(get("/gym/1")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "invalid.user@test.com"); // User without permission
-                        })))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.error").value("User not found for the provided email."));
+    void getGymDetails_ShouldReturnGymDetails_WhenGymExists() {
+        // Arrange
+        GymManager gymManager = new GymManager("TestUser", MOCK_EMAIL);
+        Gym gym = new Gym(1L, "Test Gym");
+        gymManager.setLinkedGyms(Set.of(gym));
+
+        when(gymManagerService.findGymManagerByEmail(MOCK_EMAIL)).thenReturn(Optional.of(gymManager));
+
+        // Act
+        ResponseEntity<?> response = gymController.getGymDetails(principal, 1L);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.get("name")).isEqualTo("Test Gym");
     }
 
+    @Test
+    void linkPT_ShouldReturnOkResponse_WhenLinkedSuccessfully() {
+        // Arrange
+        Gym gym = new Gym(1L, "Test Gym");
+        PersonalTrainer personalTrainer = new PersonalTrainer("PTUser", "pt@gym.com");
+
+        lenient().when(gymService.getGymById(1L)).thenReturn(Optional.of(gym));
+        lenient().when(personalTrainerService.findPTByEmail("pt@gym.com")).thenReturn(Optional.of(personalTrainer));
+
+        // Act
+        ResponseEntity<?> response = gymController.linkPT(1L, "pt@gym.com");
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Map.of("message", "Personal trainer linked successfully."));
+        verify(gymService).linkPersonalTrainer(gym, personalTrainer);
+    }
 
     @Test
-    @Order(6)
-    public void testGetAllGyms_AuthenticatedUser_ShouldReturnGymList() throws Exception {
-        mockMvc.perform(get("/gym/all")
-                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "gym.manager@test.com")))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+    void getAllGyms_ShouldReturnAllGyms_WhenGymsExist() {
+        // Arrange
+        Gym gym1 = new Gym(1L, "Gym 1");
+        Gym gym2 = new Gym(2L, "Gym 2");
+
+        when(gymService.getAllGyms()).thenReturn(List.of(gym1, gym2));
+
+        // Act
+        ResponseEntity<?> response = gymController.getAllGyms();
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(List.of(gym1, gym2));
     }
 }

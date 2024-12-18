@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "/logo.svg";
 import { CgGym } from "react-icons/cg";
-import { FiHome, FiGrid } from "react-icons/fi";
+import { FiGrid, FiHome } from "react-icons/fi";
 import { MdMiscellaneousServices } from "react-icons/md";
 import { FaPersonChalkboard } from "react-icons/fa6";
 import { BiPurchaseTag } from "react-icons/bi";
@@ -12,7 +12,7 @@ const Sidebar: React.FC = () => {
   const { user } = useAuth();
   const menuItems = [
     { name: "Home", icon: <FiHome />, link: "/" },
-    { name: "Workout Itineraries", icon: <FiGrid />, link: "/itineraries" },
+    { name: "Workouts", icon: <FiGrid />, link: "/workouts", role: "client" },
     { name: "My Gyms", icon: <CgGym />, link: "/my-gyms", role: "gym_manager" },
     {
       name: "My Services",

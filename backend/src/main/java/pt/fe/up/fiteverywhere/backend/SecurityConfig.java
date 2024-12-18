@@ -56,9 +56,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         String clientOrigin = environment.getProperty("CLIENT_ORIGIN");
-        if (clientOrigin == null || clientOrigin.isBlank()) {
-            throw new IllegalStateException("CLIENT_ORIGIN is not set! Please configure it in your environment.");
-        }
+
         config.setAllowedOrigins(Collections.singletonList(clientOrigin));
         config.setAllowCredentials(true);
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

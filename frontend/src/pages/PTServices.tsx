@@ -1,6 +1,6 @@
 import { useAuth } from "../hooks/useAuth.ts";
-import { PersonalTrainer, UserOptions } from "../types.ts";
 import type { PTService } from "../types.ts";
+import { PersonalTrainer, UserOptions } from "../types.ts";
 import { useState } from "react";
 import PTServiceForm from "../components/PTServiceForm.tsx";
 

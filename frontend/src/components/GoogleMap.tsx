@@ -7,6 +7,7 @@ import {
   Pin,
 } from "@vis.gl/react-google-maps";
 import { Gym } from "../types.ts";
+
 interface GoogleMapProps {
   gyms: Gym[];
 }

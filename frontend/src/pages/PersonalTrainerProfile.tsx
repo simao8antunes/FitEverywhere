@@ -63,25 +63,25 @@ const PersonalTrainerProfile: React.FC = () => {
                   className="rounded-circle size-32"
                 />
               </div>
-              <p className="mb-2 text-center">
+              <div className="mb-2 text-center">
                 <h1 className="text-3xl font-semibold text-primary mb-4">
                   {formData.username}
                 </h1>
-              </p>
-              <p className="mb-2">
+              </div>
+              <div className="mb-2">
                 <strong>Email:</strong> {formData.email}
-              </p>
-              <p className="mb-2">
+              </div>
+              <div className="mb-2">
                 <strong>Description:</strong>
                 <p style={{ whiteSpace: "pre-line" }}>
                   {formData.description || "N/A"}
                 </p>
-              </p>
-              <p className="mb-2">
+              </div>
+              <div className="mb-2">
                 <strong>Linked Gym:</strong>{" "}
                 {formData.linkedGym?.name ||
                   "Wait for your gym owner to add you."}
-              </p>
+              </div>
               <div className="card-actions justify-end">
                 <button className="btn btn-secondary" onClick={toggleEditMode}>
                   Edit Profile

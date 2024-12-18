@@ -1,7 +1,8 @@
 import { render } from "vitest-browser-react";
-import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import SelectRole from "../pages/SelectRole.tsx";
+
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {

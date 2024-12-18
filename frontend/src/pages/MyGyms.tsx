@@ -1,6 +1,6 @@
 import { useAuth } from "../hooks/useAuth.ts";
-import { GymManager, UserOptions } from "../types.ts";
 import type { Gym } from "../types.ts";
+import { GymManager, UserOptions } from "../types.ts";
 import { useState } from "react";
 import GymForm from "../components/gyms/GymForm.tsx";
 

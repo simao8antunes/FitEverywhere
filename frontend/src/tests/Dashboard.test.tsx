@@ -1,5 +1,5 @@
 import { render } from "vitest-browser-react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import Dashboard from "../pages/Dashboard.tsx";
 

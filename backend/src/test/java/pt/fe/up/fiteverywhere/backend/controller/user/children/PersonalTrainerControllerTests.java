@@ -1,83 +1,168 @@
 package pt.fe.up.fiteverywhere.backend.controller.user.children;
 
-
-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import pt.fe.up.fiteverywhere.backend.entity.PTService;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.PersonalTrainer;
+import pt.fe.up.fiteverywhere.backend.service.UserService;
+import pt.fe.up.fiteverywhere.backend.service.user.children.PersonalTrainerService;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PersonalTrainerControllerTests {
-    @Autowired
-    private MockMvc mockMvc;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
-    @BeforeAll
-    public void setUp() throws Exception {
-        mockMvc.perform(post("/auth/signup")
-                        .param("role", "pt")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "pt@test.com");
-                            attrs.put("name", "Test User");
-                        })))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Created user with role: pt"));
+@ExtendWith(MockitoExtension.class)
+class PersonalTrainerControllerTests {
+
+    @Mock
+    private PersonalTrainerService personalTrainerService;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private OAuth2User principal;
+
+    @InjectMocks
+    private PersonalTrainerController personalTrainerController;
+
+    private static final String MOCK_EMAIL = "test@trainer.com";
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        lenient().when(principal.getAttribute("email")).thenReturn(MOCK_EMAIL);
     }
 
     @Test
-    @Order(1)
-    public void testAddService_Success_ShouldReturn200() throws Exception {
-        // Create a valid PTService DTO
+    void addService_ShouldReturnOkResponse_WhenServiceIsAddedSuccessfully() {
+        // Arrange
         PTService serviceDTO = new PTService();
         serviceDTO.setId(0L);
-        serviceDTO.setName("Yoga Class");
-        serviceDTO.setDescription("A relaxing yoga session");
-        serviceDTO.setPrice(50.0);
+        serviceDTO.setName("Training Service");
+        serviceDTO.setDescription("Service Description");
+        serviceDTO.setPrice(100.0);
         serviceDTO.setDuration(60);
-        serviceDTO.setType("Fitness");
+        serviceDTO.setType("Personal Training");
 
-        // Convert DTO to JSON
-        ObjectMapper objectMapper = new ObjectMapper();
-        String serviceJson = objectMapper.writeValueAsString(serviceDTO);
+        PersonalTrainer trainer = new PersonalTrainer("TrainerName", MOCK_EMAIL);
+        PTService createdService = new PTService();
+        createdService.setId(1L);
+        createdService.setName("Training Service");
 
-        // Perform the request with valid data
-        mockMvc.perform(post("/personal-trainer/add-service")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(serviceJson)
-                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "pt@test.com"))))
-                .andExpect(status().isOk());
+        when(personalTrainerService.findPersonalByEmail(MOCK_EMAIL)).thenReturn(Optional.of(trainer));
+        when(personalTrainerService.addPTService(anyString(), any(PTService.class))).thenReturn(createdService);
+
+        // Act
+        ResponseEntity<String> response = personalTrainerController.addService(serviceDTO, principal);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo("Service added successfully with id: 1");
     }
 
     @Test
-    @Order(3)
-    public void testAddService_Unauthorized_ShouldReturn401() throws Exception {
-        // Create a valid PTService DTO
+    void addService_ShouldReturnUnauthorized_WhenTrainerNotFound() {
+        // Arrange
         PTService serviceDTO = new PTService();
-        serviceDTO.setName("Yoga Class");
-        serviceDTO.setDescription("A relaxing yoga session");
-        serviceDTO.setPrice(50.0);
-        serviceDTO.setDuration(60);
-        serviceDTO.setType("Fitness");
+        when(personalTrainerService.findPersonalByEmail(MOCK_EMAIL)).thenReturn(Optional.empty());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String serviceJson = objectMapper.writeValueAsString(serviceDTO);
+        // Act
+        ResponseEntity<String> response = personalTrainerController.addService(serviceDTO, principal);
 
-        // Perform the request without authentication
-        mockMvc.perform(post("/personal-trainer/add-service")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(serviceJson)
-                .with(oauth2Login().attributes(attrs -> attrs.put("email", "invalid@test.com"))))
-                .andExpect(status().isUnauthorized());
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getBody()).isEqualTo("User not found");
+    }
+
+    @Test
+    void addService_ShouldReturnNotFound_WhenIllegalArgumentExceptionThrown() {
+        // Arrange
+        PTService serviceDTO = new PTService();
+        serviceDTO.setId(0L);
+        PersonalTrainer trainer = new PersonalTrainer("TrainerName", MOCK_EMAIL);
+
+        when(personalTrainerService.findPersonalByEmail(MOCK_EMAIL)).thenReturn(Optional.of(trainer));
+        when(personalTrainerService.addPTService(anyString(), any(PTService.class)))
+                .thenThrow(new IllegalArgumentException("Invalid service data"));
+
+        // Act
+        ResponseEntity<String> response = personalTrainerController.addService(serviceDTO, principal);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isEqualTo("Invalid service data");
+    }
+
+    @Test
+    void getPersonalTrainers_ShouldReturnListOfTrainers_WhenUserExists() {
+        // Arrange
+        PersonalTrainer trainer1 = new PersonalTrainer("Trainer1", "trainer1@trainer.com");
+        PersonalTrainer trainer2 = new PersonalTrainer("Trainer2", "trainer2@trainer.com");
+
+        when(userService.findUserByEmail(MOCK_EMAIL)).thenReturn(Optional.of(trainer1));
+        when(personalTrainerService.getAllPersonalTrainers()).thenReturn(List.of(trainer1, trainer2));
+
+        // Act
+        ResponseEntity<?> response = personalTrainerController.getPersonalTrainers(principal);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(List.of(trainer1, trainer2));
+    }
+
+    @Test
+    void getPersonalTrainers_ShouldReturnNotFound_WhenUserDoesNotExist() {
+        // Arrange
+        when(userService.findUserByEmail(MOCK_EMAIL)).thenReturn(Optional.empty());
+
+        // Act
+        ResponseEntity<?> response = personalTrainerController.getPersonalTrainers(principal);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isEqualTo("User not found");
+    }
+
+    @Test
+    void getAvailablePTs_ShouldReturnListOfAvailableTrainers_WhenTheyExist() {
+        // Arrange
+        PersonalTrainer trainer1 = new PersonalTrainer("Trainer1", "trainer1@trainer.com");
+        PersonalTrainer trainer2 = new PersonalTrainer("Trainer2", "trainer2@trainer.com");
+
+        when(personalTrainerService.getAvailablePTs()).thenReturn(List.of(trainer1, trainer2));
+
+        // Act
+        ResponseEntity<?> response = personalTrainerController.getAvailablePTs();
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(List.of(trainer1, trainer2));
+    }
+
+    @Test
+    void getAvailablePTs_ShouldReturnNoContent_WhenNoAvailableTrainersExist() {
+        // Arrange
+        when(personalTrainerService.getAvailablePTs()).thenReturn(null);
+
+        // Act
+        ResponseEntity<?> response = personalTrainerController.getAvailablePTs();
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getBody()).isEqualTo(Map.of("error", "No available pts found."));
     }
 }
