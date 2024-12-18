@@ -1,20 +1,24 @@
 package pt.fe.up.fiteverywhere.backend.service.user.children;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import pt.fe.up.fiteverywhere.backend.entity.PTService;
-import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
-import pt.fe.up.fiteverywhere.backend.repository.PTServiceRepository;
-import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
-import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import pt.fe.up.fiteverywhere.backend.entity.Gym;
+import pt.fe.up.fiteverywhere.backend.entity.PTService;
+import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
+import pt.fe.up.fiteverywhere.backend.repository.GymRepository;
+import pt.fe.up.fiteverywhere.backend.repository.PTServiceRepository;
+import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
+import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
+import pt.fe.up.fiteverywhere.backend.service.GymService;
 
 @Service
 public class ClientService {
@@ -27,6 +31,12 @@ public class ClientService {
 
     @Autowired
     private PTServiceRepository ptServiceRepository;
+
+    @Autowired
+    private GymRepository gymRepository;
+
+    @Autowired
+    private GymService gymService;
 
     public Optional<Client> findClientByEmail(String email) {
         return clientRepository.findById(email); // Return user if found, otherwise null
@@ -238,5 +248,19 @@ public class ClientService {
             default:
                 throw new IllegalArgumentException("Invalid preferred time");
         }
+    }
+
+    public boolean addGymToFavourites(Client client, Gym gym) {
+        gymService.saveOrUpdateGym(gym);
+        
+        Optional<Gym> gymOptional = gymRepository.findById(gym.getId());
+        if (gymOptional.isPresent()) {
+            Gym newGym = gymOptional.get();
+            client.getFavourites().add(newGym);
+            clientRepository.save(client);
+            return true;
+        }
+
+        return false;
     }
 }

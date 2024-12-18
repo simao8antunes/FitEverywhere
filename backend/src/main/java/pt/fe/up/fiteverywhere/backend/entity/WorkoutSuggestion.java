@@ -1,7 +1,13 @@
 package pt.fe.up.fiteverywhere.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
@@ -16,7 +22,7 @@ public class WorkoutSuggestion {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_email")
     @JsonIgnoreProperties("workoutSuggestions")
     private Client client;
 
