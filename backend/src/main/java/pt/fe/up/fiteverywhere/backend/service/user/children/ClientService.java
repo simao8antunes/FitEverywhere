@@ -161,7 +161,7 @@ public class ClientService {
         clientRepository.save(client);
     }
 
-    private List<String> extractBusyTimes(List<Map<String, Object>> events) {
+    List<String> extractBusyTimes(List<Map<String, Object>> events) {
         List<String> busyTimes = new ArrayList<>();
         if (events == null) {
             return busyTimes; // Return an empty list if no events are present
@@ -183,7 +183,7 @@ public class ClientService {
     }
 
 
-    private String formatBusyTime(String start, String end) {
+    String formatBusyTime(String start, String end) {
         // Extract date and time components (assume ISO 8601 format)
         String date = start.substring(0, 10); // Extract "YYYY-MM-DD"
         String startTime = start.substring(11, 16); // Extract "HH:MM"
@@ -192,49 +192,7 @@ public class ClientService {
         return date + " " + startTime + "-" + endTime;
     }
 
-    public String findAvailableSlot(List<String> busyTimes, String preferredTime) {
-        // Map preferred time to time range (using 24-hour format)
-        LocalDateTime preferredDateTimeStart = getPreferredTimeRange(preferredTime).get(0);
-        LocalDateTime preferredDateTimeEnd = getPreferredTimeRange(preferredTime).get(1);
-
-        // Loop through next 7 days to find a slot
-        for (int i = 0; i < 7; i++) { // Check the next 7 days
-            LocalDateTime currentTimeStart = preferredDateTimeStart.plusDays(i);
-            LocalDateTime currentTimeEnd = preferredDateTimeEnd.plusDays(i);
-
-            String currentSlotStart = currentTimeStart.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-            String currentSlotEnd = currentTimeEnd.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-
-            boolean isConflict = false;
-            for (String busyTime : busyTimes) {
-                String[] timeRange = busyTime.split(" ");
-                String busyDate = timeRange[0];
-                String busyRange = timeRange[1];
-                String[] busyStartEnd = busyRange.split("-");
-
-                LocalDateTime busyStart = LocalDateTime.parse(busyDate + " " + busyStartEnd[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-                LocalDateTime busyEnd = LocalDateTime.parse(busyDate + " " + busyStartEnd[1], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-
-                // Check if the current slot conflicts with the busy time
-                if (!(currentTimeStart.isAfter(busyEnd) || currentTimeEnd.isBefore(busyStart))) {
-                    isConflict = true;
-                    break;
-                }
-            }
-
-            if (!isConflict) {
-                String newBusyTime = currentSlotStart.split(" ")[0] + " " + currentSlotStart.split(" ")[1] + "-" + currentSlotEnd.split(" ")[1];
-                busyTimes.add(newBusyTime); // Add the new slot to the busy times
-                return currentSlotStart + "/" + currentSlotEnd; // Return the first available slot
-            }
-        }
-
-        // Fallback: No slot found
-        return "No available slots";
-    }
-
-
-    private List<LocalDateTime> getPreferredTimeRange(String preferredTime) {
+    List<LocalDateTime> getPreferredTimeRange(String preferredTime) {
         LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay(); // Get today's start of day
 
         // Map preferred time to time range

@@ -1,44 +1,56 @@
 package pt.fe.up.fiteverywhere.backend.controller;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import pt.fe.up.fiteverywhere.backend.service.CalendarService;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.Map;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CalendarControllerTests {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-    @Autowired
-    private MockMvc mockMvc;
+@ExtendWith(MockitoExtension.class)
+class CalendarControllerTests {
 
-    @BeforeAll
-    public void setUp() throws Exception {
-        mockMvc.perform(post("/auth/signup")
-                        .param("role", "gym")
-                        .with(oauth2Login().attributes(attrs -> {
-                            attrs.put("email", "user@test.com");
-                            attrs.put("name", "Gym User");
-                        })))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Created user with role: gym"));
+    @Mock
+    private CalendarService calendarService;
+
+    @InjectMocks
+    private CalendarController calendarController;
+
+    @Mock
+    private OAuth2AuthorizedClient authorizedClient;
+
+    @Mock
+    private OAuth2AccessToken accessToken;
+
+    // ---- TEST FOR getCalendarEvents() ----
+    @Test
+    void getCalendarEvents_FetchError() {
+        when(authorizedClient.getAccessToken()).thenReturn(accessToken);
+        when(calendarService.fetchCalendarEvents(accessToken)).thenThrow(new RuntimeException("Calendar service error"));
+
+        ResponseEntity<?> response = calendarController.getCalendarEvents(authorizedClient);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        assertThat(response.getBody()).isEqualTo(Map.of("error", "Failed to fetch calendar events", "message", "Calendar service error"));
     }
 
     @Test
-    public void testGetCalendarEvents_AuthenticatedUser_ShouldReturnEvents() throws Exception {
-        // Perform the GET request with OAuth2 authentication and expect a 200 OK status
-        mockMvc.perform(get("/calendar/events")
-                        .with(oauth2Login().attributes(attrs -> attrs.put("email", "invalid.google.user@test.com"))))
-                .andExpect(status().isInternalServerError());
+    void getCalendarEvents_Success() {
+        when(authorizedClient.getAccessToken()).thenReturn(accessToken);
+        when(calendarService.fetchCalendarEvents(accessToken)).thenReturn(Map.of("event", "testEvent"));
+
+        ResponseEntity<?> response = calendarController.getCalendarEvents(authorizedClient);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Map.of("event", "testEvent"));
     }
 }

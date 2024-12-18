@@ -61,6 +61,10 @@ public class GymController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not found for the provided email."));
         }
 
+        if (gym.getId() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Gym not found or not authorized to update."));
+        }
+
         GymManager gymManager = existingUserOpt.get();
         // Check if the gym is associated with the current GymManager
         Optional<Gym> gymOpt = gymService.getGymById(gym.getId());
@@ -138,12 +142,12 @@ public class GymController {
     @PostMapping("/{id}/link-pt")
     public ResponseEntity<?> linkPT(@PathVariable Long id, @RequestParam String ptEmail) {
         Optional<Gym> gymOpt = gymService.getGymById(id);
-        if (gymOpt == null) {
+        if (gymOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Gym not found."));
         }
         Gym gym = gymOpt.get();
         Optional<PersonalTrainer> personalTrainerOpt = personalTrainerService.findPTByEmail(ptEmail);
-        if (personalTrainerOpt == null) {
+        if (personalTrainerOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Personal trainer not found."));
         }
         PersonalTrainer personalTrainer = personalTrainerOpt.get();
