@@ -27,7 +27,7 @@ const GymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
             <div className="card-body">
               <h4 className="card-title">{gym.name}</h4>
               <p>Distance: {gym.distance} km</p>
-              <p>Price: {gym.dailyFee} $</p>
+              <p>Price: {gym.dailyFee} €</p>
             </div>
           </div>
         ))}

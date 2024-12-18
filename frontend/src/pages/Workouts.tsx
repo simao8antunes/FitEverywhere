@@ -281,6 +281,9 @@ const Workouts: React.FC = () => {
                     <p>
                       <strong>Distance:</strong> {gym.distance} km
                     </p>
+                    <p>
+                      <strong>Daily Fee: €</strong> {gym.dailyFee}
+                    </p>
                   </li>
                 ))}
               </ul>
