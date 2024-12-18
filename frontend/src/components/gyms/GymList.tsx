@@ -14,7 +14,7 @@ const GymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
     setFavoritedGyms((prev) =>
       prev.includes(gymId)
         ? prev.filter((id) => id !== gymId)
-        : [...prev, gymId]
+        : [...prev, gymId],
     );
     const gym = gyms?.find((gym) => gym.id === gymId);
     if (gym) {
@@ -37,9 +37,9 @@ const GymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
   return (
     <div className="gyms-list space-y-4">
       {gyms &&
-        gyms.map((gym) => (
+        gyms.map((gym, index) => (
           <div
-            key={gym.id}
+            key={gym.id || `${gym.name}-${gym.distance}-${index}`}
             className="card bg-base-200 border-secbackground hover:bg-secbackground transition-colors"
           >
             <div className="card-body">
