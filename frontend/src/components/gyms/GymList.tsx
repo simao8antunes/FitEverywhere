@@ -1,11 +1,7 @@
 import React from "react";
 import type { GymsProps } from "../../types.ts";
 
-const GymList: React.FC<GymsProps> = ({
-  gyms,
-  loading,
-  error,
-}) => {
+const GymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
   if (loading) {
     return <div>Loading nearby gyms...</div>;
   }
