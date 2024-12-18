@@ -1,5 +1,5 @@
 import { render } from "vitest-browser-react";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import Login from "../pages/Login.tsx";
 
 describe("Login Component", () => {

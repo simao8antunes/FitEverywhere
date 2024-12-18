@@ -2,50 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  /*---COLORS---*/
-  --background-color: #fbf7f2;
-  --secondary-background-color: #f9fafb;
-  --color-text: #242424;
-  --color-primary: #80411b;
-  --color-secondary: #6E6E6E;
-  --color-intense: white;
-  /* Font Size Variables */
-  --font-size-h1: 2.25rem;
-  --font-size-h2: 1.875rem;
-  --font-size-h3: 1.5rem;
-  --font-size-h4: 1.25rem;
-  --font-size-h5: 1rem;
-  --font-size-h6: 0.875rem;
-  --font-size-display: 4rem;
-  --font-size-base: 1rem;
-  --font-size-s: 0.875rem;
-  --font-size-xs: 0.75rem;
-  --font-size-label: 0.875rem;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    /*---COLORS---*/
+    --background-color: #fbf7f2;
+    --secondary-background-color: #f9fafb;
+    --color-text: #242424;
+    --color-primary: #80411b;
+    --color-secondary: #6E6E6E;
+    --color-intense: white;
+    /* Font Size Variables */
+    --font-size-h1: 2.25rem;
+    --font-size-h2: 1.875rem;
+    --font-size-h3: 1.5rem;
+    --font-size-h4: 1.25rem;
+    --font-size-h5: 1rem;
+    --font-size-h6: 0.875rem;
+    --font-size-display: 4rem;
+    --font-size-base: 1rem;
+    --font-size-s: 0.875rem;
+    --font-size-xs: 0.75rem;
+    --font-size-label: 0.875rem;
 
-  /* Spacing Variables */
-  --space-xs: 0.25rem;
-  --space-s: 0.5rem;
-  --space-base: 1rem;
-  --space-m: 1.5rem;
-  --space-l: 2rem;
-  --space-xl: 3rem;
-  --space-xxl: 4rem;
+    /* Spacing Variables */
+    --space-xs: 0.25rem;
+    --space-s: 0.5rem;
+    --space-base: 1rem;
+    --space-m: 1.5rem;
+    --space-l: 2rem;
+    --space-xl: 3rem;
+    --space-xxl: 4rem;
 
-  /* Border Radius Variables */
-  --border-radius-none: 0;
-  --border-radius-soft: 0.25rem;
-  --border-radius-rounded: 0.5rem;
-  --border-radius-circle: 50%;
+    /* Border Radius Variables */
+    --border-radius-none: 0;
+    --border-radius-soft: 0.25rem;
+    --border-radius-rounded: 0.5rem;
+    --border-radius-circle: 50%;
 
-  color-scheme: light dark;
+    color-scheme: light dark;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
 
 }
@@ -54,59 +54,59 @@
 *,
 *::before,
 *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 #logo {
-  filter: invert(1);
+    filter: invert(1);
 }
 
 .google-login-button {
-  background-color: #4285f4;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 20px;
+    background-color: #4285f4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
 }
 
 .google-login-button:hover {
-  background-color: #357ae8;
+    background-color: #357ae8;
 }
 
 /* Container for App */
 .app-container {
-  height: 100vh; /* Full height to match the viewport */
+    height: 100vh; /* Full height to match the viewport */
 }
 
 
 /* Main content styling */
 .main-content {
-  flex: 1;
-  padding: var(--space-m);
-  overflow-y: auto; /* Add scrolling for long content */
+    flex: 1;
+    padding: var(--space-m);
+    overflow-y: auto; /* Add scrolling for long content */
 }
 
 .main-content h1 {
-  color: white;
+    color: white;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background-color: #2e2e2e;
-    --secondary-background-color: #3d3d3d;
-    --color-text: rgba(255, 255, 255, 0.87);
-    --color-primary: #6366f1; /* Dark mode primary color */
-    --color-secondary: #374151; /* Dark mode secondary color (for hover) */
-    --color-intense: #272727;
-  }
+    :root {
+        --background-color: #2e2e2e;
+        --secondary-background-color: #3d3d3d;
+        --color-text: rgba(255, 255, 255, 0.87);
+        --color-primary: #6366f1; /* Dark mode primary color */
+        --color-secondary: #374151; /* Dark mode secondary color (for hover) */
+        --color-intense: #272727;
+    }
 
-  #logo {
-    filter: invert(0) !important;
-  }
+    #logo {
+        filter: invert(0) !important;
+    }
 
 }

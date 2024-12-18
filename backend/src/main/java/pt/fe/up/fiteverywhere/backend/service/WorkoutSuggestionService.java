@@ -2,9 +2,7 @@ package pt.fe.up.fiteverywhere.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
-import pt.fe.up.fiteverywhere.backend.entity.Gym;
 import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
 import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
 

@@ -1,28 +1,20 @@
 package pt.fe.up.fiteverywhere.backend.service.user.children;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pt.fe.up.fiteverywhere.backend.entity.PTService;
+import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
+import pt.fe.up.fiteverywhere.backend.repository.PTServiceRepository;
+import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
+import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-
-
-import pt.fe.up.fiteverywhere.backend.entity.PTService;
-import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
-import pt.fe.up.fiteverywhere.backend.repository.PTServiceRepository;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.WorkoutSuggestion;
-import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
-import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
-import pt.fe.up.fiteverywhere.backend.repository.user.children.ClientRepository;
-
-import pt.fe.up.fiteverywhere.backend.repository.user.children.WorkoutSuggestionRepository;
-import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
 
 @Service
 public class ClientService {
@@ -54,31 +46,31 @@ public class ClientService {
         // Extract busy times from the events
         List<Map<String, Object>> events = (List<Map<String, Object>>) calendarEvents.get("items");
         List<String> busyTimes = extractBusyTimes(events);
-    
+
         String preferredTime = client.getPreferredTime();
         int workoutsPerWeek = client.getWorkoutsPerWeek();
-    
+
         List<String> suggestions = new ArrayList<>();
-    
+
         // Calculate the interval between workout days (7 days / workouts per week)
         int interval = 7 / workoutsPerWeek;
-    
+
         // Get the current date
         LocalDateTime currentDate = LocalDateTime.now();
-    
+
         for (int i = 0; i < workoutsPerWeek; i++) {
             int daysOffset = i * interval;
-    
+
             // Attempt to find an available slot within a range of ±2 days
             String suggestedDayTime = findAvailableSlotWithRange(busyTimes, preferredTime, daysOffset, 2, currentDate);
             if (!"No available slots".equals(suggestedDayTime)) {
                 suggestions.add(suggestedDayTime);
             }
         }
-    
+
         return suggestions;
     }
-    
+
     public List<WorkoutSuggestion> saveWorkoutSuggestions(Client client, List<WorkoutSuggestion> workoutSuggestions) {
         List<WorkoutSuggestion> savedSuggestions = new ArrayList<>();
 
@@ -102,52 +94,6 @@ public class ClientService {
         // Map preferred time to time range (using 24-hour format)
         LocalDateTime preferredDateTimeStart = getPreferredTimeRange(preferredTime).get(0);
         LocalDateTime preferredDateTimeEnd = getPreferredTimeRange(preferredTime).get(1);
-    
-        for (int offset = -range; offset <= range; offset++) {
-            LocalDateTime currentTimeStart = preferredDateTimeStart.plusDays(daysOffset + offset);
-            LocalDateTime currentTimeEnd = preferredDateTimeEnd.plusDays(daysOffset + offset);
-    
-            // Skip past dates
-            if (currentTimeStart.isBefore(currentDate)) {
-                continue;
-            }
-    
-            String currentSlotStart = currentTimeStart.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-            String currentSlotEnd = currentTimeEnd.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-    
-            boolean isConflict = false;
-            for (String busyTime : busyTimes) {
-                String[] timeRange = busyTime.split(" ");
-                String busyDate = timeRange[0];
-                String busyRange = timeRange[1];
-                String[] busyStartEnd = busyRange.split("-");
-    
-                LocalDateTime busyStart = LocalDateTime.parse(busyDate + " " + busyStartEnd[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-                LocalDateTime busyEnd = LocalDateTime.parse(busyDate + " " + busyStartEnd[1], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-    
-                // Check if the current slot conflicts with the busy time
-                if (!(currentTimeStart.isAfter(busyEnd) || currentTimeEnd.isBefore(busyStart))) {
-                    isConflict = true;
-                    break;
-                }
-            }
-    
-            if (!isConflict) {
-                String newBusyTime = currentSlotStart.split(" ")[0] + " " + currentSlotStart.split(" ")[1] + "-" + currentSlotEnd.split(" ")[1];
-                busyTimes.add(newBusyTime); // Add the new slot to the busy times
-                return currentSlotStart + "/" + currentSlotEnd; // Return the first available slot
-            }
-        }
-    
-        // Fallback: No slot found
-        return "No available slots";
-    }
-    
-
-    public String findAvailableSlotWithRange(List<String> busyTimes, String preferredTime, int daysOffset, int range, LocalDateTime currentDate) {
-        // Map preferred time to time range (using 24-hour format)
-        LocalDateTime preferredDateTimeStart = getPreferredTimeRange(preferredTime).get(0);
-        LocalDateTime preferredDateTimeEnd = getPreferredTimeRange(preferredTime).get(1);
 
         for (int offset = -range; offset <= range; offset++) {
             LocalDateTime currentTimeStart = preferredDateTimeStart.plusDays(daysOffset + offset);
@@ -188,7 +134,6 @@ public class ClientService {
         // Fallback: No slot found
         return "No available slots";
     }
-
 
     public void buyPTService(Client client, Long serviceId) {
         Optional<PTService> ptService = client.getPtServices().stream().filter(s -> s.getId().equals(serviceId)).findFirst();
@@ -277,7 +222,6 @@ public class ClientService {
         // Fallback: No slot found
         return "No available slots";
     }
-
 
 
     private List<LocalDateTime> getPreferredTimeRange(String preferredTime) {

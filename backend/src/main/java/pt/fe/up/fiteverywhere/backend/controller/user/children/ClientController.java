@@ -1,11 +1,5 @@
 package pt.fe.up.fiteverywhere.backend.controller.user.children;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,25 +8,13 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.web.bind.annotation.*;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
 import pt.fe.up.fiteverywhere.backend.entity.WorkoutSuggestion;
+import pt.fe.up.fiteverywhere.backend.entity.user.children.Client;
 import pt.fe.up.fiteverywhere.backend.repository.WorkoutSuggestionRepository;
 import pt.fe.up.fiteverywhere.backend.service.CalendarService;
-import pt.fe.up.fiteverywhere.backend.entity.user.children.WorkoutSuggestion;
-import pt.fe.up.fiteverywhere.backend.service.CalendarService;
 import pt.fe.up.fiteverywhere.backend.service.PurchaseService;
+import pt.fe.up.fiteverywhere.backend.service.WorkoutSuggestionService;
 import pt.fe.up.fiteverywhere.backend.service.user.children.ClientService;
 
 import java.util.HashMap;
@@ -40,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import pt.fe.up.fiteverywhere.backend.service.WorkoutSuggestionService;
 
 @RestController
 @RequestMapping("/client")
@@ -112,7 +93,6 @@ public class ClientController {
         }
     }
 
-}
     @PostMapping("/{gymId}/purchase")
     public ResponseEntity<?> purchaseMembership(
             @PathVariable Long gymId,
@@ -153,11 +133,12 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Service not found", "message", e.getMessage()));
         }
     }
+
     // Endpoint to save workout suggestions
     @PostMapping("/save-workout-suggestions")
-    public ResponseEntity<?> saveWorkoutSuggestions( @AuthenticationPrincipal OAuth2User principal,
-                                                        @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
-                                                        @RequestBody List<WorkoutSuggestion> workoutSuggestions) {
+    public ResponseEntity<?> saveWorkoutSuggestions(@AuthenticationPrincipal OAuth2User principal,
+                                                    @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
+                                                    @RequestBody List<WorkoutSuggestion> workoutSuggestions) {
         String email = principal.getAttribute("email");
 
         Optional<Client> clientOptional = clientService.findClientByEmail(email);
@@ -169,7 +150,7 @@ public class ClientController {
 
         try {
             // Save the workout suggestions
-            List<WorkoutSuggestion>  savedSuggestions = clientService.saveWorkoutSuggestions(client, workoutSuggestions);
+            List<WorkoutSuggestion> savedSuggestions = clientService.saveWorkoutSuggestions(client, workoutSuggestions);
             return ResponseEntity.ok(savedSuggestions);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving workout suggestions");
@@ -228,3 +209,4 @@ public class ClientController {
         return ResponseEntity.ok(Map.of("message", "Workout suggestion deleted successfully"));
     }
 }
+

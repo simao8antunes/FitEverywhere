@@ -127,9 +127,11 @@ const Profile: React.FC = () => {
                   value={workoutsPerWeek || ""}
                   onChange={(e) => setWorkoutsPerWeek(Number(e.target.value))}
                 />
-                  {validationMessage && (
-                      <p className="text-red-500 text-sm mt-1">{validationMessage}</p>
-                  )}
+                {validationMessage && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {validationMessage}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="font-bold">Preferred Time:</label>

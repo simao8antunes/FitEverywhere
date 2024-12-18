@@ -31,7 +31,7 @@ const Workouts: React.FC = () => {
     fetchGyms,
   } = useFetchGyms();
 
-  const {user} = useAuth();
+  const { user } = useAuth();
   const handleFetchSuggestions = async () => {
     setIsLoading(true);
     setError(null); // Reset error before fetching
@@ -136,7 +136,7 @@ const Workouts: React.FC = () => {
       // Success: Optionally show a success message or redirect
       console.log("Workout suggestions saved successfully!");
       // After saving, update the savedWorkouts state to include the new workouts
-      const savedData = await response.json(); // Assuming the backend returns the saved workouts
+
       fetchSavedWorkouts();
     } catch (error) {
       console.error("Error saving workout suggestions:", error);
@@ -196,7 +196,7 @@ const Workouts: React.FC = () => {
 
   // Fetch suggestions when the component loads
   useEffect(() => {
-    if (isClient(user) && user.workoutsPerWeek>0){
+    if (isClient(user) && user.workoutsPerWeek > 0) {
       fetchSavedWorkouts();
       handleFetchSuggestions();
     }

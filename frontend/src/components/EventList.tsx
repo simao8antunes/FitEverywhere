@@ -1,5 +1,5 @@
 import React from "react";
-import type { UseFetchEventsResult, Event } from "../types";
+import type { Event, UseFetchEventsResult } from "../types";
 
 interface EventListProps extends UseFetchEventsResult {
   onEventClick: (event: Event) => void; // Replace `any` with your event type
@@ -28,7 +28,9 @@ const EventList: React.FC<EventListProps> = ({
 
   // Sort events by their start time (closest to farthest)
   const sortedEvents = [...events].sort(
-    (a, b) => new Date(a.start.dateTime).getTime() - new Date(b.start.dateTime).getTime()
+    (a, b) =>
+      new Date(a.start.dateTime).getTime() -
+      new Date(b.start.dateTime).getTime(),
   );
 
   // Render list of events
