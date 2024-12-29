@@ -139,13 +139,17 @@ type UserSpec = {
 export type {
   Client,
   Event,
-  GymManager, GymOverpass, GymResponse, GymsProps,
-  PersonalTrainer, PTService,
-  Purchase, UseFetchEventsResult,
+  GymManager,
+  GymOverpass,
+  GymResponse,
+  GymsProps,
+  PersonalTrainer,
+  PTService,
+  Purchase,
+  UseFetchEventsResult,
   UseFetchUserResult,
   User,
-  UserOptions
+  UserOptions,
 };
 
-  export { Gym };
-
+export { Gym };
