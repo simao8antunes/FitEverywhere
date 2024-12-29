@@ -277,27 +277,23 @@ export const useFetchGyms = () => {
     }
   };
 
-  const addGymAndAddToFavourites = async (gym: any) => {
+  const addGymAndAddToFavourites = async (gym: Gym) => {
     try {
-
       const sendGym = {
         id: gym.id,
         name: gym.name,
         description: null,
         dailyFee: null,
         weeklyMembership: null,
-      }
-      const response = await fetch(
-        API_URL + `/client/favourites`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(sendGym),
+      };
+      const response = await fetch(API_URL + `/client/favourites`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        credentials: "include",
+        body: JSON.stringify(sendGym),
+      });
       if (!response.ok) {
         console.log(response);
         throw new Error("Failed to add gym to favourites");
@@ -305,7 +301,7 @@ export const useFetchGyms = () => {
     } catch (error) {
       console.error("Error adding gym to favourites:", error);
     }
-  }
+  };
 
   return {
     gyms,

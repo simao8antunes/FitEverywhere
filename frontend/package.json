@@ -14,22 +14,22 @@
   },
   "dependencies": {
     "@vis.gl/react-google-maps": "^1.4.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-router-dom": "^7.1.1",
     "vitest-browser-react": "^0.0.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
-    "@types/react": "^18.3.16",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^4.3.3",
     "@vitest/coverage-v8": "^2.1.8",
     "@vitest/ui": "^2.1.8",
     "autoprefixer": "^10.4.20",
-    "daisyui": "^4.12.22",
-    "eslint": "^9.13.0",
+    "daisyui": "^4.12.23",
+    "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react-hooks": "^5.1.0",
@@ -37,11 +37,11 @@
     "globals": "^15.14.0",
     "playwright": "^1.49.1",
     "postcss": "^8.4.49",
-    "prettier": "3.3.3",
+    "prettier": "3.4.2",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.18.2",
-    "vite": "^5.4.9",
+    "vite": "^6.0.6",
     "vitest": "^2.1.8"
   }
 }

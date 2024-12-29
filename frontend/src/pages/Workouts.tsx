@@ -27,7 +27,7 @@ const Workouts: React.FC = () => {
   const fetchFavoriteGyms = async () => {
     setIsLoading(true);
     setError(null);
-  
+
     try {
       const response = await fetch(
         import.meta.env.VITE_API_BASE_URL + "/client/favourites",
@@ -36,13 +36,13 @@ const Workouts: React.FC = () => {
           credentials: "include",
         },
       );
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         setError(errorData.message || "Failed to fetch favorite gyms");
         return;
       }
-  
+
       const data = await response.json();
       setFavouriteGyms(data);
     } catch (error) {
