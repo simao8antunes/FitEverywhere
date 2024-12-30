@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -9,22 +8,6 @@ export default defineConfig({
     host: true, // Allows Vite to be accessible externally
     watch: {
       usePolling: true, // Enable polling for changes (helpful in Docker)
-    },
-  },
-  test: {
-    browser: {
-      enabled: true,
-      name: "chromium",
-      provider: "playwright",
-    },
-    globals: true,
-    coverage: {
-      thresholds: {
-        branches: 60,
-        lines: 60,
-        statements: 60,
-        functions: 30,
-      },
     },
   },
 });

@@ -31,6 +31,7 @@ jobs:
           --platform linux/amd64 \
           --build-arg VITE_API_BASE_URL=${{ vars.API_URL }} \
           -t fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }} \
+          -f frontend/docker/Dockerfile \
           frontend/
           docker push fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }}
           docker build \
@@ -40,6 +41,7 @@ jobs:
           --build-arg SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }} \
           --build-arg SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }} \
           -t fiteverywherecr.azurecr.io/backend:${{ github.ref_name }} \
+          -f backend/docker/Dockerfile \
           backend/
           docker push fiteverywherecr.azurecr.io/backend:${{ github.ref_name }}
 

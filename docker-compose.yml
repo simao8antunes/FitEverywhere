@@ -20,8 +20,8 @@ services:
 
   fiteverywhere-be:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
+      context: backend
+      dockerfile: docker/Dockerfile.dev
     restart: on-failure
     ports:
       - "8080:8080"
@@ -39,8 +39,8 @@ services:
 
   fiteverywhere-fe:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+      context: frontend
+      dockerfile: docker/Dockerfile.dev
     ports:
       - "80:80"
     volumes:
