@@ -10,7 +10,9 @@
     "strict": true,
     "declaration": true,
     "noEmit": true,
+    "outDir": "lib",
     "esModuleInterop": true,
     "skipLibCheck": true,
   },
+  "include": ["vitest.config.ts"]
 }

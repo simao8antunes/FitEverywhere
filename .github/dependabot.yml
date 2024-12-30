@@ -11,8 +11,6 @@ updates:
     commit-message:
       prefix: "deps"
       prefix-development: "dev-deps"
-    ignore:
-      - dependency-name: "typescript"  # Example of ignoring specific dependencies
     labels:
       - "dependencies"
       - "frontend"
@@ -28,8 +26,6 @@ updates:
     commit-message:
       prefix: "deps"
       prefix-development: "dev-deps"
-    ignore:
-      - dependency-name: "org.springframework:spring-boot" # Ignore Spring Boot if needed
     labels:
       - "dependencies"
       - "backend"
