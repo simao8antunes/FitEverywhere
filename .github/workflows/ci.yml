@@ -29,6 +29,10 @@ jobs:
         run: npm run clean
         working-directory: ./frontend
 
+      - name: Clean cache
+        run: npm cache clean --force
+        working-directory: ./frontend
+
       - name: Install dependencies
         run: npm install
         working-directory: ./frontend
