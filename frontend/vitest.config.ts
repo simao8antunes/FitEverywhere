@@ -7,8 +7,16 @@ export default mergeConfig(
     test: {
       browser: {
         enabled: true,
-        name: "chromium",
         provider: "playwright",
+        instances: [
+          {
+            browser: "chromium",
+            name: "chromium-1",
+            provide: {
+              ratio: 1,
+            },
+          },
+        ],
       },
       globals: true,
       coverage: {
