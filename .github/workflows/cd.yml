@@ -22,7 +22,7 @@ jobs:
 
       - uses: azure/docker-login@v2
         with:
-          login-server: fiteverywherecr.azurecr.io
+          login-server: fiteverywhere.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
@@ -30,20 +30,20 @@ jobs:
           docker build \
           --platform linux/amd64 \
           --build-arg VITE_API_BASE_URL=${{ vars.API_URL }} \
-          -t fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }} \
+          -t fiteverywhere.azurecr.io/frontend:${{ github.ref_name }} \
           -f frontend/docker/Dockerfile \
           frontend/
-          docker push fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }}
+          docker push fiteverywhere.azurecr.io/frontend:${{ github.ref_name }}
           docker build \
           --platform linux/amd64 \
           --build-arg SPRING_PROFILES_ACTIVE=${{ github.ref_name }},general \
           --build-arg SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}" \
           --build-arg SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }} \
           --build-arg SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }} \
-          -t fiteverywherecr.azurecr.io/backend:${{ github.ref_name }} \
+          -t fiteverywhere.azurecr.io/backend:${{ github.ref_name }} \
           -f backend/docker/Dockerfile \
           backend/
-          docker push fiteverywherecr.azurecr.io/backend:${{ github.ref_name }}
+          docker push fiteverywhere.azurecr.io/backend:${{ github.ref_name }}
 
   deploy:
     permissions:
@@ -61,11 +61,11 @@ jobs:
           app-name: ${{ vars.CLIENT_NAME }}
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONTEND }}
-          images: 'fiteverywherecr.azurecr.io/frontend:${{ github.ref_name }}'
+          images: 'fiteverywhere.azurecr.io/frontend:${{ github.ref_name }}'
 
       - uses: azure/webapps-deploy@v3.0.2
         with:
           app-name: ${{ vars.API_NAME }}
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_BACKEND }}
-          images: 'fiteverywherecr.azurecr.io/backend:${{ github.ref_name }}'
+          images: 'fiteverywhere.azurecr.io/backend:${{ github.ref_name }}'
