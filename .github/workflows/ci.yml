@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CLIENT_ORIGIN: http://localhost
-      SPRING_DATASOURCE_URL: jdbc:mysql://dbfiteverywhere.mysql.database.azure.com:3306/actions-fiteverywhere_db?useSSL=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://fiteverywhere.mysql.database.azure.com:3306/actions-fiteverywhere_db?useSSL=true
       SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
       SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
