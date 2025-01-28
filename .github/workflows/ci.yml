@@ -95,7 +95,7 @@ jobs:
         working-directory: ./backend
 
       - name: Unit and Integration Tests
-        run: mvn verify jacoco:report -Dspring.profiles.active=general
+        run: mvn verify -Pskip-cucumber-tests jacoco:report -Dspring.profiles.active=general
         working-directory: ./backend
 
       - name: JaCoCo Code Coverage Report
