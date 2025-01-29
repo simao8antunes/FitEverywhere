@@ -40,7 +40,7 @@ const GymList: React.FC<GymsProps> = ({ gyms, loading, error }) => {
         gyms.map((gym, index) => (
           <div
             key={gym.id || `${gym.name}-${gym.distance}-${index}`}
-            className="card bg-base-200 border-secbackground hover:bg-secbackground transition-colors"
+            className="card bg-base-200 border-secbackground hover:bg-secbackground transition-colors gym"
           >
             <div className="card-body">
               <div className="flex justify-between">

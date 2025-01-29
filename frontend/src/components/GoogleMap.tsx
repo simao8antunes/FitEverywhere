@@ -22,6 +22,7 @@ const PoiMarkers: React.FC<GoogleMapProps> = ({ gyms }) => {
             lat: poi.overpassData?.lat ?? 0,
             lng: poi.overpassData?.lon ?? 0,
           }}
+          className="marker"
         >
           <Pin
             background={"#FBBC04"}

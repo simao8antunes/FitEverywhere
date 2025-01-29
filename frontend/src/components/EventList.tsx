@@ -40,7 +40,8 @@ const EventList: React.FC<EventListProps> = ({
         {sortedEvents.map((event) => (
           <div
             key={event.id}
-            className="card bg-base-200 hover:bg-neutral hover:text-neutral-content cursor-pointer transition-colors"
+            id={event.id}
+            className="card bg-base-200 hover:bg-neutral hover:text-neutral-content cursor-pointer transition-colors event"
             onClick={() => onEventClick(event)}
           >
             <div className="card-body">
