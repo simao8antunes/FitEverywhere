@@ -4,7 +4,14 @@
 **Dev**:
 [![CD Development](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml/badge.svg?branch=dev)](https://github.com/MESW-LES-2425/FitEverywhere-T2E/actions/workflows/cd.yml)
 
-<p align="center"><a href="https://fiteverywhere.azurewebsites.net" target="_blank"><img src="frontend/public/logo.svg" width="300" alt="Laravel Logo"></a></p>
+| ID Number | Student Name | Work |
+| --------- | ------------ | ---- |
+| 202403077 | Nuno Fernandes | 50% |
+| 202403111 | Simão Antunes | 25% |
+| 202108708 | Ricardo Sousa | 15% |
+| 202302522 | Salif Faustino | 10% |
+
+<p align="center"><a href="https://fiteverywhere.azurewebsites.net" target="_blank"><img src="frontend/public/logo.svg" width="300" alt="FitEverywhere Logo"></a></p>
 
 # Welcome to FitEverywhere!
 **FitEverywhere** is a fitness management platform designed to connect customers, personal trainers, and gym managers through a seamless digital experience. This README provides an overview of the deployed environments, steps to start the application, and a summary of the tech stack used. All project documentation, planning, and progress are available on our [Wiki Page](https://github.com/MESW-LES-2425/FitEverywhere-T2E/wiki).
